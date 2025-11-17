@@ -11,8 +11,8 @@ public class Student extends User {
     private String semester;
     private String major;
 
-    public Student(String username, String password, String role, String phoneNumber, String dateOfBirth, ArrayList<String> currentCourses, Map<String, String> takenCourses, String GPA, String semester, String major) {
-        super(username, password, role, phoneNumber);
+    public Student(String username, String phoneNumber, String email, String password, String name, String dateOfBirth, ArrayList<String> currentCourses, Map<String, String> takenCourses, String GPA, String semester, String major) {
+        super(username, phoneNumber, email, password, name);
         DateOfBirth = dateOfBirth;
         this.currentCourses = currentCourses;
         this.takenCourses = takenCourses;
