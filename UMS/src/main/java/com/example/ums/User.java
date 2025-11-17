@@ -1,15 +1,18 @@
 package com.example.ums;
 
 public class User {
+    private String email;
     private String username;
     private String password;
-    private String role;
     private String phoneNumber;
-    public User(String username, String password, String role, String phoneNumber) {
+    private String name;
+
+    public User(String username, String phoneNumber, String email, String password, String name) {
         this.username = username;
-        this.password = password;
-        this.role = role;
         this.phoneNumber = phoneNumber;
+        this.email = email;
+        this.password = password;
+        this.name = name;
     }
 
     public String getUsername() {
@@ -28,12 +31,12 @@ public class User {
         this.password = password;
     }
 
-    public String getRole() {
-        return role;
+    public String getName() {
+        return name;
     }
 
-    public void setRole(String role) {
-        this.role = role;
+    public void setName(String role) {
+        this.name = name;
     }
 
     public String getPhoneNumber() {
