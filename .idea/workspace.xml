@@ -5,14 +5,28 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="3b0e75bd-c97a-490f-b811-f2c75cb1e98f" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/UMS/src/main/java/com/example/ums/Assignment.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/UMS/src/main/java/com/example/ums/Course.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/UMS/src/main/java/com/example/ums/Equipment.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/UMS/src/main/java/com/example/ums/Hall.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/UMS/src/main/java/com/example/ums/Issue.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/UMS/src/main/java/com/example/ums/LeaveRequests.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/UMS/src/main/java/com/example/ums/Material.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/UMS/src/main/java/com/example/ums/Quiz.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/UMS/src/main/java/com/example/ums/Softwares.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/UMS/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/UMS/pom.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Class" />
+      </list>
+    </option>
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -31,6 +45,7 @@
   </component>
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
+    "Application.Launcher.executor": "Run",
     "ModuleVcsDetector.initialDetectionPerformed": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "RunOnceActivity.git.unshallow": "true",
