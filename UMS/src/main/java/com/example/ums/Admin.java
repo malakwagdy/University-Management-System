@@ -1,18 +1,20 @@
 package com.example.ums;
 
-public class Admin extends User {
-    private String salary;
+import com.google.firebase.database.PropertyName;
 
-    public Admin(String username, String phoneNumber, String email, String password, String name, String salary) {
+public class Admin extends User {
+    private Float salary;
+
+    public Admin(String username, String phoneNumber, String email, String password, String name, Float salary) {
         super(username, phoneNumber, email, password, name);
         this.salary = salary;
     }
-
-    public String getSalary() {
+    @PropertyName("salary")
+    public Float getSalary() {
         return salary;
     }
-
-    public void setSalary(String salary) {
+    @PropertyName("salary")
+    public void setSalary(Float salary) {
         this.salary = salary;
     }
 }

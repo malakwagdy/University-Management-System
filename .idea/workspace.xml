@@ -5,16 +5,25 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="3b0e75bd-c97a-490f-b811-f2c75cb1e98f" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/UMS/src/main/java/com/example/ums/Assignment.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/UMS/src/main/java/com/example/ums/Course.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/UMS/src/main/java/com/example/ums/Equipment.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/UMS/src/main/java/com/example/ums/Hall.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/UMS/src/main/java/com/example/ums/Issue.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/UMS/src/main/java/com/example/ums/LeaveRequests.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/UMS/src/main/java/com/example/ums/Material.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/UMS/src/main/java/com/example/ums/Quiz.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/UMS/src/main/java/com/example/ums/Softwares.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/UMS/src/main/java/com/example/ums/FirestoreManager.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/UMS/src/main/java/com/example/ums/LoginException.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/UMS/src/main/java/com/example/ums/Admin.java" beforeDir="false" afterPath="$PROJECT_DIR$/UMS/src/main/java/com/example/ums/Admin.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/UMS/src/main/java/com/example/ums/Assignment.java" beforeDir="false" afterPath="$PROJECT_DIR$/UMS/src/main/java/com/example/ums/Assignment.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/UMS/src/main/java/com/example/ums/Course.java" beforeDir="false" afterPath="$PROJECT_DIR$/UMS/src/main/java/com/example/ums/Course.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/UMS/src/main/java/com/example/ums/Equipment.java" beforeDir="false" afterPath="$PROJECT_DIR$/UMS/src/main/java/com/example/ums/Equipment.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/UMS/src/main/java/com/example/ums/Firestore.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/UMS/src/main/java/com/example/ums/HR.java" beforeDir="false" afterPath="$PROJECT_DIR$/UMS/src/main/java/com/example/ums/HR.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/UMS/src/main/java/com/example/ums/Hall.java" beforeDir="false" afterPath="$PROJECT_DIR$/UMS/src/main/java/com/example/ums/Hall.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/UMS/src/main/java/com/example/ums/Instructor.java" beforeDir="false" afterPath="$PROJECT_DIR$/UMS/src/main/java/com/example/ums/Instructor.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/UMS/src/main/java/com/example/ums/Issue.java" beforeDir="false" afterPath="$PROJECT_DIR$/UMS/src/main/java/com/example/ums/Issue.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/UMS/src/main/java/com/example/ums/LeaveRequests.java" beforeDir="false" afterPath="$PROJECT_DIR$/UMS/src/main/java/com/example/ums/LeaveRequest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/UMS/src/main/java/com/example/ums/Material.java" beforeDir="false" afterPath="$PROJECT_DIR$/UMS/src/main/java/com/example/ums/Material.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/UMS/src/main/java/com/example/ums/Parent.java" beforeDir="false" afterPath="$PROJECT_DIR$/UMS/src/main/java/com/example/ums/Parent.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/UMS/src/main/java/com/example/ums/Quiz.java" beforeDir="false" afterPath="$PROJECT_DIR$/UMS/src/main/java/com/example/ums/Quiz.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/UMS/src/main/java/com/example/ums/Softwares.java" beforeDir="false" afterPath="$PROJECT_DIR$/UMS/src/main/java/com/example/ums/Software.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/UMS/src/main/java/com/example/ums/Student.java" beforeDir="false" afterPath="$PROJECT_DIR$/UMS/src/main/java/com/example/ums/Student.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/UMS/src/main/java/com/example/ums/User.java" beforeDir="false" afterPath="$PROJECT_DIR$/UMS/src/main/java/com/example/ums/User.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -45,19 +54,23 @@
   </component>
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
-    "Application.Launcher.executor": "Run",
     "ModuleVcsDetector.initialDetectionPerformed": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "RunOnceActivity.git.unshallow": "true",
     "dart.analysis.tool.window.visible": "false",
     "git-widget-placeholder": "main",
     "kotlin-language-version-configured": "true",
-    "last_opened_file_path": "/Users/Malak/D/UNI/Senior-1 Year/Semester 7/Agile Software Engineering/Project/University-Management-System",
+    "last_opened_file_path": "C:/Users/pc/IdeaProjects/University-Management-System/UMS/src/main/resources",
     "node.js.selected.package.tslint": "(autodetect)",
     "settings.editor.selected.configurable": "preferences.lookFeel",
     "vue.rearranger.settings.migration": "true"
   }
 }]]></component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\pc\IdeaProjects\University-Management-System\UMS\src\main\resources" />
+    </key>
+  </component>
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
