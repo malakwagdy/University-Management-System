@@ -7,7 +7,7 @@
   <groupId>com.example</groupId>
   <artifactId>UMS</artifactId>
   <version>1.0-SNAPSHOT</version>
-  <name>UNS</name>
+  <name>UMS</name>
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -58,7 +58,7 @@
             <!-- Default configuration for running with: mvn clean javafx:run -->
             <id>default-cli</id>
             <configuration>
-              <mainClass>com.example.ums/com.example.ums.HelloApplication</mainClass>
+              <mainClass>com.example.ums.HelloApplication</mainClass>
               <launcher>app</launcher>
               <jlinkZipName>app</jlinkZipName>
               <jlinkImageName>app</jlinkImageName>
