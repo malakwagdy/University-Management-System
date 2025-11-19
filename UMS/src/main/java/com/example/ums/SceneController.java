@@ -23,9 +23,18 @@ public class SceneController {
         FXMLLoader fxmlLoader = new FXMLLoader(new java.io.File(absolutePath).toURI().toURL());
         Parent root = fxmlLoader.load();
         Stage stage = (Stage)((Node)event.getSource()).getScene().getWindow();
+        
+        // Save current maximized state
+        boolean wasMaximized = stage.isMaximized();
+        
         stage.setScene(new Scene(root));
         stage.setTitle(title);
         stage.show();
+        
+        // Restore maximized state if it was maximized or if maximizeByDefault is true
+        if (wasMaximized || maximizeByDefault) {
+            Platform.runLater(() -> stage.setMaximized(true));
+        }
     }
 
     public static void Popup(ActionEvent event, String fileName, String title) throws IOException {
@@ -49,10 +58,19 @@ public class SceneController {
 
         Node source = (Node) event.getSource();
         Stage stage = (Stage) source.getScene().getWindow();
+        
+        // Save current maximized state
+        boolean wasMaximized = stage.isMaximized();
+        
         FXMLLoader loader = new FXMLLoader(new java.io.File(absolutePath).toURI().toURL());
         Scene scene = new Scene(loader.load());
         stage.setScene(scene);
         stage.show();
+        
+        // Restore maximized state if it was maximized or if maximizeByDefault is true
+        if (wasMaximized || maximizeByDefault) {
+            Platform.runLater(() -> stage.setMaximized(true));
+        }
     }
 
     // ===== New primary-stage helpers (replacement for StageManager) =====

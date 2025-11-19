@@ -1,9 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.Insets?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
-<BorderPane xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1">
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.VBox?>
+
+<BorderPane xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.ums.StudentDashboardController">
    <top>
       <VBox spacing="10">
          <padding>
@@ -13,7 +22,7 @@
             <Label text="Student Dashboard" />
             <Region HBox.hgrow="ALWAYS" />
             <Label fx:id="studentNameLabel" text="Welcome, Student" />
-            <Button fx:id="logoutBtn" text="Logout" />
+            <Button fx:id="logoutBtn" onAction="#handleLogoutButton" text="Logout" />
          </HBox>
       </VBox>
    </top>
@@ -62,11 +71,11 @@
                <Label text="My Courses" />
                <TableView fx:id="coursesTable" prefHeight="200.0">
                   <columns>
-                     <TableColumn fx:id="courseIdCol" text="Course ID" prefWidth="120.0" />
-                     <TableColumn fx:id="courseNameCol" text="Course Name" prefWidth="250.0" />
-                     <TableColumn fx:id="instructorCol" text="Instructor" prefWidth="150.0" />
-                     <TableColumn fx:id="gradeCol" text="Grade" prefWidth="100.0" />
-                     <TableColumn fx:id="actionsCol" text="Actions" prefWidth="150.0" />
+                     <TableColumn fx:id="courseIdCol" prefWidth="120.0" text="Course ID" />
+                     <TableColumn fx:id="courseNameCol" prefWidth="250.0" text="Course Name" />
+                     <TableColumn fx:id="instructorCol" prefWidth="150.0" text="Instructor" />
+                     <TableColumn fx:id="gradeCol" prefWidth="100.0" text="Grade" />
+                     <TableColumn fx:id="actionsCol" prefWidth="150.0" text="Actions" />
                   </columns>
                </TableView>
             </VBox>
@@ -76,11 +85,11 @@
                <Label text="Recent Assignments" />
                <TableView fx:id="assignmentsTable" prefHeight="200.0">
                   <columns>
-                     <TableColumn fx:id="assignmentNameCol" text="Assignment" prefWidth="200.0" />
-                     <TableColumn fx:id="courseCol" text="Course" prefWidth="150.0" />
-                     <TableColumn fx:id="dueDateCol" text="Due Date" prefWidth="120.0" />
-                     <TableColumn fx:id="statusCol" text="Status" prefWidth="100.0" />
-                     <TableColumn fx:id="gradeCol2" text="Grade" prefWidth="100.0" />
+                     <TableColumn fx:id="assignmentNameCol" prefWidth="200.0" text="Assignment" />
+                     <TableColumn fx:id="courseCol" prefWidth="150.0" text="Course" />
+                     <TableColumn fx:id="dueDateCol" prefWidth="120.0" text="Due Date" />
+                     <TableColumn fx:id="statusCol" prefWidth="100.0" text="Status" />
+                     <TableColumn fx:id="gradeCol2" prefWidth="100.0" text="Grade" />
                   </columns>
                </TableView>
             </VBox>
@@ -92,7 +101,7 @@
             </VBox>
             
             <!-- Action Buttons -->
-            <HBox spacing="15" alignment="CENTER">
+            <HBox alignment="CENTER" spacing="15">
                <Button fx:id="viewAllCoursesBtn" text="View All Courses" />
                <Button fx:id="viewAssignmentsBtn" text="View All Assignments" />
                <Button fx:id="viewGradesBtn" text="View Grades" />
@@ -102,4 +111,3 @@
       </ScrollPane>
    </center>
 </BorderPane>
-

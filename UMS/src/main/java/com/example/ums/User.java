@@ -83,8 +83,13 @@ public class User {
                 throw new LoginException("Password is incorrect.");
             }
         }
-        //GlobalData.setCurrentlyLoggedIN(email)
+        GlobalData.setCurrentlyLoggedIN(id);
     }
+
+    public static void Logout(){
+        GlobalData.setCurrentlyLoggedIN(null);
+    }
+
     @PropertyName("id")
     public String getId() {
         return id;
