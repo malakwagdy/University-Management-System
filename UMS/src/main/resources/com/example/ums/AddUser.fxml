@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.ChoiceBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+<VBox alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.ums.userController">
+    <children>
+      <HBox alignment="CENTER" prefHeight="31.0" prefWidth="600.0">
+         <children>
+            <Label text="User Type:" />
+            <ChoiceBox fx:id="userTypeChoiceBox" prefHeight="26.0" prefWidth="161.0">
+               <HBox.margin>
+                  <Insets left="42.0" />
+               </HBox.margin>
+            </ChoiceBox>
+         </children>
+      </HBox>
+        <HBox alignment="CENTER" prefHeight="41.0" prefWidth="600.0">
+            <children>
+                <Label alignment="CENTER" text="Full name:">
+               <padding>
+                  <Insets right="35.0" />
+               </padding></Label>
+                <TextField fx:id="fullNameField">
+                    <opaqueInsets>
+                        <Insets />
+                    </opaqueInsets>
+                    <HBox.margin>
+                        <Insets left="10.0" />
+                    </HBox.margin>
+                </TextField>
+            </children>
+        </HBox>
+        <HBox alignment="CENTER" prefHeight="41.0" prefWidth="600.0">
+            <children>
+                <Label alignment="CENTER" text="Phone Number:">
+               <padding>
+                  <Insets right="6.0" />
+               </padding></Label>
+                <TextField fx:id="phoneNumberField">
+                    <opaqueInsets>
+                        <Insets />
+                    </opaqueInsets>
+                    <HBox.margin>
+                        <Insets left="10.0" />
+                    </HBox.margin>
+                </TextField>
+            </children>
+        </HBox>
+        <HBox alignment="CENTER" prefHeight="41.0" prefWidth="600.0">
+            <children>
+                <Label alignment="CENTER" text="Email: ">
+               <HBox.margin>
+                  <Insets right="55.0" />
+               </HBox.margin></Label>
+                <TextField fx:id="emailField">
+                    <opaqueInsets>
+                        <Insets />
+                    </opaqueInsets>
+                    <HBox.margin>
+                        <Insets left="10.0" />
+                    </HBox.margin>
+                </TextField>
+            </children>
+        </HBox>
+        <HBox alignment="CENTER" prefHeight="41.0" prefWidth="600.0">
+            <children>
+                <Label alignment="CENTER" text="Department:">
+               <HBox.margin>
+                  <Insets right="23.0" />
+               </HBox.margin></Label>
+                <TextField fx:id="departmentField">
+                    <opaqueInsets>
+                        <Insets />
+                    </opaqueInsets>
+                    <HBox.margin>
+                        <Insets left="10.0" />
+                    </HBox.margin>
+                </TextField>
+            </children>
+        </HBox>
+      <HBox alignment="CENTER" prefHeight="36.0" prefWidth="600.0">
+         <children>
+            <Label text="Department Head:" />
+            <CheckBox fx:id="departmentHeachCheckBox" mnemonicParsing="false" onAction="#handleDepartmentCheckBox">
+               <HBox.margin>
+                  <Insets left="10.0" right="132.0" />
+               </HBox.margin>
+            </CheckBox>
+         </children>
+      </HBox>
+        <Button fx:id="addUserButton" mnemonicParsing="false" onAction="#handleAddUserButton" text="Add User">
+            <VBox.margin>
+                <Insets top="10.0" />
+            </VBox.margin>
+        </Button>
+    </children>
+</VBox>
