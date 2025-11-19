@@ -15,20 +15,19 @@ public class FirestoreManager {
     private com.google.cloud.firestore.Firestore db;
 
     public FirestoreManager() {
-    try {
-        FileInputStream serviceAccount =
-                new FileInputStream("C:/Users/pc/IdeaProjects/University-Management-System/UMS/src/main/resources/university-management-sy-9314c-firebase-adminsdk-fbsvc-7e85945818.json");
-        GoogleCredentials credentials = GoogleCredentials.fromStream(serviceAccount);
-        FirestoreOptions firestoreOptions = FirestoreOptions.newBuilder()
-                .setCredentials(credentials)
-                .build();
+        try {
+            FileInputStream serviceAccount =
+                    new FileInputStream("C:/Users/pc/IdeaProjects/University-Management-System/UMS/src/main/resources/university-management-sy-9314c-firebase-adminsdk-fbsvc-7e85945818.json");
+            GoogleCredentials credentials = GoogleCredentials.fromStream(serviceAccount);
+            FirestoreOptions firestoreOptions = FirestoreOptions.newBuilder()
+                    .setCredentials(credentials)
+                    .build();
 
-        this.db = firestoreOptions.getService();
-    } catch (
-    IOException e) {
+            this.db = firestoreOptions.getService();
+        } catch (IOException e) {
         throw new RuntimeException("Failed to initialize Firebase", e);
+        }
     }
-}
 
     public static synchronized FirestoreManager getInstance() {
         if (instance == null) {
@@ -37,9 +36,7 @@ public class FirestoreManager {
         return instance;
     }
 
-
-
-public com.google.cloud.firestore.Firestore getDb() {
+    public com.google.cloud.firestore.Firestore getDb() {
         return db;
     }
 
@@ -56,7 +53,6 @@ public com.google.cloud.firestore.Firestore getDb() {
             e.printStackTrace();
         }
     }
-
 
     public void updateAdmissionStatus(String admissionId, String newStatus) {
         DocumentReference ref = db.collection("Admission").document(admissionId);
@@ -100,7 +96,6 @@ public com.google.cloud.firestore.Firestore getDb() {
 
         return admissionsList;
     }
-
 
     public Admission getAdmissionByName(String name) {
         try {
@@ -150,12 +145,6 @@ public com.google.cloud.firestore.Firestore getDb() {
         return admissionsList;
     }
 
-
-
-
-
-
-
     public void addStudent(Student student) {
         DocumentReference ref = db.collection("Student").document(student.getId());
         ApiFuture<WriteResult> result = ref.set(student);
@@ -165,6 +154,7 @@ public com.google.cloud.firestore.Firestore getDb() {
             e.printStackTrace();
         }
     }
+
     public Student getStudent(String studentId) {
         DocumentReference ref = db.collection("Student").document(studentId);
         try {
@@ -179,8 +169,6 @@ public com.google.cloud.firestore.Firestore getDb() {
         }
     }
 
-
-
     public void addInstructor(Instructor instructor) {
         try {
 
@@ -193,6 +181,7 @@ public com.google.cloud.firestore.Firestore getDb() {
             e.printStackTrace();
         }
     }
+
     public Instructor getInstructor(String id) {
         try {
             DocumentReference ref = db.collection("Instructor").document(id);
@@ -212,9 +201,6 @@ public com.google.cloud.firestore.Firestore getDb() {
         }
     }
 
-
-
-
     public void addHR(HR hr) {
         try {
             DocumentReference ref = db.collection("HR").document(hr.getId());
@@ -226,6 +212,7 @@ public com.google.cloud.firestore.Firestore getDb() {
             e.printStackTrace();
         }
     }
+
     public HR getHR(String id) {
         try {
             DocumentReference ref = db.collection("HR").document(id);
@@ -245,9 +232,6 @@ public com.google.cloud.firestore.Firestore getDb() {
         }
     }
 
-
-
-
     public void addAdmin(Admin admin) {
         try {
             DocumentReference ref = db.collection("Admin").document(admin.getId());
@@ -259,6 +243,7 @@ public com.google.cloud.firestore.Firestore getDb() {
             e.printStackTrace();
         }
     }
+
     public Admin getAdmin(String id) {
         try {
             DocumentReference ref = db.collection("Admin").document(id);
@@ -278,11 +263,6 @@ public com.google.cloud.firestore.Firestore getDb() {
         }
     }
 
-
-
-
-
-
     public void addParent(Parent parent) {
         try {
             DocumentReference ref = db.collection("Parent").document(parent.getId());
@@ -294,7 +274,6 @@ public com.google.cloud.firestore.Firestore getDb() {
             e.printStackTrace();
         }
     }
-
 
     public Parent getParent(String id) {
         try {
@@ -314,7 +293,6 @@ public com.google.cloud.firestore.Firestore getDb() {
             return null;
         }
     }
-
 
     public int getHighestIdNumber(String collectionName, String typeLetter) {
         int highest = 0;
