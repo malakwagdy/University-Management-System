@@ -17,15 +17,14 @@ public class FirestoreManager {
     public FirestoreManager() {
     try {
         FileInputStream serviceAccount =
-                new FileInputStream("src/main/resources/university-management-sy-9314c-firebase-adminsdk-fbsvc-7e85945818.json");
+            new FileInputStream("/Users/Malak/D/UNI/Senior-1 Year/Semester 7/Agile Software Engineering/Project/University-Management-System/UMS/src/main/resources/university-management-sy-9314c-firebase-adminsdk-fbsvc-7e85945818.json");
         GoogleCredentials credentials = GoogleCredentials.fromStream(serviceAccount);
         FirestoreOptions firestoreOptions = FirestoreOptions.newBuilder()
                 .setCredentials(credentials)
                 .build();
 
         this.db = firestoreOptions.getService();
-    } catch (
-    IOException e) {
+    } catch (IOException e) {
         throw new RuntimeException("Failed to initialize Firebase", e);
     }
 }
@@ -43,8 +42,7 @@ public com.google.cloud.firestore.Firestore getDb() {
         return db;
     }
 
-<<<<<<< HEAD
-=======
+
     public void addAdmission(Admission admission) {
         DocumentReference ref = db.collection("Admission").document();
         String generatedId = ref.getId();
@@ -139,7 +137,6 @@ public com.google.cloud.firestore.Firestore getDb() {
 
 
 
->>>>>>> 01df12dd5b8b9d1243011ba4758424c40710a59f
 
     public void addStudent(Student student) {
         DocumentReference ref = db.collection("Students").document(student.getStudentID());
@@ -173,7 +170,7 @@ public com.google.cloud.firestore.Firestore getDb() {
     public void addInstructor(Instructor instructor) {
         try {
 
-            DocumentReference ref = db.collection("Instructors").document(instructor.getUsername());
+            DocumentReference ref = db.collection("Instructors").document(instructor.getEmail());
 
             ApiFuture<WriteResult> result = ref.set(instructor);
             System.out.println("Instructor added at: " + result.get().getUpdateTime());
@@ -206,7 +203,7 @@ public com.google.cloud.firestore.Firestore getDb() {
 
     public void addHR(HR hr) {
         try {
-            DocumentReference ref = db.collection("HR").document(hr.getUsername());
+            DocumentReference ref = db.collection("HR").document(hr.getEmail());
 
             ApiFuture<WriteResult> result = ref.set(hr);
             System.out.println("HR added at: " + result.get().getUpdateTime());
@@ -240,7 +237,7 @@ public com.google.cloud.firestore.Firestore getDb() {
 
     public void addAdmin(Admin admin) {
         try {
-            DocumentReference ref = db.collection("Admin").document(admin.getUsername());
+            DocumentReference ref = db.collection("Admin").document(admin.getEmail());
 
             ApiFuture<WriteResult> result = ref.set(admin);
             System.out.println("Admin added at: " + result.get().getUpdateTime());
@@ -273,7 +270,7 @@ public com.google.cloud.firestore.Firestore getDb() {
 
     public void addParent(Parent parent) {
         try {
-            DocumentReference ref = db.collection("Parent").document(parent.getUsername());
+            DocumentReference ref = db.collection("Parent").document(parent.getEmail());
 
             ApiFuture<WriteResult> result = ref.set(parent);
             System.out.println("Parent added at: " + result.get().getUpdateTime());
