@@ -2,13 +2,12 @@ package com.example.ums;
 
 import com.google.api.core.ApiFuture;
 import com.google.auth.oauth2.GoogleCredentials;
-import com.google.cloud.firestore.DocumentReference;
-import com.google.cloud.firestore.DocumentSnapshot;
-import com.google.cloud.firestore.FirestoreOptions;
-import com.google.cloud.firestore.WriteResult;
+import com.google.cloud.firestore.*;
 
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 public class FirestoreManager {
@@ -44,6 +43,103 @@ public com.google.cloud.firestore.Firestore getDb() {
         return db;
     }
 
+<<<<<<< HEAD
+=======
+    public void addAdmission(Admission admission) {
+        DocumentReference ref = db.collection("Admission").document();
+        String generatedId = ref.getId();
+        admission.setAdmissionId(generatedId);
+
+        ApiFuture<WriteResult> result = ref.set(admission);
+        try {
+            System.out.println("Admission added at: " + result.get().getUpdateTime());
+            System.out.println("Generated ID: " + generatedId);
+        } catch (InterruptedException | ExecutionException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public ArrayList<Admission> getAdmissionsByStatus(String status) {
+        ArrayList<Admission> admissionsList = new ArrayList<>();
+
+        try {
+            ApiFuture<QuerySnapshot> future =
+                    db.collection("Admission")
+                            .whereEqualTo("status", status)
+                            .get();
+
+            List<QueryDocumentSnapshot> documents = future.get().getDocuments();
+
+            for (QueryDocumentSnapshot doc : documents) {
+                Admission admission = doc.toObject(Admission.class);
+
+                admission.setAdmissionId(doc.getId());
+
+                admissionsList.add(admission);
+            }
+
+        } catch (InterruptedException | ExecutionException e) {
+            e.printStackTrace();
+        }
+
+        return admissionsList;
+    }
+
+
+    public Admission getAdmissionByName(String name) {
+        try {
+            ApiFuture<QuerySnapshot> future =
+                    db.collection("Admission")
+                            .whereEqualTo("name", name)
+                            .get();
+
+            List<QueryDocumentSnapshot> documents = future.get().getDocuments();
+
+            if (!documents.isEmpty()) {
+                QueryDocumentSnapshot doc = documents.get(0);
+                Admission admission = doc.toObject(Admission.class);
+                admission.setAdmissionId(doc.getId());
+                return admission;
+            }
+
+        } catch (InterruptedException | ExecutionException e) {
+            e.printStackTrace();
+        }
+
+        return null; // No admission found
+    }
+
+    public ArrayList<Admission> getAllAdmissions() {
+        ArrayList<Admission> admissionsList = new ArrayList<>();
+
+        try {
+            // Query entire collection
+            ApiFuture<QuerySnapshot> future =
+                    db.collection("Admission").get();
+
+            List<QueryDocumentSnapshot> documents = future.get().getDocuments();
+
+            for (QueryDocumentSnapshot doc : documents) {
+                Admission admission = doc.toObject(Admission.class);
+
+                admission.setAdmissionId(doc.getId());
+
+                admissionsList.add(admission);
+            }
+
+        } catch (InterruptedException | ExecutionException e) {
+            e.printStackTrace();
+        }
+
+        return admissionsList;
+    }
+
+
+
+
+
+
+>>>>>>> 01df12dd5b8b9d1243011ba4758424c40710a59f
 
     public void addStudent(Student student) {
         DocumentReference ref = db.collection("Students").document(student.getStudentID());
