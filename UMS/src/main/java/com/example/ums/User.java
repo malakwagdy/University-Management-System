@@ -24,7 +24,7 @@ public class User {
     public void Login(String email, String Password) throws LoginException {
 
         if (email == null) {
-            throw new LoginException("email is incorrect.");
+            throw new LoginException("Email is incorrect.");
         }
         User user = fm.getAdmin(email);
 
@@ -32,7 +32,7 @@ public class User {
             user = fm.getInstructor(email);
             if (user != null) {
                 if (user.getEmail().equals(email) && user.getPassword().equals(Password)) {
-                    //LoginController.isInstructor = true;
+                    LoginController.isInstructor = true;
 
                 } else {
                     throw new LoginException("Password is incorrect.");
@@ -42,7 +42,7 @@ public class User {
                 if (user != null) {
                     if (user.getEmail().equals(email) && user.getPassword().equals(Password)) {
 
-                        //LoginController.isStudent = true;
+                        LoginController.isStudent = true;
 
                     } else {
                         throw new LoginException("Password is incorrect.");
@@ -52,7 +52,7 @@ public class User {
                     if (user != null) {
                         if (user.getEmail().equals(email) && user.getPassword().equals(Password)) {
 
-                            //LoginController.isHR = true;
+                            LoginController.isHr = true;
 
                         } else {
                             throw new LoginException("Password is incorrect.");
@@ -62,13 +62,13 @@ public class User {
                         if (user != null) {
                             if (user.getEmail().equals(email) && user.getPassword().equals(Password)) {
 
-                                //LoginController.isParent = true;
+                                LoginController.isParent = true;
 
                             } else {
                                 throw new LoginException("Password is incorrect.");
                             }
                         }else{
-                            throw new LoginException("email is incorrect.");
+                            throw new LoginException("Email is incorrect.");
                         }
                     }
                 }

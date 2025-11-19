@@ -8,6 +8,10 @@ public class Parent extends User{
     private String relation;
     private ArrayList<String> children;
 
+    public Parent() {
+        super();
+    }
+
     public Parent( String phoneNumber, String email, String password, String name, String relation, ArrayList<String> children) {
         super( phoneNumber, email, password, name);
         this.relation = relation;

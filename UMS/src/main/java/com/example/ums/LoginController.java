@@ -13,7 +13,6 @@ import java.io.IOException;
 
 public class LoginController {
 
-    static boolean isAdmin = false;
     static boolean isInstructor= false;
     static boolean isStudent= false;
     static boolean isHr= false;
@@ -38,7 +37,7 @@ public class LoginController {
         String email = emailField.getText();
         String password = passwordField.getText();
         
-        // TODO: Add your login validation logic here
+        // Add your login validation logic here
         // For example, using your User class and FirestoreManager
         
 //        try {
@@ -62,17 +61,7 @@ public class LoginController {
             errorMessage.setText("Login Successful!");
             // Create a PauseTransition with a delay of 2 seconds
             PauseTransition delay = new PauseTransition(Duration.seconds(2));
-            if(isAdmin){
-                delay.setOnFinished(e -> {
-                    try {
-                        SceneController.switchScene(event, "AdminDashboard.fxml", "Admin Dashboard");
-//                        MainVendorPageController.initialize();
-                    } catch (IOException ex) {
-                        ex.printStackTrace();
-                    }
-                });
-            }
-            else if(isInstructor){
+            if(isInstructor){
                 delay.setOnFinished(e -> {
                     try {
                         SceneController.switchScene(event, "InstructorDashboard.fxml", "Instructor Dashboard");
@@ -122,11 +111,22 @@ public class LoginController {
                     }
                 });
             }
+            else {
+                delay.setOnFinished(e -> {
+                    try {
+                        SceneController.switchScene(event, "AdminDashboard.fxml", "Admin Dashboard");
+//                        MainVendorPageController.initialize();
+                    } catch (IOException ex) {
+                        ex.printStackTrace();
+                    }
+                });
+            }
             delay.play();
 //            SceneController.switchScene(event, GlobalData.path + "MainPageClient.fxml", "Homepage");
 
         } catch (LoginException e) {
             // Show error dialog
+            errorMessage.setStyle("-fx-text-fill: red;");
             errorMessage.setText(e.getMessage());
         }
     }

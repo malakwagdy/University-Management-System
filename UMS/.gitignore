@@ -39,3 +39,5 @@ build/
 .DS_Store
 
  ../.idea
+
+src/main/resources/university-management-sy-9314c-firebase-adminsdk-fbsvc-7e85945818.json

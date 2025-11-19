@@ -6,7 +6,7 @@ import java.util.ArrayList;
 
 public class Instructor extends User{
     private ArrayList<String> courses;
-    private Float salary;
+    private String salary;
     private String role;
     private boolean departmentHead;
     private String departmentName;
@@ -14,7 +14,11 @@ public class Instructor extends User{
     private ArrayList<String> officeHours;
     private ArrayList<String> benefits;
 
-    public Instructor( String phoneNumber, String email, String password, String name, Float salary, ArrayList<String> courses, String role, boolean departmentHead, String departmentName, ArrayList<String> responsibilities, ArrayList<String> officeHours, ArrayList<String> benefits) {
+    public Instructor() {
+        super();
+    }
+
+    public Instructor( String phoneNumber, String email, String password, String name, String salary, ArrayList<String> courses, String role, boolean departmentHead, String departmentName, ArrayList<String> responsibilities, ArrayList<String> officeHours, ArrayList<String> benefits) {
         super( phoneNumber, email, password, name);
         this.salary = salary;
         this.courses = courses;
@@ -34,11 +38,11 @@ public class Instructor extends User{
         this.courses = courses;
     }
     @PropertyName("salary")
-    public Float getSalary() {
+    public String getSalary() {
         return salary;
     }
     @PropertyName("salary")
-    public void setSalary(Float salary) {
+    public void setSalary(String salary) {
         this.salary = salary;
     }
     @PropertyName("departmentHead")
