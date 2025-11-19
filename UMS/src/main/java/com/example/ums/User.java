@@ -8,15 +8,17 @@ public class User {
     private String password;
     private String phoneNumber;
     private String name;
+    private String id;
 
     public User() {
     }
 
-    public User( String phoneNumber, String email, String password, String name) {
+    public User( String id, String phoneNumber, String email, String password, String name) {
         this.phoneNumber = phoneNumber;
         this.email = email;
         this.password = password;
         this.name = name;
+        this.id = id;
     }
     static FirestoreManager fm = FirestoreManager.getInstance();
 
@@ -83,7 +85,15 @@ public class User {
         }
         //GlobalData.setCurrentlyLoggedIN(email)
     }
-    
+    @PropertyName("id")
+    public String getId() {
+        return id;
+    }
+    @PropertyName("id")
+    public void setId(String id) {
+        this.id = id;
+    }
+
     @PropertyName("password")
     public String getPassword() {
         return password;

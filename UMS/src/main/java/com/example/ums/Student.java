@@ -12,16 +12,15 @@ public class Student extends User {
     private String gpa;
     private String semester;
     private String major;
-    private String studentId;
+
 
     public Student() {
         super();
     }
 
     public Student( String studentId, String phoneNumber, String email, String password, String name, String dateOfBirth, ArrayList<String> currentCourses, Map<String, String> takenCourses, String GPA, String semester, String major) {
-        super( phoneNumber, email, password, name);
+        super(studentId ,phoneNumber, email, password, name);
         this.dateOfBirth = dateOfBirth;
-        this.studentId = studentId;
         this.currentCourses = currentCourses;
         this.takenCourses = takenCourses;
         this.gpa = GPA;
@@ -29,19 +28,15 @@ public class Student extends User {
         this.major = major;
     }
     public Student(String studentId, String phoneNumber, String email, String password, String name, String dateOfBirth,String major){
-        super(phoneNumber, email, password, name);
+        super(studentId,phoneNumber, email, password, name);
         this.dateOfBirth = dateOfBirth;
-        this.studentId = studentId;
+
         this.currentCourses = null;
         this.takenCourses = null;
         this.gpa = "0";
         this.semester = "1";
         this.major = major;
     }
-    @PropertyName("studentId")
-    public String getStudentID() {return studentId;}
-    @PropertyName("studentId")
-    public void setStudentID(String studentID) {this.studentId = studentID;}
     @PropertyName("dateOfBirth")
     public String getdateOfBirth() {
         return dateOfBirth;

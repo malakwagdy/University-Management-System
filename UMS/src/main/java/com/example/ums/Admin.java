@@ -4,7 +4,6 @@ import com.google.firebase.database.PropertyName;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.UUID;
 
 public class Admin extends User {
     private String salary;
@@ -13,8 +12,8 @@ public class Admin extends User {
         super();
     }
 
-    public Admin(String phoneNumber, String email, String password, String name, String salary) {
-        super(phoneNumber, email, password, name);
+    public Admin(String id,String phoneNumber, String email, String password, String name, String salary) {
+        super(id,phoneNumber, email, password, name);
         this.salary = salary;
     }
     @PropertyName("salary")
@@ -25,6 +24,51 @@ public class Admin extends User {
     public void setSalary(String salary) {
         this.salary = salary;
     }
+
+
+
+    public void createHR(String phoneNumber,  String password, String name, String salary,String dep) {
+        String id= this.generateID("hr");
+        String email = id+"@ums.edu";
+        validateCommonFields(phoneNumber, email, password, name);
+        if (salary == null || salary.trim().isEmpty()) {
+            throw new IllegalArgumentException("salary is required");
+        }
+        if (dep == null || dep.trim().isEmpty()) {
+            throw new IllegalArgumentException("department is required");
+        }
+
+        HR hr=new HR(id, phoneNumber, email, password, name, salary,dep);
+        fm.addHR(hr);
+    }
+    public void createInstructor(String phoneNumber,  String password, String name, String department) {
+        String id= this.generateID("instructor");
+        String email = id+"@ums.edu";
+        validateCommonFields(phoneNumber, email, password, name);
+        if (department == null || department.trim().isEmpty()) {
+            throw new IllegalArgumentException("department is required");
+        }
+
+        Instructor instructor=new Instructor(id, phoneNumber, email, password, name, department);
+        fm.addInstructor(instructor);
+    }
+    public void createParent(String phoneNumber, String password, String name, String relation, ArrayList<String> children) {
+        String id= this.generateID("parent");
+        String email = id+"@ums.edu";
+
+        validateCommonFields(phoneNumber, email, password, name);
+
+        if (relation == null || relation.trim().isEmpty()) {
+            throw new IllegalArgumentException("relation is required");
+        }
+        if (children == null) {
+            throw new IllegalArgumentException("children list must not  be empty)");
+        }
+
+        Parent parent=new Parent(id, phoneNumber, email, password, name, relation, children);
+        fm.addParent(parent);
+    }
+
 
     public ArrayList<Admission> getAdmissions() {
         return fm.getAllAdmissions();
@@ -45,6 +89,33 @@ public class Admin extends User {
         admission.setStatus("Rejected");
         fm.updateAdmissionStatus(admission.getAdmissionId(),"Rejected");
     }
+
+
+    private void validateCommonFields(String phoneNumber, String email, String password, String name) {
+        if (phoneNumber == null || phoneNumber.trim().isEmpty()) {
+            throw new IllegalArgumentException("phoneNumber is required");
+        }
+
+        if (phoneNumber.length() != 11|| !phoneNumber.startsWith("011") && !phoneNumber.startsWith("012") && !phoneNumber.startsWith("010") && !phoneNumber.startsWith("015")) {
+            throw new IllegalArgumentException("phoneNumber is invalid");
+        }
+
+        if (email == null || email.trim().isEmpty()) {
+            throw new IllegalArgumentException("email is required");
+        }
+        if (!email.contains("@") || email.startsWith("@") || email.endsWith("@")) {
+            throw new IllegalArgumentException("email is invalid");
+        }
+
+        if (password == null || password.length() < 4) {
+            throw new IllegalArgumentException("password must be at least 4 characters");
+        }
+
+        if (name == null || name.trim().isEmpty()) {
+            throw new IllegalArgumentException("name is required");
+        }
+    }
+
     public String generateID(String type) {
         String year = String.valueOf(LocalDate.now().getYear()).substring(2);
         String letter;
