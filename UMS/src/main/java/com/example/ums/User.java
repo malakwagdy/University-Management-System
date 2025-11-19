@@ -24,14 +24,14 @@ public class User {
 
 
     public void Login(String email, String Password) throws LoginException {
-
+        String id = email.substring(0, 6);
         if (email == null) {
             throw new LoginException("Email is incorrect.");
         }
-        User user = fm.getAdmin(email);
+        User user = fm.getAdmin(id);
 
         if (user == null) {
-            user = fm.getInstructor(email);
+            user = fm.getInstructor(id);
             if (user != null) {
                 if (user.getEmail().equals(email) && user.getPassword().equals(Password)) {
                     LoginController.isInstructor = true;
@@ -40,7 +40,7 @@ public class User {
                     throw new LoginException("Password is incorrect.");
                 }
             } else  {
-                user = fm.getStudent(email);
+                user = fm.getStudent(id);
                 if (user != null) {
                     if (user.getEmail().equals(email) && user.getPassword().equals(Password)) {
 
@@ -50,7 +50,7 @@ public class User {
                         throw new LoginException("Password is incorrect.");
                     }
                 }else  {
-                    user = fm.getHR(email);
+                    user = fm.getHR(id);
                     if (user != null) {
                         if (user.getEmail().equals(email) && user.getPassword().equals(Password)) {
 
@@ -60,7 +60,7 @@ public class User {
                             throw new LoginException("Password is incorrect.");
                         }
                     }else {
-                        user = fm.getParent(email);
+                        user = fm.getParent(id);
                         if (user != null) {
                             if (user.getEmail().equals(email) && user.getPassword().equals(Password)) {
 
