@@ -10,6 +10,9 @@ public class User {
     private String phoneNumber;
     private String name;
 
+    public User() {
+    }
+
     public User(String username, String phoneNumber, String email, String password, String name) {
         this.username = username;
         this.phoneNumber = phoneNumber;
@@ -119,5 +122,11 @@ public class User {
     @PropertyName("phoneNumber")
     public void setPhoneNumber(String phoneNumber) {
         this.phoneNumber = phoneNumber;
+    }
+}
+
+class LoginException extends Exception {
+    public LoginException(String message) {
+        super(message);
     }
 }

@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<BorderPane xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1">
+   <top>
+      <VBox spacing="10">
+         <padding>
+            <Insets bottom="15.0" left="20.0" right="20.0" top="15.0" />
+         </padding>
+         <HBox alignment="CENTER_LEFT" spacing="20">
+            <Label text="Department Head Dashboard" />
+            <Region HBox.hgrow="ALWAYS" />
+            <Label fx:id="deptHeadNameLabel" text="Welcome, Department Head" />
+            <Label fx:id="departmentNameLabel" text="Department: Computer Science" />
+            <Button fx:id="logoutBtn" text="Logout" />
+         </HBox>
+      </VBox>
+   </top>
+   
+   <left>
+      <VBox spacing="10" prefWidth="220.0">
+         <padding>
+            <Insets bottom="15.0" left="15.0" right="15.0" top="15.0" />
+         </padding>
+         <Label text="Department Management" />
+         <Button fx:id="instructorsBtn" text="Instructors" maxWidth="1.7976931348623157E308" />
+         <Button fx:id="coursesBtn" text="Department Courses" maxWidth="1.7976931348623157E308" />
+         <Button fx:id="studentsBtn" text="Department Students" maxWidth="1.7976931348623157E308" />
+         <Separator />
+         <Button fx:id="resourcesBtn" text="Resources" maxWidth="1.7976931348623157E308" />
+         <Button fx:id="equipmentBtn" text="Equipment" maxWidth="1.7976931348623157E308" />
+         <Separator />
+         <Button fx:id="reportsBtn" text="Department Reports" maxWidth="1.7976931348623157E308" />
+         <Button fx:id="myCoursesBtn" text="My Courses" maxWidth="1.7976931348623157E308" />
+         <Region VBox.vgrow="ALWAYS" />
+      </VBox>
+   </left>
+   
+   <center>
+      <ScrollPane fitToWidth="true">
+         <VBox spacing="20">
+            <padding>
+               <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+            </padding>
+            
+            <!-- Department Overview Stats -->
+            <HBox spacing="20">
+               <VBox alignment="CENTER" spacing="5" HBox.hgrow="ALWAYS">
+                  <padding>
+                     <Insets bottom="15.0" left="15.0" right="15.0" top="15.0" />
+                  </padding>
+                  <Label text="Department Instructors" />
+                  <Label fx:id="instructorsCountLabel" text="25" />
+               </VBox>
+               <VBox alignment="CENTER" spacing="5" HBox.hgrow="ALWAYS">
+                  <padding>
+                     <Insets bottom="15.0" left="15.0" right="15.0" top="15.0" />
+                  </padding>
+                  <Label text="Department Courses" />
+                  <Label fx:id="coursesCountLabel" text="45" />
+               </VBox>
+               <VBox alignment="CENTER" spacing="5" HBox.hgrow="ALWAYS">
+                  <padding>
+                     <Insets bottom="15.0" left="15.0" right="15.0" top="15.0" />
+                  </padding>
+                  <Label text="Department Students" />
+                  <Label fx:id="studentsCountLabel" text="350" />
+               </VBox>
+               <VBox alignment="CENTER" spacing="5" HBox.hgrow="ALWAYS">
+                  <padding>
+                     <Insets bottom="15.0" left="15.0" right="15.0" top="15.0" />
+                  </padding>
+                  <Label text="Pending Requests" />
+                  <Label fx:id="pendingRequestsLabel" text="8" />
+               </VBox>
+            </HBox>
+            
+            <!-- Department Instructors -->
+            <VBox spacing="10">
+               <HBox alignment="CENTER_LEFT" spacing="10">
+                  <Label text="Department Instructors" />
+                  <Region HBox.hgrow="ALWAYS" />
+                  <Button fx:id="addInstructorBtn" text="+ Add Instructor" />
+               </HBox>
+               <TableView fx:id="instructorsTable" prefHeight="250.0">
+                  <columns>
+                     <TableColumn fx:id="instructorNameCol" text="Name" prefWidth="200.0" />
+                     <TableColumn fx:id="instructorEmailCol" text="Email" prefWidth="200.0" />
+                     <TableColumn fx:id="coursesCountCol" text="Courses" prefWidth="100.0" />
+                     <TableColumn fx:id="roleCol" text="Role" prefWidth="120.0" />
+                     <TableColumn fx:id="actionsCol" text="Actions" prefWidth="200.0" />
+                  </columns>
+               </TableView>
+            </VBox>
+            
+            <!-- Department Courses -->
+            <VBox spacing="10">
+               <HBox alignment="CENTER_LEFT" spacing="10">
+                  <Label text="Department Courses" />
+                  <Region HBox.hgrow="ALWAYS" />
+                  <Button fx:id="addCourseBtn" text="+ Add Course" />
+               </HBox>
+               <TableView fx:id="coursesTable" prefHeight="200.0">
+                  <columns>
+                     <TableColumn fx:id="courseIdCol" text="Course ID" prefWidth="120.0" />
+                     <TableColumn fx:id="courseNameCol" text="Course Name" prefWidth="250.0" />
+                     <TableColumn fx:id="instructorCol" text="Instructor" prefWidth="150.0" />
+                     <TableColumn fx:id="studentsCountCol" text="Students" prefWidth="100.0" />
+                     <TableColumn fx:id="yearCol" text="Year" prefWidth="100.0" />
+                  </columns>
+               </TableView>
+            </VBox>
+            
+            <!-- Quick Actions -->
+            <HBox spacing="15" alignment="CENTER">
+               <Button fx:id="generateReportBtn" text="Generate Department Report" />
+               <Button fx:id="viewResourcesBtn" text="View Resources" />
+               <Button fx:id="manageEquipmentBtn" text="Manage Equipment" />
+            </HBox>
+         </VBox>
+      </ScrollPane>
+   </center>
+</BorderPane>
+

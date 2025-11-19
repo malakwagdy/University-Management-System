@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1">
+   <top>
+      <VBox spacing="10">
+         <padding>
+            <Insets bottom="15.0" left="20.0" right="20.0" top="15.0" />
+         </padding>
+         <HBox alignment="CENTER_LEFT" spacing="20">
+            <Label text="HR Dashboard" />
+            <Region HBox.hgrow="ALWAYS" />
+            <Label fx:id="hrNameLabel" text="Welcome, HR Specialist" />
+            <Label fx:id="departmentLabel" text="Department: HR" />
+            <Button fx:id="logoutBtn" text="Logout" />
+         </HBox>
+      </VBox>
+   </top>
+
+   <left>
+      <VBox spacing="10" prefWidth="220.0">
+         <padding>
+            <Insets bottom="15.0" left="15.0" right="15.0" top="15.0" />
+         </padding>
+         <Label text="HR Tools" />
+         <Button fx:id="staffDirectoryBtn" text="Staff Directory" maxWidth="1.7976931348623157E308" />
+         <Button fx:id="leaveRequestsBtn" text="Leave Requests" maxWidth="1.7976931348623157E308" />
+         <Button fx:id="recruitmentBtn" text="Recruitment" maxWidth="1.7976931348623157E308" />
+         <Button fx:id="benefitsBtn" text="Benefits" maxWidth="1.7976931348623157E308" />
+         <Button fx:id="attendanceBtn" text="Attendance" maxWidth="1.7976931348623157E308" />
+         <Separator />
+         <Button fx:id="equipmentBtn" text="Equipment" maxWidth="1.7976931348623157E308" />
+         <Button fx:id="issuesBtn" text="HR Issues" maxWidth="1.7976931348623157E308" />
+         <Region VBox.vgrow="ALWAYS" />
+      </VBox>
+   </left>
+
+   <center>
+      <ScrollPane fitToWidth="true">
+         <VBox spacing="20">
+            <padding>
+               <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+            </padding>
+
+            <!-- HR Overview -->
+            <HBox spacing="20">
+               <VBox alignment="CENTER" spacing="5" HBox.hgrow="ALWAYS">
+                  <padding>
+                     <Insets bottom="15.0" left="15.0" right="15.0" top="15.0" />
+                  </padding>
+                  <Label text="Employees" />
+                  <Label fx:id="totalEmployeesLabel" text="240" />
+               </VBox>
+               <VBox alignment="CENTER" spacing="5" HBox.hgrow="ALWAYS">
+                  <padding>
+                     <Insets bottom="15.0" left="15.0" right="15.0" top="15.0" />
+                  </padding>
+                  <Label text="Training Sessions" />
+                  <Label fx:id="trainingSessionsLabel" text="12" />
+               </VBox>
+               <VBox alignment="CENTER" spacing="5" HBox.hgrow="ALWAYS">
+                  <padding>
+                     <Insets bottom="15.0" left="15.0" right="15.0" top="15.0" />
+                  </padding>
+                  <Label text="Pending Leave Requests" />
+                  <Label fx:id="pendingLeaveLabel" text="4" />
+               </VBox>
+               <VBox alignment="CENTER" spacing="5" HBox.hgrow="ALWAYS">
+                  <padding>
+                     <Insets bottom="15.0" left="15.0" right="15.0" top="15.0" />
+                  </padding>
+                  <Label text="Payroll Updates" />
+                  <Label fx:id="payrollUpdatesLabel" text="5" />
+               </VBox>
+               <VBox alignment="CENTER" spacing="5" HBox.hgrow="ALWAYS">
+                  <padding>
+                     <Insets bottom="15.0" left="15.0" right="15.0" top="15.0" />
+                  </padding>
+                  <Label text="Benefits Reviews" />
+                  <Label fx:id="benefitsReviewsLabel" text="7" />
+               </VBox>
+            </HBox>
+
+            <!-- Professional Development -->
+            <VBox spacing="10">
+               <HBox alignment="CENTER_LEFT" spacing="10">
+                  <Label text="Professional Development Activities" />
+                  <Region HBox.hgrow="ALWAYS" />
+                  <TextField fx:id="trainingSearchField" promptText="Search activities" />
+                  <Button fx:id="addTrainingBtn" text="+ Add Activity" />
+               </HBox>
+               <TableView fx:id="trainingTable" prefHeight="220.0">
+                  <columns>
+                     <TableColumn fx:id="trainingEmployeeCol" text="Employee" prefWidth="180.0" />
+                     <TableColumn fx:id="trainingNameCol" text="Activity" prefWidth="200.0" />
+                     <TableColumn fx:id="trainingDateCol" text="Date" prefWidth="120.0" />
+                     <TableColumn fx:id="trainingStatusCol" text="Status" prefWidth="120.0" />
+                     <TableColumn fx:id="trainingCreditsCol" text="Credits" prefWidth="100.0" />
+                     <TableColumn fx:id="trainingActionsCol" text="Actions" prefWidth="150.0" />
+                  </columns>
+               </TableView>
+            </VBox>
+
+            <!-- Payroll Information -->
+            <VBox spacing="10">
+               <HBox alignment="CENTER_LEFT" spacing="10">
+                  <Label text="Payroll Management" />
+                  <Region HBox.hgrow="ALWAYS" />
+                  <TextField fx:id="payrollSearchField" promptText="Search employees" />
+                  <Button fx:id="exportPayrollBtn" text="Export Payroll" />
+               </HBox>
+               <TableView fx:id="payrollTable" prefHeight="220.0">
+                  <columns>
+                     <TableColumn fx:id="payrollEmployeeCol" text="Employee" prefWidth="180.0" />
+                     <TableColumn fx:id="payrollRoleCol" text="Role" prefWidth="150.0" />
+                     <TableColumn fx:id="salaryCol" text="Salary" prefWidth="120.0" />
+                     <TableColumn fx:id="benefitsCostCol" text="Benefits" prefWidth="120.0" />
+                     <TableColumn fx:id="payrollStatusCol" text="Status" prefWidth="120.0" />
+                     <TableColumn fx:id="payrollUpdatedCol" text="Last Updated" prefWidth="150.0" />
+                     <TableColumn fx:id="payrollActionsCol" text="Actions" prefWidth="150.0" />
+                  </columns>
+               </TableView>
+            </VBox>
+
+            <!-- Leave Requests -->
+            <VBox spacing="10">
+               <HBox alignment="CENTER_LEFT" spacing="10">
+                  <Label text="Leave Requests" />
+                  <Region HBox.hgrow="ALWAYS" />
+                  <ComboBox fx:id="leaveFilter" promptText="Filter" />
+               </HBox>
+               <TableView fx:id="leaveRequestsTable" prefHeight="200.0">
+                  <columns>
+                     <TableColumn fx:id="leaveEmployeeCol" text="Employee" prefWidth="150.0" />
+                     <TableColumn fx:id="leaveTypeCol" text="Type" prefWidth="120.0" />
+                     <TableColumn fx:id="leaveStartCol" text="Start" prefWidth="120.0" />
+                     <TableColumn fx:id="leaveEndCol" text="End" prefWidth="120.0" />
+                     <TableColumn fx:id="leaveStatusCol" text="Status" prefWidth="100.0" />
+                     <TableColumn fx:id="leaveActionsCol" text="Actions" prefWidth="150.0" />
+                  </columns>
+               </TableView>
+            </VBox>
+
+            <!-- Benefits Management -->
+            <VBox spacing="10">
+               <HBox alignment="CENTER_LEFT" spacing="10">
+                  <Label text="Benefits Management" />
+                  <Region HBox.hgrow="ALWAYS" />
+                  <ComboBox fx:id="benefitsFilter" promptText="Filter" />
+                  <Button fx:id="updateBenefitsBtn" text="Update Package" />
+               </HBox>
+               <TableView fx:id="benefitsTable" prefHeight="200.0">
+                  <columns>
+                     <TableColumn fx:id="benefitsEmployeeCol" text="Employee" prefWidth="180.0" />
+                     <TableColumn fx:id="benefitsPlanCol" text="Plan" prefWidth="180.0" />
+                     <TableColumn fx:id="benefitsCoverageCol" text="Coverage" prefWidth="150.0" />
+                     <TableColumn fx:id="benefitsStatusCol" text="Status" prefWidth="120.0" />
+                     <TableColumn fx:id="benefitsUpdatedCol" text="Last Updated" prefWidth="150.0" />
+                     <TableColumn fx:id="benefitsActionsCol" text="Actions" prefWidth="150.0" />
+                  </columns>
+               </TableView>
+            </VBox>
+
+            <!-- Action Buttons -->
+            <HBox spacing="15" alignment="CENTER">
+               <Button fx:id="generateTrainingReportBtn" text="Training Report" />
+               <Button fx:id="payrollReportBtn" text="Payroll Report" />
+               <Button fx:id="benefitsReportBtn" text="Benefits Report" />
+               <Button fx:id="contactDeptBtn" text="Contact Department Head" />
+            </HBox>
+         </VBox>
+      </ScrollPane>
+   </center>
+</BorderPane>
+
