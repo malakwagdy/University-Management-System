@@ -28,6 +28,16 @@ public class Student extends User {
         this.semester = semester;
         this.major = major;
     }
+    public Student(String studentId, String phoneNumber, String email, String password, String name, String dateOfBirth,String major){
+        super(phoneNumber, email, password, name);
+        this.dateOfBirth = dateOfBirth;
+        this.studentId = studentId;
+        this.currentCourses = null;
+        this.takenCourses = null;
+        this.gpa = "0";
+        this.semester = "1";
+        this.major = major;
+    }
     @PropertyName("studentId")
     public String getStudentID() {return studentId;}
     @PropertyName("studentId")

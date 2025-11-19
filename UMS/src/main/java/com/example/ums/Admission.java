@@ -2,6 +2,8 @@ package com.example.ums;
 
 import com.google.firebase.database.PropertyName;
 
+import java.time.LocalDate;
+
 public class Admission {
     private String admissionId;
     private String name;
@@ -11,6 +13,7 @@ public class Admission {
     private String major;
     private String highschoolGPA;
     private String status;
+    private String yearOfAdmission;
 
 
     public Admission(String admissionId, String name, String phoneNumber, String email, String dateOfBirth, String major, String highschoolGPA) {
@@ -22,6 +25,8 @@ public class Admission {
         this.major = major;
         this.highschoolGPA = highschoolGPA;
         this.status = "Pending";
+        this.yearOfAdmission = String.valueOf(LocalDate.now().getYear());
+
     }
 
     static FirestoreManager fm = FirestoreManager.getInstance();
@@ -61,9 +66,14 @@ public class Admission {
         }
     }
 
-
-
-
+    @PropertyName("yearOfAdmission")
+    public String getYearOfAdmission() {
+        return yearOfAdmission;
+    }
+    @PropertyName("yearOfAdmission")
+    public void setYearOfAdmission(String yearOfAdmission) {
+        this.yearOfAdmission = yearOfAdmission;
+    }
 
     @PropertyName("status")
     public String getStatus() {
