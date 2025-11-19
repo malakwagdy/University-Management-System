@@ -6,8 +6,8 @@ public class HR extends User {
     private Float salary;
     private String departmentName;
 
-    public HR(String username, String phoneNumber, String email, String password, String name, Float salary, String departmentName) {
-        super(username, phoneNumber, email, password, name);
+    public HR( String phoneNumber, String email, String password, String name, Float salary, String departmentName) {
+        super( phoneNumber, email, password, name);
         this.salary = salary;
         this.departmentName = departmentName;
     }

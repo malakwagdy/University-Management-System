@@ -44,9 +44,17 @@ public com.google.cloud.firestore.Firestore getDb() {
         return db;
     }
 
-
+    public void addAdmission(Admission admission) {
+        DocumentReference ref = db.collection("Admission").document(admission.getAdmissionId());
+        ApiFuture<WriteResult> result = ref.set(admission);
+        try {
+            System.out.println("Student added at: " + result.get().getUpdateTime());
+        } catch (InterruptedException | ExecutionException e) {
+            e.printStackTrace();
+        }
+    }
     public void addStudent(Student student) {
-        DocumentReference ref = db.collection("Students").document(student.getStudentID());
+        DocumentReference ref = db.collection("Student").document(student.getStudentID());
         ApiFuture<WriteResult> result = ref.set(student);
         try {
             System.out.println("Student added at: " + result.get().getUpdateTime());
@@ -55,7 +63,7 @@ public com.google.cloud.firestore.Firestore getDb() {
         }
     }
     public Student getStudent(String studentId) {
-        DocumentReference ref = db.collection("Students").document(studentId);
+        DocumentReference ref = db.collection("Student").document(studentId);
         try {
             DocumentSnapshot snapshot = ref.get().get();
             if (!snapshot.exists()) return null;
@@ -69,15 +77,10 @@ public com.google.cloud.firestore.Firestore getDb() {
     }
 
 
-
-    public void Login(String username, String password) {
-
-    }
-
     public void addInstructor(Instructor instructor) {
         try {
 
-            DocumentReference ref = db.collection("Instructors").document(instructor.getUsername());
+            DocumentReference ref = db.collection("Instructor").document(instructor.getEmail());
 
             ApiFuture<WriteResult> result = ref.set(instructor);
             System.out.println("Instructor added at: " + result.get().getUpdateTime());
@@ -86,9 +89,9 @@ public com.google.cloud.firestore.Firestore getDb() {
             e.printStackTrace();
         }
     }
-    public Instructor getInstructor(String username) {
+    public Instructor getInstructor(String email) {
         try {
-            DocumentReference ref = db.collection("Instructors").document(username);
+            DocumentReference ref = db.collection("Instructor").document(email);
             ApiFuture<com.google.cloud.firestore.DocumentSnapshot> future = ref.get();
             com.google.cloud.firestore.DocumentSnapshot snapshot = future.get();
 
@@ -110,7 +113,7 @@ public com.google.cloud.firestore.Firestore getDb() {
 
     public void addHR(HR hr) {
         try {
-            DocumentReference ref = db.collection("HR").document(hr.getUsername());
+            DocumentReference ref = db.collection("HR").document(hr.getEmail());
 
             ApiFuture<WriteResult> result = ref.set(hr);
             System.out.println("HR added at: " + result.get().getUpdateTime());
@@ -119,9 +122,9 @@ public com.google.cloud.firestore.Firestore getDb() {
             e.printStackTrace();
         }
     }
-    public HR getHR(String username) {
+    public HR getHR(String email) {
         try {
-            DocumentReference ref = db.collection("HR").document(username);
+            DocumentReference ref = db.collection("HR").document(email);
             ApiFuture<com.google.cloud.firestore.DocumentSnapshot> future = ref.get();
             com.google.cloud.firestore.DocumentSnapshot snapshot = future.get();
 
@@ -144,7 +147,7 @@ public com.google.cloud.firestore.Firestore getDb() {
 
     public void addAdmin(Admin admin) {
         try {
-            DocumentReference ref = db.collection("Admin").document(admin.getUsername());
+            DocumentReference ref = db.collection("Admin").document(admin.getEmail());
 
             ApiFuture<WriteResult> result = ref.set(admin);
             System.out.println("Admin added at: " + result.get().getUpdateTime());
@@ -153,9 +156,9 @@ public com.google.cloud.firestore.Firestore getDb() {
             e.printStackTrace();
         }
     }
-    public Admin getAdmin(String username) {
+    public Admin getAdmin(String email) {
         try {
-            DocumentReference ref = db.collection("Admin").document(username);
+            DocumentReference ref = db.collection("Admin").document(email);
             ApiFuture<com.google.cloud.firestore.DocumentSnapshot> future = ref.get();
             com.google.cloud.firestore.DocumentSnapshot snapshot = future.get();
 
@@ -177,7 +180,7 @@ public com.google.cloud.firestore.Firestore getDb() {
 
     public void addParent(Parent parent) {
         try {
-            DocumentReference ref = db.collection("Parent").document(parent.getUsername());
+            DocumentReference ref = db.collection("Parent").document(parent.getEmail());
 
             ApiFuture<WriteResult> result = ref.set(parent);
             System.out.println("Parent added at: " + result.get().getUpdateTime());
@@ -188,9 +191,9 @@ public com.google.cloud.firestore.Firestore getDb() {
     }
 
 
-    public Parent getParent(String username) {
+    public Parent getParent(String email) {
         try {
-            DocumentReference ref = db.collection("Parent").document(username);
+            DocumentReference ref = db.collection("Parent").document(email);
             ApiFuture<com.google.cloud.firestore.DocumentSnapshot> future = ref.get();
             com.google.cloud.firestore.DocumentSnapshot snapshot = future.get();
 

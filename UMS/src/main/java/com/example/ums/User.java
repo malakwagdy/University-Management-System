@@ -5,7 +5,6 @@ import com.google.firebase.database.PropertyName;
 
 public class User {
     private String email;
-    private String username;
     private String password;
     private String phoneNumber;
     private String name;
@@ -13,8 +12,7 @@ public class User {
     public User() {
     }
 
-    public User(String username, String phoneNumber, String email, String password, String name) {
-        this.username = username;
+    public User( String phoneNumber, String email, String password, String name) {
         this.phoneNumber = phoneNumber;
         this.email = email;
         this.password = password;
@@ -23,26 +21,26 @@ public class User {
     static FirestoreManager fm = FirestoreManager.getInstance();
 
 
-    public void Login(String username, String Password) throws LoginException {
+    public void Login(String email, String Password) throws LoginException {
 
-        if (username == null) {
-            throw new LoginException("Username is incorrect.");
+        if (email == null) {
+            throw new LoginException("email is incorrect.");
         }
-        User user = fm.getAdmin(username);
+        User user = fm.getAdmin(email);
 
         if (user == null) {
-            user = fm.getInstructor(username);
+            user = fm.getInstructor(email);
             if (user != null) {
-                if (user.getUsername().equals(username) && user.getPassword().equals(Password)) {
+                if (user.getEmail().equals(email) && user.getPassword().equals(Password)) {
                     //LoginController.isInstructor = true;
 
                 } else {
                     throw new LoginException("Password is incorrect.");
                 }
             } else  {
-                user = fm.getStudent(username);
+                user = fm.getStudent(email);
                 if (user != null) {
-                    if (user.getUsername().equals(username) && user.getPassword().equals(Password)) {
+                    if (user.getEmail().equals(email) && user.getPassword().equals(Password)) {
 
                         //LoginController.isStudent = true;
 
@@ -50,9 +48,9 @@ public class User {
                         throw new LoginException("Password is incorrect.");
                     }
                 }else  {
-                    user = fm.getHR(username);
+                    user = fm.getHR(email);
                     if (user != null) {
-                        if (user.getUsername().equals(username) && user.getPassword().equals(Password)) {
+                        if (user.getEmail().equals(email) && user.getPassword().equals(Password)) {
 
                             //LoginController.isHR = true;
 
@@ -60,37 +58,32 @@ public class User {
                             throw new LoginException("Password is incorrect.");
                         }
                     }else {
-                        user = fm.getParent(username);
+                        user = fm.getParent(email);
                         if (user != null) {
-                            if (user.getUsername().equals(username) && user.getPassword().equals(Password)) {
+                            if (user.getEmail().equals(email) && user.getPassword().equals(Password)) {
 
                                 //LoginController.isParent = true;
 
                             } else {
                                 throw new LoginException("Password is incorrect.");
                             }
+                        }else{
+                            throw new LoginException("email is incorrect.");
                         }
                     }
                 }
             }
         }else{
-            if (user.getUsername().equals(username) && user.getPassword().equals(Password)) {
+            if (user.getEmail().equals(email) && user.getPassword().equals(Password)) {
 
                 //LoginController.isAdmin = true;
             }else {
                 throw new LoginException("Password is incorrect.");
             }
         }
-        //GlobalData.setCurrentlyLoggedIN(username)
+        //GlobalData.setCurrentlyLoggedIN(email)
     }
-    @PropertyName("username")
-    public String getUsername() {
-        return username;
-    }
-    @PropertyName("username")
-    public void setUsername(String username) {
-        this.username = username;
-    }
+    
     @PropertyName("password")
     public String getPassword() {
         return password;

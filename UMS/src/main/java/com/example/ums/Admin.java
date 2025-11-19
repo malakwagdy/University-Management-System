@@ -5,8 +5,8 @@ import com.google.firebase.database.PropertyName;
 public class Admin extends User {
     private Float salary;
 
-    public Admin(String username, String phoneNumber, String email, String password, String name, Float salary) {
-        super(username, phoneNumber, email, password, name);
+    public Admin( String phoneNumber, String email, String password, String name, Float salary) {
+        super( phoneNumber, email, password, name);
         this.salary = salary;
     }
     @PropertyName("salary")

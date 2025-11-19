@@ -14,8 +14,8 @@ public class Instructor extends User{
     private ArrayList<String> officeHours;
     private ArrayList<String> benefits;
 
-    public Instructor(String username, String phoneNumber, String email, String password, String name, Float salary, ArrayList<String> courses, String role, boolean departmentHead, String departmentName, ArrayList<String> responsibilities, ArrayList<String> officeHours, ArrayList<String> benefits) {
-        super(username, phoneNumber, email, password, name);
+    public Instructor( String phoneNumber, String email, String password, String name, Float salary, ArrayList<String> courses, String role, boolean departmentHead, String departmentName, ArrayList<String> responsibilities, ArrayList<String> officeHours, ArrayList<String> benefits) {
+        super( phoneNumber, email, password, name);
         this.salary = salary;
         this.courses = courses;
         this.role = role;

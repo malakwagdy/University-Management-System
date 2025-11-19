@@ -4,24 +4,14 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="3b0e75bd-c97a-490f-b811-f2c75cb1e98f" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/UMS/src/main/java/com/example/ums/FirestoreManager.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/UMS/src/main/java/com/example/ums/LoginException.java" afterDir="false" />
+    <list default="true" id="3b0e75bd-c97a-490f-b811-f2c75cb1e98f" name="Changes" comment="-applied the schema to all classes&#10;-finished login (untested)&#10;-finished a few functions is databaseManager&#10;-fixed a few issues">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/UMS/src/main/java/com/example/ums/Admin.java" beforeDir="false" afterPath="$PROJECT_DIR$/UMS/src/main/java/com/example/ums/Admin.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/UMS/src/main/java/com/example/ums/Assignment.java" beforeDir="false" afterPath="$PROJECT_DIR$/UMS/src/main/java/com/example/ums/Assignment.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/UMS/src/main/java/com/example/ums/Course.java" beforeDir="false" afterPath="$PROJECT_DIR$/UMS/src/main/java/com/example/ums/Course.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/UMS/src/main/java/com/example/ums/Equipment.java" beforeDir="false" afterPath="$PROJECT_DIR$/UMS/src/main/java/com/example/ums/Equipment.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/UMS/src/main/java/com/example/ums/Firestore.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/UMS/src/main/java/com/example/ums/FirestoreManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/UMS/src/main/java/com/example/ums/FirestoreManager.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/UMS/src/main/java/com/example/ums/HR.java" beforeDir="false" afterPath="$PROJECT_DIR$/UMS/src/main/java/com/example/ums/HR.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/UMS/src/main/java/com/example/ums/Hall.java" beforeDir="false" afterPath="$PROJECT_DIR$/UMS/src/main/java/com/example/ums/Hall.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/UMS/src/main/java/com/example/ums/Instructor.java" beforeDir="false" afterPath="$PROJECT_DIR$/UMS/src/main/java/com/example/ums/Instructor.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/UMS/src/main/java/com/example/ums/Issue.java" beforeDir="false" afterPath="$PROJECT_DIR$/UMS/src/main/java/com/example/ums/Issue.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/UMS/src/main/java/com/example/ums/LeaveRequests.java" beforeDir="false" afterPath="$PROJECT_DIR$/UMS/src/main/java/com/example/ums/LeaveRequest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/UMS/src/main/java/com/example/ums/Material.java" beforeDir="false" afterPath="$PROJECT_DIR$/UMS/src/main/java/com/example/ums/Material.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/UMS/src/main/java/com/example/ums/Parent.java" beforeDir="false" afterPath="$PROJECT_DIR$/UMS/src/main/java/com/example/ums/Parent.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/UMS/src/main/java/com/example/ums/Quiz.java" beforeDir="false" afterPath="$PROJECT_DIR$/UMS/src/main/java/com/example/ums/Quiz.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/UMS/src/main/java/com/example/ums/Softwares.java" beforeDir="false" afterPath="$PROJECT_DIR$/UMS/src/main/java/com/example/ums/Software.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/UMS/src/main/java/com/example/ums/Student.java" beforeDir="false" afterPath="$PROJECT_DIR$/UMS/src/main/java/com/example/ums/Student.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/UMS/src/main/java/com/example/ums/User.java" beforeDir="false" afterPath="$PROJECT_DIR$/UMS/src/main/java/com/example/ums/User.java" afterDir="false" />
     </list>
@@ -40,6 +30,18 @@
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
+  <component name="GitHubPullRequestSearchHistory">{
+  &quot;lastFilter&quot;: {
+    &quot;state&quot;: &quot;OPEN&quot;,
+    &quot;assignee&quot;: &quot;yehia347&quot;
+  }
+}</component>
+  <component name="GithubPullRequestsUISettings">{
+  &quot;selectedUrlAndAccountId&quot;: {
+    &quot;url&quot;: &quot;https://github.com/malakwagdy/University-Management-System.git&quot;,
+    &quot;accountId&quot;: &quot;c28baf00-70cb-446d-afe5-f5ca3df5ac01&quot;
+  }
+}</component>
   <component name="KubernetesApiPersistence">{}</component>
   <component name="KubernetesApiProvider">{
   &quot;isMigrated&quot;: true
@@ -52,20 +54,23 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "ModuleVcsDetector.initialDetectionPerformed": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "RunOnceActivity.git.unshallow": "true",
-    "dart.analysis.tool.window.visible": "false",
-    "git-widget-placeholder": "main",
-    "kotlin-language-version-configured": "true",
-    "last_opened_file_path": "C:/Users/pc/IdeaProjects/University-Management-System/UMS/src/main/resources",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "settings.editor.selected.configurable": "preferences.lookFeel",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;dart.analysis.tool.window.visible&quot;: &quot;false&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
+    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/pc/IdeaProjects/University-Management-System/UMS/src/main/resources&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.lookFeel&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="C:\Users\pc\IdeaProjects\University-Management-System\UMS\src\main\resources" />
@@ -74,7 +79,8 @@
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
-        <option value="bundled-jdk-9823dce3aa75-bf35d07a577b-intellij.indexing.shared.core-IU-252.25557.131" />
+        <option value="bundled-jdk-9823dce3aa75-bf35d07a577b-intellij.indexing.shared.core-IU-252.27397.103" />
+        <option value="bundled-js-predefined-d6986cc7102b-3aa1da707db6-JavaScript-IU-252.27397.103" />
       </set>
     </attachedChunks>
   </component>
@@ -86,10 +92,25 @@
       <option name="presentableId" value="Default" />
       <updated>1763383271241</updated>
       <workItem from="1763383303100" duration="218000" />
+      <workItem from="1763508619918" duration="415000" />
+      <workItem from="1763558569469" duration="1760000" />
     </task>
+    <task id="LOCAL-00001" summary="-applied the schema to all classes&#10;-finished login (untested)&#10;-finished a few functions is databaseManager&#10;-fixed a few issues">
+      <option name="closed" value="true" />
+      <created>1763421403848</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1763421403848</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="-applied the schema to all classes&#10;-finished login (untested)&#10;-finished a few functions is databaseManager&#10;-fixed a few issues" />
+    <option name="LAST_COMMIT_MESSAGE" value="-applied the schema to all classes&#10;-finished login (untested)&#10;-finished a few functions is databaseManager&#10;-fixed a few issues" />
   </component>
 </project>
