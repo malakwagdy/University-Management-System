@@ -1,9 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.Insets?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
-<BorderPane xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1">
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.VBox?>
+
+<BorderPane xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.ums.DeptHeadDashboardController">
    <top>
       <VBox spacing="10">
          <padding>
@@ -14,26 +23,26 @@
             <Region HBox.hgrow="ALWAYS" />
             <Label fx:id="deptHeadNameLabel" text="Welcome, Department Head" />
             <Label fx:id="departmentNameLabel" text="Department: Computer Science" />
-            <Button fx:id="logoutBtn" text="Logout" />
+            <Button fx:id="logoutBtn" onAction="#handleLogoutButton" text="Logout" />
          </HBox>
       </VBox>
    </top>
    
    <left>
-      <VBox spacing="10" prefWidth="220.0">
+      <VBox prefWidth="220.0" spacing="10">
          <padding>
             <Insets bottom="15.0" left="15.0" right="15.0" top="15.0" />
          </padding>
          <Label text="Department Management" />
-         <Button fx:id="instructorsBtn" text="Instructors" maxWidth="1.7976931348623157E308" />
-         <Button fx:id="coursesBtn" text="Department Courses" maxWidth="1.7976931348623157E308" />
-         <Button fx:id="studentsBtn" text="Department Students" maxWidth="1.7976931348623157E308" />
+         <Button fx:id="instructorsBtn" maxWidth="1.7976931348623157E308" text="Instructors" />
+         <Button fx:id="coursesBtn" maxWidth="1.7976931348623157E308" text="Department Courses" />
+         <Button fx:id="studentsBtn" maxWidth="1.7976931348623157E308" text="Department Students" />
          <Separator />
-         <Button fx:id="resourcesBtn" text="Resources" maxWidth="1.7976931348623157E308" />
-         <Button fx:id="equipmentBtn" text="Equipment" maxWidth="1.7976931348623157E308" />
+         <Button fx:id="resourcesBtn" maxWidth="1.7976931348623157E308" text="Resources" />
+         <Button fx:id="equipmentBtn" maxWidth="1.7976931348623157E308" text="Equipment" />
          <Separator />
-         <Button fx:id="reportsBtn" text="Department Reports" maxWidth="1.7976931348623157E308" />
-         <Button fx:id="myCoursesBtn" text="My Courses" maxWidth="1.7976931348623157E308" />
+         <Button fx:id="reportsBtn" maxWidth="1.7976931348623157E308" text="Department Reports" />
+         <Button fx:id="myCoursesBtn" maxWidth="1.7976931348623157E308" text="My Courses" />
          <Region VBox.vgrow="ALWAYS" />
       </VBox>
    </left>
@@ -86,11 +95,11 @@
                </HBox>
                <TableView fx:id="instructorsTable" prefHeight="250.0">
                   <columns>
-                     <TableColumn fx:id="instructorNameCol" text="Name" prefWidth="200.0" />
-                     <TableColumn fx:id="instructorEmailCol" text="Email" prefWidth="200.0" />
-                     <TableColumn fx:id="coursesCountCol" text="Courses" prefWidth="100.0" />
-                     <TableColumn fx:id="roleCol" text="Role" prefWidth="120.0" />
-                     <TableColumn fx:id="actionsCol" text="Actions" prefWidth="200.0" />
+                     <TableColumn fx:id="instructorNameCol" prefWidth="200.0" text="Name" />
+                     <TableColumn fx:id="instructorEmailCol" prefWidth="200.0" text="Email" />
+                     <TableColumn fx:id="coursesCountCol" prefWidth="100.0" text="Courses" />
+                     <TableColumn fx:id="roleCol" prefWidth="120.0" text="Role" />
+                     <TableColumn fx:id="actionsCol" prefWidth="200.0" text="Actions" />
                   </columns>
                </TableView>
             </VBox>
@@ -104,17 +113,17 @@
                </HBox>
                <TableView fx:id="coursesTable" prefHeight="200.0">
                   <columns>
-                     <TableColumn fx:id="courseIdCol" text="Course ID" prefWidth="120.0" />
-                     <TableColumn fx:id="courseNameCol" text="Course Name" prefWidth="250.0" />
-                     <TableColumn fx:id="instructorCol" text="Instructor" prefWidth="150.0" />
-                     <TableColumn fx:id="studentsCountCol" text="Students" prefWidth="100.0" />
-                     <TableColumn fx:id="yearCol" text="Year" prefWidth="100.0" />
+                     <TableColumn fx:id="courseIdCol" prefWidth="120.0" text="Course ID" />
+                     <TableColumn fx:id="courseNameCol" prefWidth="250.0" text="Course Name" />
+                     <TableColumn fx:id="instructorCol" prefWidth="150.0" text="Instructor" />
+                     <TableColumn fx:id="studentsCountCol" prefWidth="100.0" text="Students" />
+                     <TableColumn fx:id="yearCol" prefWidth="100.0" text="Year" />
                   </columns>
                </TableView>
             </VBox>
             
             <!-- Quick Actions -->
-            <HBox spacing="15" alignment="CENTER">
+            <HBox alignment="CENTER" spacing="15">
                <Button fx:id="generateReportBtn" text="Generate Department Report" />
                <Button fx:id="viewResourcesBtn" text="View Resources" />
                <Button fx:id="manageEquipmentBtn" text="Manage Equipment" />
@@ -123,4 +132,3 @@
       </ScrollPane>
    </center>
 </BorderPane>
-

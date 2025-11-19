@@ -1,9 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.Insets?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
-<BorderPane xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1">
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.VBox?>
+
+<BorderPane xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.ums.InstructorDashboardController">
    <top>
       <VBox spacing="10">
          <padding>
@@ -14,26 +24,26 @@
             <Region HBox.hgrow="ALWAYS" />
             <Label fx:id="instructorNameLabel" text="Welcome, Instructor" />
             <Label fx:id="departmentLabel" text="Department: CS" />
-            <Button fx:id="logoutBtn" text="Logout" />
+            <Button fx:id="logoutBtn" onAction="#handleLogoutButton" text="Logout" />
          </HBox>
       </VBox>
    </top>
    
    <left>
-      <VBox spacing="10" prefWidth="200.0">
+      <VBox prefWidth="200.0" spacing="10">
          <padding>
             <Insets bottom="15.0" left="15.0" right="15.0" top="15.0" />
          </padding>
          <Label text="Navigation" />
-         <Button fx:id="myCoursesBtn" text="My Courses" maxWidth="1.7976931348623157E308" />
-         <Button fx:id="studentsBtn" text="My Students" maxWidth="1.7976931348623157E308" />
-         <Button fx:id="assignmentsBtn" text="Assignments" maxWidth="1.7976931348623157E308" />
-         <Button fx:id="quizzesBtn" text="Quizzes" maxWidth="1.7976931348623157E308" />
-         <Button fx:id="officeHoursBtn" text="Office Hours" maxWidth="1.7976931348623157E308" />
-         <Button fx:id="gradesBtn" text="Grade Management" maxWidth="1.7976931348623157E308" />
+         <Button fx:id="myCoursesBtn" maxWidth="1.7976931348623157E308" text="My Courses" />
+         <Button fx:id="studentsBtn" maxWidth="1.7976931348623157E308" text="My Students" />
+         <Button fx:id="assignmentsBtn" maxWidth="1.7976931348623157E308" text="Assignments" />
+         <Button fx:id="quizzesBtn" maxWidth="1.7976931348623157E308" text="Quizzes" />
+         <Button fx:id="officeHoursBtn" maxWidth="1.7976931348623157E308" text="Office Hours" />
+         <Button fx:id="gradesBtn" maxWidth="1.7976931348623157E308" text="Grade Management" />
          <Region VBox.vgrow="ALWAYS" />
          <Separator />
-         <Button fx:id="leaveRequestBtn" text="Leave Requests" maxWidth="1.7976931348623157E308" />
+         <Button fx:id="leaveRequestBtn" maxWidth="1.7976931348623157E308" text="Leave Requests" />
       </VBox>
    </left>
    
@@ -78,11 +88,11 @@
                </HBox>
                <TableView fx:id="coursesTable" prefHeight="250.0">
                   <columns>
-                     <TableColumn fx:id="courseIdCol" text="Course ID" prefWidth="120.0" />
-                     <TableColumn fx:id="courseNameCol" text="Course Name" prefWidth="200.0" />
-                     <TableColumn fx:id="studentsCountCol" text="Students" prefWidth="100.0" />
-                     <TableColumn fx:id="assignmentsCountCol" text="Assignments" prefWidth="120.0" />
-                     <TableColumn fx:id="actionsCol" text="Actions" prefWidth="200.0" />
+                     <TableColumn fx:id="courseIdCol" prefWidth="120.0" text="Course ID" />
+                     <TableColumn fx:id="courseNameCol" prefWidth="200.0" text="Course Name" />
+                     <TableColumn fx:id="studentsCountCol" prefWidth="100.0" text="Students" />
+                     <TableColumn fx:id="assignmentsCountCol" prefWidth="120.0" text="Assignments" />
+                     <TableColumn fx:id="actionsCol" prefWidth="200.0" text="Actions" />
                   </columns>
                </TableView>
             </VBox>
@@ -106,4 +116,3 @@
       </ScrollPane>
    </center>
 </BorderPane>
-
