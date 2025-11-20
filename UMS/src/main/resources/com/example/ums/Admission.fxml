@@ -7,8 +7,17 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.ums.AdmissionController">
+<VBox alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.ums.AdmissionController">
    <children>
+      <HBox prefHeight="51.0" prefWidth="600.0">
+         <children>
+            <Button fx:id="backBtn" mnemonicParsing="false" onAction="#handleBackButton" text="Back">
+               <HBox.margin>
+                  <Insets left="10.0" />
+               </HBox.margin>
+            </Button>
+         </children>
+      </HBox>
       <HBox alignment="CENTER" prefHeight="41.0" prefWidth="600.0">
          <children>
             <Label alignment="CENTER" text="Full name:              " />
@@ -63,13 +72,13 @@
       </HBox>
       <HBox alignment="CENTER" prefHeight="41.0" prefWidth="600.0">
          <children>
-            <Label alignment="CENTER" text="Highschool GPA:" />
+            <Label alignment="CENTER" text="High School GPA:" />
             <TextField fx:id="highschoolGPAField">
                <opaqueInsets>
                   <Insets />
                </opaqueInsets>
                <HBox.margin>
-                  <Insets left="10.0" />
+                  <Insets left="5.0" />
                </HBox.margin>
             </TextField>
          </children>

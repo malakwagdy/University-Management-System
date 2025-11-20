@@ -4,7 +4,6 @@
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.control.ListView?>
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.Separator?>
 <?import javafx.scene.control.TableColumn?>
@@ -45,9 +44,6 @@
          <Button fx:id="equipmentBtn" maxWidth="1.7976931348623157E308" text="Equipment" />
          <Button fx:id="hallsBtn" maxWidth="1.7976931348623157E308" text="Halls &amp; Rooms" />
          <Button fx:id="softwareBtn" maxWidth="1.7976931348623157E308" text="Software" />
-         <Separator />
-         <Button fx:id="reportsBtn" maxWidth="1.7976931348623157E308" text="Reports &amp; Analytics" />
-         <Button fx:id="settingsBtn" maxWidth="1.7976931348623157E308" text="System Settings" />
          <Region VBox.vgrow="ALWAYS" />
       </VBox>
    </left>
@@ -97,7 +93,7 @@
                   <Label text="User Management" />
                   <Region HBox.hgrow="ALWAYS" />
                   <ComboBox fx:id="userTypeFilter" onAction="#handleUserTypeFilter" promptText="Filter by Type" />
-                  <Button fx:id="addUserBtn" text="+ Add User" />
+                  <Button fx:id="addUserBtn" onAction="#handleAddUserButton" text="+ Add User" />
                </HBox>
                <TableView fx:id="usersTable" prefHeight="300.0">
                   <columns>
@@ -108,12 +104,6 @@
                      <TableColumn fx:id="actionsCol" prefWidth="200.0" text="Actions" />
                   </columns>
                </TableView>
-            </VBox>
-            
-            <!-- Recent System Activity -->
-            <VBox spacing="10">
-               <Label text="Recent System Activity" />
-               <ListView fx:id="activityList" prefHeight="150.0" />
             </VBox>
             <VBox spacing="10">
                <children>
@@ -135,17 +125,6 @@
                      </columns>
                   </TableView>
                </children>
-            </VBox>
-            
-            <!-- Quick Actions -->
-            <VBox spacing="10">
-               <Label text="Quick Actions" />
-               <HBox spacing="15">
-                  <Button fx:id="generateReportBtn" text="Generate Report" />
-                  <Button fx:id="backupSystemBtn" text="Backup System" />
-                  <Button fx:id="viewIssuesBtn" text="View Issues" />
-                  <Button fx:id="systemLogsBtn" text="System Logs" />
-               </HBox>
             </VBox>
          </VBox>
       </ScrollPane>
