@@ -14,6 +14,15 @@ public class ParentDashboardController {
     private Button logoutBtn;
 
     @FXML
+    private void initialize() {
+        FirestoreManager fm = FirestoreManager.getInstance();
+        Parent parent = fm.getParent(GlobalData.getCurrentlyLoggedIN());
+        if (parent != null) {
+            parentNameLabel.setText("Welcome, " + parent.getName());
+        }
+    }
+
+    @FXML
     private void handleLogoutButton(ActionEvent event) {
         User.Logout();
         try {

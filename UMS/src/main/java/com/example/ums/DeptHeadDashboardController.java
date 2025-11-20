@@ -12,6 +12,15 @@ public class DeptHeadDashboardController {
 
     @FXML
     private Button logoutBtn;
+    
+    @FXML
+    private void initialize() {
+        FirestoreManager fm = FirestoreManager.getInstance();
+        Instructor deptHead = fm.getInstructor(GlobalData.getCurrentlyLoggedIN());
+        if (deptHead != null) {
+            deptHeadNameLabel.setText("Welcome, " + deptHead.getName());
+        }
+    }
 
     @FXML
     private void handleLogoutButton(ActionEvent event) {

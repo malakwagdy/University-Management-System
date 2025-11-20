@@ -323,4 +323,90 @@ public class FirestoreManager {
         return highest;
     }
 
+    // Methods to get all users from each collection
+    public ArrayList<Student> getAllStudents() {
+        ArrayList<Student> studentsList = new ArrayList<>();
+        try {
+            ApiFuture<QuerySnapshot> future = db.collection("Student").get();
+            List<QueryDocumentSnapshot> documents = future.get().getDocuments();
+            for (QueryDocumentSnapshot doc : documents) {
+                Student student = doc.toObject(Student.class);
+                if (student != null) {
+                    studentsList.add(student);
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return studentsList;
+    }
+
+    public ArrayList<Instructor> getAllInstructors() {
+        ArrayList<Instructor> instructorsList = new ArrayList<>();
+        try {
+            ApiFuture<QuerySnapshot> future = db.collection("Instructor").get();
+            List<QueryDocumentSnapshot> documents = future.get().getDocuments();
+            for (QueryDocumentSnapshot doc : documents) {
+                Instructor instructor = doc.toObject(Instructor.class);
+                if (instructor != null) {
+                    instructorsList.add(instructor);
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return instructorsList;
+    }
+
+    public ArrayList<Admin> getAllAdmins() {
+        ArrayList<Admin> adminsList = new ArrayList<>();
+        try {
+            ApiFuture<QuerySnapshot> future = db.collection("Admin").get();
+            List<QueryDocumentSnapshot> documents = future.get().getDocuments();
+            for (QueryDocumentSnapshot doc : documents) {
+                Admin admin = doc.toObject(Admin.class);
+                if (admin != null) {
+                    adminsList.add(admin);
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return adminsList;
+    }
+
+    public ArrayList<HR> getAllHR() {
+        ArrayList<HR> hrList = new ArrayList<>();
+        try {
+            ApiFuture<QuerySnapshot> future = db.collection("HR").get();
+            List<QueryDocumentSnapshot> documents = future.get().getDocuments();
+            for (QueryDocumentSnapshot doc : documents) {
+                HR hr = doc.toObject(HR.class);
+                if (hr != null) {
+                    hrList.add(hr);
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return hrList;
+    }
+
+    public ArrayList<Parent> getAllParents() {
+        ArrayList<Parent> parentsList = new ArrayList<>();
+        try {
+            ApiFuture<QuerySnapshot> future = db.collection("Parent").get();
+            List<QueryDocumentSnapshot> documents = future.get().getDocuments();
+            for (QueryDocumentSnapshot doc : documents) {
+                Parent parent = doc.toObject(Parent.class);
+                if (parent != null) {
+                    parentsList.add(parent);
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return parentsList;
+    }
+
 }

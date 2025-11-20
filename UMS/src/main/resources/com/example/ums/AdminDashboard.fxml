@@ -96,16 +96,15 @@
                <HBox alignment="CENTER_LEFT" spacing="10">
                   <Label text="User Management" />
                   <Region HBox.hgrow="ALWAYS" />
-                  <ComboBox fx:id="userTypeFilter" promptText="Filter by Type" />
+                  <ComboBox fx:id="userTypeFilter" onAction="#handleUserTypeFilter" promptText="Filter by Type" />
                   <Button fx:id="addUserBtn" text="+ Add User" />
                </HBox>
                <TableView fx:id="usersTable" prefHeight="300.0">
                   <columns>
-                     <TableColumn fx:id="usernameCol" prefWidth="150.0" text="Username" />
-                     <TableColumn fx:id="nameCol" prefWidth="200.0" text="Name" />
-                     <TableColumn fx:id="emailCol" prefWidth="200.0" text="Email" />
-                     <TableColumn fx:id="typeCol" prefWidth="120.0" text="Type" />
-                     <TableColumn fx:id="statusCol" prefWidth="100.0" text="Status" />
+                     <TableColumn fx:id="userIdCol" prefWidth="150.0" text="User Id" />
+                     <TableColumn fx:id="userNameCol" prefWidth="200.0" text="Name" />
+                     <TableColumn fx:id="userEmailCol" prefWidth="200.0" text="Email" />
+                     <TableColumn fx:id="userTypeCol" prefWidth="120.0" text="Type" />
                      <TableColumn fx:id="actionsCol" prefWidth="200.0" text="Actions" />
                   </columns>
                </TableView>
@@ -115,6 +114,27 @@
             <VBox spacing="10">
                <Label text="Recent System Activity" />
                <ListView fx:id="activityList" prefHeight="150.0" />
+            </VBox>
+            <VBox spacing="10">
+               <children>
+                  <HBox alignment="CENTER_LEFT" spacing="10">
+                     <children>
+                        <Label text="Admission Requests" />
+                        <Region HBox.hgrow="ALWAYS" />
+                        <ComboBox fx:id="admissionStatusFilter" onAction="#handleStatusFilter" promptText="Filter by Status" />
+                     </children>
+                  </HBox>
+                  <TableView fx:id="admissionsTable" prefHeight="300.0">
+                     <columns>
+                        <TableColumn fx:id="applicantIdCol" prefWidth="103.32467651367188" text="Application ID" />
+                        <TableColumn fx:id="applicantNameCo" prefWidth="246.67532348632812" text="Name" />
+                        <TableColumn fx:id="applicantEmailCol" prefWidth="200.0" text="Email" />
+                        <TableColumn fx:id="applicantPhoneNoCol" prefWidth="120.0" text="Phone Number" />
+                        <TableColumn fx:id="applicantStatusCol" prefWidth="100.0" text="Status" />
+                        <TableColumn fx:id="actionsCol1" prefWidth="200.0" text="Actions" />
+                     </columns>
+                  </TableView>
+               </children>
             </VBox>
             
             <!-- Quick Actions -->

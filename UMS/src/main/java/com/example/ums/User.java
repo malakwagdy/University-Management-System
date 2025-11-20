@@ -88,6 +88,12 @@ public class User {
 
     public static void Logout(){
         GlobalData.setCurrentlyLoggedIN(null);
+        // Reset all login flags on logout
+        LoginController.isInstructor = false;
+        LoginController.isStudent = false;
+        LoginController.isHr = false;
+        LoginController.isDepartmentHead = false;
+        LoginController.isParent = false;
     }
 
     @PropertyName("id")
@@ -112,7 +118,7 @@ public class User {
         return name;
     }
     @PropertyName("name")
-    public void setName(String role) {
+    public void setName(String name) {
         this.name = name;
     }
     @PropertyName("email")

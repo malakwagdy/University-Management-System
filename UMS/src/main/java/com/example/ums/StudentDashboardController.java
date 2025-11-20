@@ -15,6 +15,15 @@ public class StudentDashboardController {
     private Button logoutBtn;
 
     @FXML
+    private void initialize() {
+        FirestoreManager fm = FirestoreManager.getInstance();
+        Student student = fm.getStudent(GlobalData.getCurrentlyLoggedIN());
+        if (student != null) {
+            studentNameLabel.setText("Welcome, " + student.getName());
+        }
+    }
+
+    @FXML
     private void handleLogoutButton(ActionEvent event) {
         User.Logout();
         try {

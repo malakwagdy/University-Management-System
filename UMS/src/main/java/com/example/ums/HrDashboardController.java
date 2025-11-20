@@ -14,6 +14,15 @@ public class HrDashboardController {
     private Button logoutBtn;
 
     @FXML
+    private void initialize() {
+        FirestoreManager fm = FirestoreManager.getInstance();
+        HR hr = fm.getHR(GlobalData.getCurrentlyLoggedIN());
+        if (hr != null) {
+            hrNameLabel.setText("Welcome, " + hr.getName());
+        }
+    }
+
+    @FXML
     private void handleLogoutButton(ActionEvent event) {
         User.Logout();
         try {

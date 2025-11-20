@@ -15,6 +15,9 @@ public class Admission {
     private String status;
     private String yearOfAdmission;
 
+    // No-arg constructor required for Firestore deserialization
+    public Admission() {
+    }
 
     public Admission(String admissionId, String name, String phoneNumber, String email, String dateOfBirth, String major, String highschoolGPA) {
         this.admissionId = admissionId;
