@@ -11,15 +11,6 @@
 
 <VBox alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.ums.AddUserController">
     <children>
-      <HBox prefHeight="45.0" prefWidth="600.0">
-         <children>
-            <Button fx:id="backButton" mnemonicParsing="false" onAction="#handleBackButton" text="Back">
-               <HBox.margin>
-                  <Insets left="10.0" />
-               </HBox.margin>
-            </Button>
-         </children>
-      </HBox>
       <HBox alignment="CENTER" prefHeight="31.0" prefWidth="600.0">
          <children>
             <Label text="User Type:" />
@@ -62,23 +53,30 @@
                 </TextField>
             </children>
         </HBox>
-        <HBox alignment="CENTER" prefHeight="41.0" prefWidth="600.0">
+      <HBox fx:id="roleHBox" alignment="CENTER" prefHeight="31.0" prefWidth="600.0">
+         <children>
+            <Label text="Role:">
+               <HBox.margin>
+                  <Insets right="33.0" />
+               </HBox.margin>
+            </Label>
+            <ChoiceBox fx:id="userRoleChoiceBox" prefHeight="26.0" prefWidth="161.0">
+               <HBox.margin>
+                  <Insets left="42.0" />
+               </HBox.margin>
+            </ChoiceBox>
+         </children>
+      </HBox>
+        <HBox fx:id="departmentHBox" alignment="CENTER" prefHeight="41.0" prefWidth="600.0">
             <children>
                 <Label alignment="CENTER" text="Department:">
                <HBox.margin>
-                  <Insets right="23.0" />
+                  <Insets right="34.0" />
                </HBox.margin></Label>
-                <TextField fx:id="departmentField">
-                    <opaqueInsets>
-                        <Insets />
-                    </opaqueInsets>
-                    <HBox.margin>
-                        <Insets left="10.0" />
-                    </HBox.margin>
-                </TextField>
+            <ChoiceBox fx:id="departmentChoiceBox" prefHeight="26.0" prefWidth="161.0" />
             </children>
         </HBox>
-      <HBox alignment="CENTER" prefHeight="36.0" prefWidth="600.0">
+      <HBox fx:id="departmentHeadHBox" alignment="CENTER" prefHeight="36.0" prefWidth="600.0">
          <children>
             <Label text="Department Head:" />
             <CheckBox fx:id="departmentHeachCheckBox" mnemonicParsing="false">
@@ -88,10 +86,46 @@
             </CheckBox>
          </children>
       </HBox>
-        <Button fx:id="addUserButton" mnemonicParsing="false" onAction="#handleAddUserButton" text="Add User">
-            <VBox.margin>
-                <Insets top="10.0" />
-            </VBox.margin>
-        </Button>
+      <HBox fx:id="relationHBox" alignment="CENTER" prefHeight="41.0" prefWidth="600.0">
+         <children>
+            <Label alignment="CENTER" text="Relation:">
+               <HBox.margin>
+                  <Insets right="55.0" />
+               </HBox.margin>
+            </Label>
+            <ChoiceBox fx:id="relationChoiceBox" prefHeight="26.0" prefWidth="161.0" />
+         </children>
+      </HBox>
+      <HBox fx:id="childIdHBox" alignment="CENTER" prefHeight="41.0" prefWidth="600.0">
+         <children>
+            <Label alignment="CENTER" text="Children IDs:">
+               <padding>
+                  <Insets right="6.0" />
+               </padding>
+               <HBox.margin>
+                  <Insets right="37.0" />
+               </HBox.margin>
+            </Label>
+            <TextField fx:id="childIdField">
+               <opaqueInsets>
+                  <Insets />
+               </opaqueInsets>
+               <HBox.margin>
+                  <Insets left="10.0" />
+               </HBox.margin>
+            </TextField>
+         </children>
+      </HBox>
+      <Label fx:id="errorMsg" />
+      <HBox alignment="CENTER" prefHeight="45.0" prefWidth="600.0" spacing="10.0">
+         <children>
+            <Button fx:id="cancelButton" mnemonicParsing="false" onAction="#handleCancelButton" text="Cancel">
+               <HBox.margin>
+                  <Insets left="10.0" />
+               </HBox.margin>
+            </Button>
+              <Button fx:id="addUserButton" mnemonicParsing="false" onAction="#handleAddUserButton" text="Add User" />
+         </children>
+      </HBox>
     </children>
 </VBox>

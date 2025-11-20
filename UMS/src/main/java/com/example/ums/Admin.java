@@ -33,7 +33,12 @@ public class Admin extends User {
         if (salary == null || salary.trim().isEmpty()) {
             throw new IllegalArgumentException("salary is required");
         }
-
+        if (name == null || name.trim().isEmpty()) {
+            throw new IllegalArgumentException("Name is required");
+        }
+        if (phoneNumber == null || phoneNumber.trim().isEmpty()) {
+            throw new IllegalArgumentException("Phone number is required");
+        }
         Admin admin=new Admin(id, phoneNumber, email, password, name, salary);
         fm.addAdmin(admin);
     }
@@ -83,9 +88,14 @@ public class Admin extends User {
         String email = id+"@ums.edu";
         validateCommonFields(phoneNumber, email, password, name);
         if (salary == null || salary.trim().isEmpty()) {
-            throw new IllegalArgumentException("salary is required");
+            throw new IllegalArgumentException("Salary is required");
         }
-
+        if (name == null || name.trim().isEmpty()) {
+            throw new IllegalArgumentException("Name is required");
+        }
+        if (phoneNumber == null || phoneNumber.trim().isEmpty()) {
+            throw new IllegalArgumentException("Phone number is required");
+        }
         HR hr=new HR(id, phoneNumber, email, password, name, salary);
         fm.addHR(hr);
     }
@@ -94,9 +104,17 @@ public class Admin extends User {
         String email = id+"@ums.edu";
         validateCommonFields(phoneNumber, email, password, name);
         if (department == null || department.trim().isEmpty()) {
-            throw new IllegalArgumentException("department is required");
+            throw new IllegalArgumentException("Department is required");
         }
-
+        if (name == null || name.trim().isEmpty()) {
+            throw new IllegalArgumentException("Name is required");
+        }
+        if (phoneNumber == null || phoneNumber.trim().isEmpty()) {
+            throw new IllegalArgumentException("Phone number is required");
+        }
+        if (role == null || role.trim().isEmpty()) {
+            throw new IllegalArgumentException("Role is required");
+        }
         Instructor instructor=new Instructor(id, phoneNumber, email, password, name, department, departmentHead, role);
         fm.addInstructor(instructor);
     }
@@ -107,10 +125,22 @@ public class Admin extends User {
         validateCommonFields(phoneNumber, email, password, name);
 
         if (relation == null || relation.trim().isEmpty()) {
-            throw new IllegalArgumentException("relation is required");
+            throw new IllegalArgumentException("Relation is required");
         }
-        if (children == null) {
-            throw new IllegalArgumentException("children list must not  be empty)");
+        if (children == null || children.isEmpty()) {
+            throw new IllegalArgumentException("Children list must not be empty");
+        }
+        // Check if all children IDs are non-empty
+        for (String childId : children) {
+            if (childId == null || childId.trim().isEmpty()) {
+                throw new IllegalArgumentException("Children list contains invalid (empty) child ID");
+            }
+        }
+        if (name == null || name.trim().isEmpty()) {
+            throw new IllegalArgumentException("Name is required");
+        }
+        if (phoneNumber == null || phoneNumber.trim().isEmpty()) {
+            throw new IllegalArgumentException("Phone number is required");
         }
 
         Parent parent=new Parent(id, phoneNumber, email, password, name, relation, children);
@@ -141,26 +171,26 @@ public class Admin extends User {
 
     private void validateCommonFields(String phoneNumber, String email, String password, String name) {
         if (phoneNumber == null || phoneNumber.trim().isEmpty()) {
-            throw new IllegalArgumentException("phoneNumber is required");
+            throw new IllegalArgumentException("Phone number is required");
         }
 
         if (phoneNumber.length() != 11|| !phoneNumber.startsWith("011") && !phoneNumber.startsWith("012") && !phoneNumber.startsWith("010") && !phoneNumber.startsWith("015")) {
-            throw new IllegalArgumentException("phoneNumber is invalid");
+            throw new IllegalArgumentException("Phone number is invalid");
         }
 
         if (email == null || email.trim().isEmpty()) {
-            throw new IllegalArgumentException("email is required");
+            throw new IllegalArgumentException("Email is required");
         }
         if (!email.contains("@") || email.startsWith("@") || email.endsWith("@")) {
-            throw new IllegalArgumentException("email is invalid");
+            throw new IllegalArgumentException("Email is invalid");
         }
 
         if (password == null || password.length() < 4) {
-            throw new IllegalArgumentException("password must be at least 4 characters");
+            throw new IllegalArgumentException("Password must be at least 4 characters");
         }
 
         if (name == null || name.trim().isEmpty()) {
-            throw new IllegalArgumentException("name is required");
+            throw new IllegalArgumentException("Name is required");
         }
     }
 
@@ -186,6 +216,10 @@ public class Admin extends User {
             case "hr":
                 letter = "H";
                 collection = "HR";
+                break;
+            case "admin":
+                letter = "A";
+                collection = "Admin";
                 break;
             default:
                 throw new IllegalArgumentException("Invalid type: " + type);
