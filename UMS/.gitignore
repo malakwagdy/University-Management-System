@@ -38,6 +38,7 @@ build/
 ### Mac OS ###
 .DS_Store
 
- ../.idea
+../.idea
+./src/main/resources/university-management-sy-9314c-firebase-adminsdk-fbsvc-7e85945818.json
 
 src/main/resources/university-management-sy-9314c-firebase-adminsdk-fbsvc-7e85945818.json
