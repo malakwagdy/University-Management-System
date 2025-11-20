@@ -41,6 +41,9 @@ public class Admin extends User {
     public void deleteUser(String id){
         String code = id.substring(2,3);
         switch (code) {
+            case"A":
+                fm.deleteAdmin(id);
+                break;
             case "S":
                 fm.deleteStudent(id);
                 break;
