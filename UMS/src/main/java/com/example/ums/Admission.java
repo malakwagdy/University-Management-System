@@ -34,7 +34,7 @@ public class Admission {
 
     static FirestoreManager fm = FirestoreManager.getInstance();
 
-    public void newAdmission(String name, String phoneNumber, String email, String dateOfBirth, String major, String highschoolGPA) {
+    public static void newAdmission(String name, String phoneNumber, String email, String dateOfBirth, String major, String highschoolGPA) {
 
         Admission.validateInputs(name, phoneNumber, email, dateOfBirth, major, highschoolGPA);
 

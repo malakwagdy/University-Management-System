@@ -107,4 +107,13 @@ public class LoginController {
             errorMessage.setText(e.getMessage());
         }
     }
+
+    @FXML
+    private void handleApplyHyperlink(ActionEvent event) {
+        try {
+            SceneController.switchScene(event, "Admission.fxml", "Apply");
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
+    }
 }

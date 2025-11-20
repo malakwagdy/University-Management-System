@@ -345,4 +345,12 @@ public class AdminDashboardController implements Initializable {
             }
         });
     }
+    @FXML
+    private void handleAddUserButton(ActionEvent event) {
+        try {
+            SceneController.switchScene(event, "AddUser.fxml", "Add User");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 }

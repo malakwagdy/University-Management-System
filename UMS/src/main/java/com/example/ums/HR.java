@@ -11,10 +11,10 @@ public class HR extends User {
         super();
     }
 
-    public HR( String id, String phoneNumber, String email, String password, String name, String salary, String departmentName) {
+    public HR( String id, String phoneNumber, String email, String password, String name, String salary) {
         super( id, phoneNumber, email, password, name);
         this.salary = salary;
-        this.departmentName = departmentName;
+        this.departmentName = "HR";
     }
     @PropertyName("salary")
     public String getSalary() {

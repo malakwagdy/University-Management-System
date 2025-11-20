@@ -27,18 +27,15 @@ public class Admin extends User {
 
 
 
-    public void createHR(String phoneNumber,  String password, String name, String salary,String dep) {
+    public void createHR(String phoneNumber,  String password, String name, String salary) {
         String id= this.generateID("hr");
         String email = id+"@ums.edu";
         validateCommonFields(phoneNumber, email, password, name);
         if (salary == null || salary.trim().isEmpty()) {
             throw new IllegalArgumentException("salary is required");
         }
-        if (dep == null || dep.trim().isEmpty()) {
-            throw new IllegalArgumentException("department is required");
-        }
 
-        HR hr=new HR(id, phoneNumber, email, password, name, salary,dep);
+        HR hr=new HR(id, phoneNumber, email, password, name, salary);
         fm.addHR(hr);
     }
     public void createInstructor(String phoneNumber,  String password, String name, String department) {
