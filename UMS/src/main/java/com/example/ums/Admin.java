@@ -26,6 +26,54 @@ public class Admin extends User {
     }
 
 
+    public void createAdmin(String phoneNumber,  String password, String name, String salary) {
+        String id= this.generateID("admin");
+        String email = id+"@ums.edu";
+        validateCommonFields(phoneNumber, email, password, name);
+        if (salary == null || salary.trim().isEmpty()) {
+            throw new IllegalArgumentException("salary is required");
+        }
+
+        Admin admin=new Admin(id, phoneNumber, email, password, name, salary);
+        fm.addAdmin(admin);
+    }
+
+    public void deleteUser(String id){
+        String code = id.substring(2,3);
+        switch (code) {
+            case "S":
+                fm.deleteStudent(id);
+                break;
+            case "I":
+                fm.deleteInstructor(id);
+                break;
+            case "P":
+                fm.deleteParent(id);
+                break;
+            case "H":
+                fm.deleteHR(id);
+                break;
+            default:
+                throw new IllegalArgumentException("Invalid ID: " + id);
+        }
+    }
+
+    public void updateDepartmentHead(String instructorId, Boolean isDepartmentHead) {
+        Instructor instructor = fm.getInstructor(instructorId);
+        if (instructor == null) {
+            throw new IllegalArgumentException("Instructor not found with ID: " + instructorId);
+        }
+        instructor.setDepartmentHead(isDepartmentHead);
+        fm.updateInstructor(instructor);
+    }
+    public void updateRole(String instructorId, String role) {
+        Instructor instructor = fm.getInstructor(instructorId);
+        if (instructor == null) {
+            throw new IllegalArgumentException("Instructor not found with ID: " + instructorId);
+        }
+        instructor.setRole(role);
+        fm.updateInstructor(instructor);
+    }
 
     public void createHR(String phoneNumber,  String password, String name, String salary) {
         String id= this.generateID("hr");
@@ -38,7 +86,7 @@ public class Admin extends User {
         HR hr=new HR(id, phoneNumber, email, password, name, salary);
         fm.addHR(hr);
     }
-    public void createInstructor(String phoneNumber,  String password, String name, String department) {
+    public void createInstructor(String phoneNumber,  String password, String name, String department,String role,Boolean departmentHead) {
         String id= this.generateID("instructor");
         String email = id+"@ums.edu";
         validateCommonFields(phoneNumber, email, password, name);
@@ -46,7 +94,7 @@ public class Admin extends User {
             throw new IllegalArgumentException("department is required");
         }
 
-        Instructor instructor=new Instructor(id, phoneNumber, email, password, name, department);
+        Instructor instructor=new Instructor(id, phoneNumber, email, password, name, department, departmentHead, role);
         fm.addInstructor(instructor);
     }
     public void createParent(String phoneNumber, String password, String name, String relation, ArrayList<String> children) {

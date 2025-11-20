@@ -102,7 +102,7 @@ public class AddUserController implements Initializable {
                     // Show error: department required for Instructor
                     return;
                 }
-                admin.createInstructor(phoneNumber, password, name, department);
+                admin.createInstructor(phoneNumber, password, name, department, "add role here", isDepartmentHead);
                 break;
                 
             // case "Admin":

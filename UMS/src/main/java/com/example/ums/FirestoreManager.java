@@ -17,7 +17,7 @@ public class FirestoreManager {
     public FirestoreManager() {
         try {
             FileInputStream serviceAccount =
-                    new FileInputStream("/Users/Malak/D/UNI/Senior-1 Year/Semester 7/Agile Software Engineering/Project/University-Management-System/UMS/src/main/resources/university-management-sy-9314c-firebase-adminsdk-fbsvc-7e85945818.json");
+                    new FileInputStream("C:/Users/pc/IdeaProjects/University-Management-System/UMS/src/main/resources/university-management-sy-9314c-firebase-adminsdk-fbsvc-7e85945818.json");
             GoogleCredentials credentials = GoogleCredentials.fromStream(serviceAccount);
             FirestoreOptions firestoreOptions = FirestoreOptions.newBuilder()
                     .setCredentials(credentials)
@@ -409,4 +409,74 @@ public class FirestoreManager {
         return parentsList;
     }
 
-}
+    public void deleteHR(String id) {
+        try {
+            DocumentReference ref = db.collection("HR").document(id);
+            ApiFuture<WriteResult> future = ref.delete();
+            System.out.println("HR document deleted at: " + future.get().getUpdateTime());
+        } catch (InterruptedException | ExecutionException e) {
+            e.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+
+    public void deleteStudent(String id) {
+        try {
+            DocumentReference ref = db.collection("Student").document(id);
+            ApiFuture<WriteResult> future = ref.delete();
+            System.out.println("Student document deleted at: " + future.get().getUpdateTime());
+        } catch (InterruptedException | ExecutionException e) {
+            e.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    public void deleteParent(String id) {
+        try {
+            DocumentReference ref = db.collection("Parent").document(id);
+            ApiFuture<WriteResult> future = ref.delete();
+            System.out.println("Parent document deleted at: " + future.get().getUpdateTime());
+        } catch (InterruptedException | ExecutionException e) {
+            e.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    public void deleteInstructor(String id) {
+        try {
+            DocumentReference ref = db.collection("Instructor").document(id);
+            ApiFuture<WriteResult> future = ref.delete();
+            System.out.println("Instructor document deleted at: " + future.get().getUpdateTime());
+        } catch (InterruptedException | ExecutionException e) {
+            e.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void deleteAdmin(String id) {
+        try {
+            DocumentReference ref = db.collection("Admin").document(id);
+            ApiFuture<WriteResult> future = ref.delete();
+            System.out.println("Admin document deleted at: " + future.get().getUpdateTime());
+        } catch (InterruptedException | ExecutionException e) {
+            e.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    public void updateInstructor(Instructor instructor) {
+        try {
+            DocumentReference ref = db.collection("Instructor").document(instructor.getId());
+            ApiFuture<WriteResult> result = ref.set(instructor);
+            System.out.println("Instructor updated at: " + result.get().getUpdateTime());
+        } catch (InterruptedException | ExecutionException e) {
+            e.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+
+}}

@@ -24,10 +24,11 @@ public class User {
 
 
     public void Login(String email, String Password) throws LoginException {
-        String id = email.substring(0, 6);
+
         if (email == null) {
             throw new LoginException("Email is incorrect.");
         }
+        String id = email.substring(0, 6);
         User user = fm.getAdmin(id);
 
         if (user == null) {
