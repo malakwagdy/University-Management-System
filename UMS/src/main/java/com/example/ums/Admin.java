@@ -147,6 +147,127 @@ public class Admin extends User {
         fm.addParent(parent);
     }
 
+    public void updateUser(User user) {
+        if (user instanceof Student) {
+            Student student = (Student) user;
+            Student existing = fm.getStudent(student.getId());
+            if (existing != null) {
+                if ((student.getCurrentCourses() == null || student.getCurrentCourses().isEmpty()) && existing.getCurrentCourses() != null) {
+                    student.setCurrentCourses(existing.getCurrentCourses());
+                }
+                if ((student.getTakenCourses() == null || student.getTakenCourses().isEmpty()) && existing.getTakenCourses() != null) {
+                    student.setTakenCourses(existing.getTakenCourses());
+                }
+                if (student.getdateOfBirth() == null && existing.getdateOfBirth() != null) {
+                    student.setdateOfBirth(existing.getdateOfBirth());
+                }
+                if (student.getGpa() == null && existing.getGpa() != null) {
+                    student.setGpa(existing.getGpa());
+                }
+                if (student.getSemester() == null && existing.getSemester() != null) {
+                    student.setSemester(existing.getSemester());
+                }
+            }
+            fm.addStudent(student);
+        }else if (user instanceof Instructor) {
+            Instructor instructor = (Instructor) user;
+            Instructor existing = fm.getInstructor(instructor.getId());
+
+            if (existing != null) {
+
+                if ((instructor.getCourses() == null || instructor.getCourses().isEmpty())
+                        && existing.getCourses() != null) {
+                    instructor.setCourses(existing.getCourses());
+                }
+
+                if (instructor.getSalary() == null && existing.getSalary() != null) {
+                    instructor.setSalary(existing.getSalary());
+                }
+
+                if (instructor.getRole() == null && existing.getRole() != null) {
+                    instructor.setRole(existing.getRole());
+                }
+
+                // boolean → only replace if default (false) and existing is true
+                if (!instructor.isDepartmentHead() && existing.isDepartmentHead()) {
+                    instructor.setDepartmentHead(existing.isDepartmentHead());
+                }
+
+                if (instructor.getDepartmentName() == null && existing.getDepartmentName() != null) {
+                    instructor.setDepartmentName(existing.getDepartmentName());
+                }
+
+                if ((instructor.getResponsibilities() == null || instructor.getResponsibilities().isEmpty())
+                        && existing.getResponsibilities() != null) {
+                    instructor.setResponsibilities(existing.getResponsibilities());
+                }
+
+                if ((instructor.getOfficeHours() == null || instructor.getOfficeHours().isEmpty())
+                        && existing.getOfficeHours() != null) {
+                    instructor.setOfficeHours(existing.getOfficeHours());
+                }
+
+                if ((instructor.getBenefits() == null || instructor.getBenefits().isEmpty())
+                        && existing.getBenefits() != null) {
+                    instructor.setBenefits(existing.getBenefits());
+                }
+            }
+
+            fm.addInstructor(instructor);
+        }
+        else if (user instanceof Parent) {
+            Parent parent = (Parent) user;
+            Parent existing = fm.getParent(parent.getId());
+
+            if (existing != null) {
+
+                if (parent.getRelation() == null && existing.getRelation() != null) {
+                    parent.setRelation(existing.getRelation());
+                }
+
+                if ((parent.getChildren() == null || parent.getChildren().isEmpty())
+                        && existing.getChildren() != null) {
+                    parent.setChildren(existing.getChildren());
+                }
+            }
+
+            fm.addParent(parent);
+        }else if (user instanceof HR) {
+            HR hr = (HR) user;
+            HR existing = fm.getHR(hr.getId());
+
+            if (existing != null) {
+
+                if (hr.getSalary() == null && existing.getSalary() != null) {
+                    hr.setSalary(existing.getSalary());
+                }
+
+                if (hr.getDepartmentName() == null && existing.getDepartmentName() != null) {
+                    hr.setDepartmentName(existing.getDepartmentName());
+                }
+            }
+
+            fm.addHR(hr);
+        } else if (user instanceof Admin) {
+            Admin admin = (Admin) user;
+            Admin existing = fm.getAdmin(admin.getId());
+
+            if (existing != null) {
+
+                if (admin.getSalary() == null && existing.getSalary() != null) {
+                    admin.setSalary(existing.getSalary());
+                }
+            }
+
+            fm.addAdmin(admin);
+        }
+
+
+
+
+    }
+
+
 
     public ArrayList<Admission> getAdmissions() {
         return fm.getAllAdmissions();

@@ -685,26 +685,10 @@ public class AdminDashboardController implements Initializable {
                 
                 // Update type-specific fields and save
                 if (user instanceof Student) {
-                    Student student = (Student) user;
-                    Student existing = fm.getStudent(student.getId());
-                    if (existing != null) {
-                        if ((student.getCurrentCourses() == null || student.getCurrentCourses().isEmpty()) && existing.getCurrentCourses() != null) {
-                            student.setCurrentCourses(existing.getCurrentCourses());
-                        }
-                        if ((student.getTakenCourses() == null || student.getTakenCourses().isEmpty()) && existing.getTakenCourses() != null) {
-                            student.setTakenCourses(existing.getTakenCourses());
-                        }
-                        if (student.getdateOfBirth() == null && existing.getdateOfBirth() != null) {
-                            student.setdateOfBirth(existing.getdateOfBirth());
-                        }
-                        if (student.getGpa() == null && existing.getGpa() != null) {
-                            student.setGpa(existing.getGpa());
-                        }
-                        if (student.getSemester() == null && existing.getSemester() != null) {
-                            student.setSemester(existing.getSemester());
-                        }
-                    }
-                    fm.addStudent(student); // addStudent uses set() which updates
+
+                    //check the usage 3ashan ma3rfsh eh admin el hena
+                    admin.updateUser(user);
+
                 } else if (user instanceof Instructor) {
                     Instructor instructor = (Instructor) user;
                     if (departmentChoiceBoxRef[0] != null && departmentChoiceBoxRef[0].getValue() != null) {
@@ -719,13 +703,15 @@ public class AdminDashboardController implements Initializable {
                             instructor.setRole(roleChoiceBoxRef[0].getValue());
                         }
                     }
-                    fm.updateInstructor(instructor);
+                    //check the usage 3ashan ma3rfsh eh admin el hena
+                    admin.updateUser(user);
+
                 } else if (user instanceof Admin) {
-                    Admin adminUser = (Admin) user;
-                    fm.addAdmin(adminUser); // addAdmin uses set() which updates
+                    //check the usage 3ashan ma3rfsh eh admin el hena
+                    admin.updateUser(user);
                 } else if (user instanceof HR) {
-                    HR hr = (HR) user;
-                    fm.addHR(hr); // addHR uses set() which updates
+                    //check the usage 3ashan ma3rfsh eh admin el hena
+                    admin.updateUser(user);
                 } else if (user instanceof Parent) {
                     Parent parent = (Parent) user;
                     if (relationChoiceBoxRef[0] != null && relationChoiceBoxRef[0].getValue() != null) {
@@ -739,7 +725,8 @@ public class AdminDashboardController implements Initializable {
                         }
                         parent.setChildren(children);
                     }
-                    fm.addParent(parent); // addParent uses set() which updates
+                    //check the usage 3ashan ma3rfsh eh admin el hena
+                    admin.updateUser(user);
                 }
                 
                 // Refresh the table
