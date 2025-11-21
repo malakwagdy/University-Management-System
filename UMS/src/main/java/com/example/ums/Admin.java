@@ -149,26 +149,33 @@ public class Admin extends User {
 
     private void mergeBaseUserFields(User updated, User existing) {
 
-        if (updated.getEmail() == null && existing.getEmail() != null) {
+        updated.setEmail(normalize(updated.getEmail()));
+        updated.setPassword(normalize(updated.getPassword()));
+        updated.setPhoneNumber(normalize(updated.getPhoneNumber()));
+        updated.setName(normalize(updated.getName()));
+        updated.setId(normalize(updated.getId()));
+
+        if (updated.getEmail() == null) {
             updated.setEmail(existing.getEmail());
         }
 
-        if (updated.getPassword() == null && existing.getPassword() != null) {
+        if (updated.getPassword() == null) {
             updated.setPassword(existing.getPassword());
         }
 
-        if (updated.getPhoneNumber() == null && existing.getPhoneNumber() != null) {
+        if (updated.getPhoneNumber() == null) {
             updated.setPhoneNumber(existing.getPhoneNumber());
         }
 
-        if (updated.getName() == null && existing.getName() != null) {
+        if (updated.getName() == null) {
             updated.setName(existing.getName());
         }
 
-        if (updated.getId() == null && existing.getId() != null) {
+        if (updated.getId() == null) {
             updated.setId(existing.getId());
         }
     }
+
     private void mergeStudent(Student updated, Student existing) {
 
         if ((updated.getCurrentCourses() == null || updated.getCurrentCourses().isEmpty())
@@ -328,6 +335,13 @@ public class Admin extends User {
             fm.addAdmin(a);
         }
     }
+    private String normalize(String value) {
+        if (value == null || value.trim().isEmpty()) {
+            return null;
+        }
+        return value;
+    }
+
 
 
 
