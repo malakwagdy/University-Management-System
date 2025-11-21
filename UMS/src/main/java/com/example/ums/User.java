@@ -35,8 +35,11 @@ public class User {
             user = fm.getInstructor(id);
             if (user != null) {
                 if (user.getEmail().equals(email) && user.getPassword().equals(Password)) {
-                    LoginController.isInstructor = true;
-
+                    if (((Instructor) user).isDepartmentHead()) {
+                        LoginController.isDepartmentHead = true;
+                    } else {
+                        LoginController.isInstructor = true;
+                    }
                 } else {
                     throw new LoginException("Password is incorrect.");
                 }

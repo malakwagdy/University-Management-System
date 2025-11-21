@@ -44,7 +44,6 @@ public class LoginController {
                 delay.setOnFinished(e -> {
                     try {
                         SceneController.switchScene(event, "InstructorDashboard.fxml", "Instructor Dashboard");
-//                        MainVendorPageController.initialize();
                     } catch (IOException ex) {
                         ex.printStackTrace();
                     }
@@ -54,7 +53,6 @@ public class LoginController {
                 delay.setOnFinished(e -> {
                     try {
                         SceneController.switchScene(event, "StudentDashboard.fxml", "Student Dashboard");
-//                        MainVendorPageController.initialize();
                     } catch (IOException ex) {
                         ex.printStackTrace();
                     }
@@ -64,7 +62,6 @@ public class LoginController {
                 delay.setOnFinished(e -> {
                     try {
                         SceneController.switchScene(event, "HrDashboard.fxml", "Hr Dashboard");
-//                        MainVendorPageController.initialize();
                     } catch (IOException ex) {
                         ex.printStackTrace();
                     }
@@ -74,7 +71,6 @@ public class LoginController {
                 delay.setOnFinished(e -> {
                     try {
                         SceneController.switchScene(event, "DeptHeadDashboard.fxml", "Department Head Dashboard");
-//                        MainVendorPageController.initialize();
                     } catch (IOException ex) {
                         ex.printStackTrace();
                     }
@@ -84,7 +80,6 @@ public class LoginController {
                 delay.setOnFinished(e -> {
                     try {
                         SceneController.switchScene(event, "ParentDashboard.fxml", "Parent Dashboard");
-//                        MainVendorPageController.initialize();
                     } catch (IOException ex) {
                         ex.printStackTrace();
                     }
@@ -94,7 +89,6 @@ public class LoginController {
                 delay.setOnFinished(e -> {
                     try {
                         SceneController.switchScene(event, "AdminDashboard.fxml", "Admin Dashboard");
-//                        MainVendorPageController.initialize();
                     } catch (IOException ex) {
                         ex.printStackTrace();
                     }

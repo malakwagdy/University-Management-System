@@ -83,7 +83,7 @@ public class Admin extends User {
         fm.updateInstructor(instructor);
     }
 
-    public void createHR(String phoneNumber,  String password, String name, String salary) {
+    public void createHR(String phoneNumber,  String password, String name, String salary, String departmentName) {
         String id= this.generateID("hr");
         String email = id+"@ums.edu";
         validateCommonFields(phoneNumber, email, password, name);
@@ -96,7 +96,7 @@ public class Admin extends User {
         if (phoneNumber == null || phoneNumber.trim().isEmpty()) {
             throw new IllegalArgumentException("Phone number is required");
         }
-        HR hr=new HR(id, phoneNumber, email, password, name, salary);
+        HR hr=new HR(id, phoneNumber, email, password, name, salary, departmentName);
         fm.addHR(hr);
     }
     public void createInstructor(String phoneNumber,  String password, String name, String department,String role,Boolean departmentHead) {
@@ -217,10 +217,6 @@ public class Admin extends User {
 
         if (updated.getRole() == null && existing.getRole() != null) {
             updated.setRole(existing.getRole());
-        }
-
-        if (!updated.isDepartmentHead() && existing.isDepartmentHead()) {
-            updated.setDepartmentHead(existing.isDepartmentHead());
         }
 
         if (updated.getDepartmentName() == null && existing.getDepartmentName() != null) {
@@ -345,11 +341,10 @@ public class Admin extends User {
 
 
 
-
-    public ArrayList<Admission> getAdmissions() {
+    public ArrayList<Admission> retrieveAdmissions() {
         return fm.getAllAdmissions();
     }
-    public ArrayList<Admission> getAdmissionsByStatus(String status) {
+    public ArrayList<Admission> retrieveAdmissionsByStatus(String status) {
         return fm.getAdmissionsByStatus(status);
     }
     public void acceptAdmission(Admission admission) {

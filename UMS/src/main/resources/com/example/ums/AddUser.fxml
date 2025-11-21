@@ -103,7 +103,7 @@
                   <Insets right="6.0" />
                </padding>
                <HBox.margin>
-                  <Insets right="37.0" />
+                  <Insets right="15.0" />
                </HBox.margin>
             </Label>
             <TextField fx:id="childIdField">

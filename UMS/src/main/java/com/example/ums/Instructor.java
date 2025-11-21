@@ -34,13 +34,13 @@ public class Instructor extends User{
     public Instructor(String id , String phoneNumber, String email, String password, String name, String department,boolean departmentHead,String role) {
         super( id, phoneNumber, email, password, name);
         this.salary = "0";
-        this.courses = new ArrayList<>();
+        this.courses = new ArrayList<String>();
         this.role = role;
         this.departmentHead = departmentHead;
         this.departmentName = department;
-        this.responsibilities = new ArrayList<>();
-        this.officeHours = new ArrayList<>();
-        this.benefits = new ArrayList<>();
+        this.responsibilities = new ArrayList<String>();
+        this.officeHours = new ArrayList<String>();
+        this.benefits = new ArrayList<String>();
     }
 
 

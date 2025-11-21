@@ -38,10 +38,6 @@
          <Button fx:id="coursesBtn" maxWidth="1.7976931348623157E308" text="Department Courses" />
          <Button fx:id="studentsBtn" maxWidth="1.7976931348623157E308" text="Department Students" />
          <Separator />
-         <Button fx:id="resourcesBtn" maxWidth="1.7976931348623157E308" text="Resources" />
-         <Button fx:id="equipmentBtn" maxWidth="1.7976931348623157E308" text="Equipment" />
-         <Separator />
-         <Button fx:id="reportsBtn" maxWidth="1.7976931348623157E308" text="Department Reports" />
          <Button fx:id="myCoursesBtn" maxWidth="1.7976931348623157E308" text="My Courses" />
          <Region VBox.vgrow="ALWAYS" />
       </VBox>
@@ -121,13 +117,6 @@
                   </columns>
                </TableView>
             </VBox>
-            
-            <!-- Quick Actions -->
-            <HBox alignment="CENTER" spacing="15">
-               <Button fx:id="generateReportBtn" text="Generate Department Report" />
-               <Button fx:id="viewResourcesBtn" text="View Resources" />
-               <Button fx:id="manageEquipmentBtn" text="Manage Equipment" />
-            </HBox>
          </VBox>
       </ScrollPane>
    </center>

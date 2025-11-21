@@ -1,7 +1,5 @@
 package com.example.ums;
 
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -62,40 +60,13 @@ public class AddUserController implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         // Populate the choice box with user types
-        ObservableList<String> userTypes = FXCollections.observableArrayList(
-            "Parent",
-            "HR",
-            "Admin",
-            "Instructor"
-        );
-        userTypeChoiceBox.setItems(userTypes);
+        userTypeChoiceBox.getItems().addAll("Parent", "HR", "Admin", "Instructor");
 
-        ObservableList<String> userRoles = FXCollections.observableArrayList(
-            "Teaching Assistant",
-            "Professor"
-        );
-        userRoleChoiceBox.setItems(userRoles);
+        userRoleChoiceBox.getItems().addAll("Teaching Assistant", "Professor");
 
-        ObservableList<String> departments = FXCollections.observableArrayList(
-            "CESS",
-            "COMM",
-            "MCTA",
-            "ERGY",
-            "BLDG",
-            "LAAR",
-            "HOUD",
-            "CISE",
-            "MANF",
-            "ENVR",
-            "MATL"
-        );
-        departmentChoiceBox.setItems(departments);
+        departmentChoiceBox.getItems().addAll("CESS", "COMM", "MCTA", "ERGY", "BLDG", "LAAR", "HOUD", "CISE", "MANF", "ENVR", "MATL");
 
-        ObservableList<String> relation = FXCollections.observableArrayList(
-            "Father",
-            "Mother"
-        );
-        relationChoiceBox.setItems(relation);
+        relationChoiceBox.getItems().addAll("Father", "Mother");
         
         // Initially hide and disable Department Head checkbox, Department field, and Role field
         departmentHeachCheckBox.setDisable(true);
@@ -177,7 +148,29 @@ public class AddUserController implements Initializable {
                 }
                 relationChoiceBox.setDisable(false);
                 childIdField.setDisable(false);
-            } else {
+            } else if ("HR".equals(selectedType)) {
+                if (roleHBox != null) {
+                    roleHBox.setVisible(false);
+                    roleHBox.setManaged(false);
+                }
+                if (departmentHBox != null) {
+                    departmentHBox.setVisible(true);
+                    departmentHBox.setManaged(true);
+                }
+                if (departmentHeadHBox != null) {
+                    departmentHeadHBox.setVisible(false);
+                    departmentHeadHBox.setManaged(false);
+                }
+                if (relationHBox != null) {
+                    relationHBox.setVisible(false);
+                    relationHBox.setManaged(false);
+                }
+                if (childIdHBox != null) {
+                    childIdHBox.setVisible(false);
+                    childIdHBox.setManaged(false);
+                }
+                departmentChoiceBox.setDisable(false);
+            }else {
                 // Hide and disable for other user types
                 if (roleHBox != null) {
                     roleHBox.setVisible(false);
@@ -235,7 +228,12 @@ public class AddUserController implements Initializable {
                 case "Instructor":
                     String department = departmentChoiceBox.getValue();
                     boolean isDepartmentHead = departmentHeachCheckBox.isSelected();
-                    String role = userRoleChoiceBox.getValue();
+                    String role = null;
+                    if (isDepartmentHead) {
+                        role = "Professor";
+                    } else {
+                        role = userRoleChoiceBox.getValue();
+                    }
                     admin.createInstructor(phoneNumber, password, name, department, role, isDepartmentHead);
                     break;
                     
@@ -244,7 +242,8 @@ public class AddUserController implements Initializable {
                     break;
                     
                 case "HR":
-                    admin.createHR(phoneNumber, password, name, "0");
+                    department = departmentChoiceBox.getValue();
+                    admin.createHR(phoneNumber, password, name, "0", department);
                     break;
                     
                 case "Parent":
