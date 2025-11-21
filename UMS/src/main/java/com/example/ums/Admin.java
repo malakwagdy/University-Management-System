@@ -147,125 +147,188 @@ public class Admin extends User {
         fm.addParent(parent);
     }
 
-    public void updateUser(User user) {
-        if (user instanceof Student) {
-            Student student = (Student) user;
-            Student existing = fm.getStudent(student.getId());
-            if (existing != null) {
-                if ((student.getCurrentCourses() == null || student.getCurrentCourses().isEmpty()) && existing.getCurrentCourses() != null) {
-                    student.setCurrentCourses(existing.getCurrentCourses());
-                }
-                if ((student.getTakenCourses() == null || student.getTakenCourses().isEmpty()) && existing.getTakenCourses() != null) {
-                    student.setTakenCourses(existing.getTakenCourses());
-                }
-                if (student.getdateOfBirth() == null && existing.getdateOfBirth() != null) {
-                    student.setdateOfBirth(existing.getdateOfBirth());
-                }
-                if (student.getGpa() == null && existing.getGpa() != null) {
-                    student.setGpa(existing.getGpa());
-                }
-                if (student.getSemester() == null && existing.getSemester() != null) {
-                    student.setSemester(existing.getSemester());
-                }
-            }
-            fm.addStudent(student);
-        }else if (user instanceof Instructor) {
-            Instructor instructor = (Instructor) user;
-            Instructor existing = fm.getInstructor(instructor.getId());
+    private void mergeBaseUserFields(User updated, User existing) {
 
-            if (existing != null) {
-
-                if ((instructor.getCourses() == null || instructor.getCourses().isEmpty())
-                        && existing.getCourses() != null) {
-                    instructor.setCourses(existing.getCourses());
-                }
-
-                if (instructor.getSalary() == null && existing.getSalary() != null) {
-                    instructor.setSalary(existing.getSalary());
-                }
-
-                if (instructor.getRole() == null && existing.getRole() != null) {
-                    instructor.setRole(existing.getRole());
-                }
-
-                // boolean → only replace if default (false) and existing is true
-                if (!instructor.isDepartmentHead() && existing.isDepartmentHead()) {
-                    instructor.setDepartmentHead(existing.isDepartmentHead());
-                }
-
-                if (instructor.getDepartmentName() == null && existing.getDepartmentName() != null) {
-                    instructor.setDepartmentName(existing.getDepartmentName());
-                }
-
-                if ((instructor.getResponsibilities() == null || instructor.getResponsibilities().isEmpty())
-                        && existing.getResponsibilities() != null) {
-                    instructor.setResponsibilities(existing.getResponsibilities());
-                }
-
-                if ((instructor.getOfficeHours() == null || instructor.getOfficeHours().isEmpty())
-                        && existing.getOfficeHours() != null) {
-                    instructor.setOfficeHours(existing.getOfficeHours());
-                }
-
-                if ((instructor.getBenefits() == null || instructor.getBenefits().isEmpty())
-                        && existing.getBenefits() != null) {
-                    instructor.setBenefits(existing.getBenefits());
-                }
-            }
-
-            fm.addInstructor(instructor);
+        if (updated.getEmail() == null && existing.getEmail() != null) {
+            updated.setEmail(existing.getEmail());
         }
+
+        if (updated.getPassword() == null && existing.getPassword() != null) {
+            updated.setPassword(existing.getPassword());
+        }
+
+        if (updated.getPhoneNumber() == null && existing.getPhoneNumber() != null) {
+            updated.setPhoneNumber(existing.getPhoneNumber());
+        }
+
+        if (updated.getName() == null && existing.getName() != null) {
+            updated.setName(existing.getName());
+        }
+
+        if (updated.getId() == null && existing.getId() != null) {
+            updated.setId(existing.getId());
+        }
+    }
+    private void mergeStudent(Student updated, Student existing) {
+
+        if ((updated.getCurrentCourses() == null || updated.getCurrentCourses().isEmpty())
+                && existing.getCurrentCourses() != null) {
+            updated.setCurrentCourses(existing.getCurrentCourses());
+        }
+
+        if ((updated.getTakenCourses() == null || updated.getTakenCourses().isEmpty())
+                && existing.getTakenCourses() != null) {
+            updated.setTakenCourses(existing.getTakenCourses());
+        }
+
+        if (updated.getdateOfBirth() == null && existing.getdateOfBirth() != null) {
+            updated.setdateOfBirth(existing.getdateOfBirth());
+        }
+
+        if (updated.getGpa() == null && existing.getGpa() != null) {
+            updated.setGpa(existing.getGpa());
+        }
+
+        if (updated.getSemester() == null && existing.getSemester() != null) {
+            updated.setSemester(existing.getSemester());
+        }
+
+        if (updated.getMajor() == null && existing.getMajor() != null) {
+            updated.setMajor(existing.getMajor());
+        }
+    }
+    private void mergeInstructor(Instructor updated, Instructor existing) {
+
+        if ((updated.getCourses() == null || updated.getCourses().isEmpty())
+                && existing.getCourses() != null) {
+            updated.setCourses(existing.getCourses());
+        }
+
+        if (updated.getSalary() == null && existing.getSalary() != null) {
+            updated.setSalary(existing.getSalary());
+        }
+
+        if (updated.getRole() == null && existing.getRole() != null) {
+            updated.setRole(existing.getRole());
+        }
+
+        if (!updated.isDepartmentHead() && existing.isDepartmentHead()) {
+            updated.setDepartmentHead(existing.isDepartmentHead());
+        }
+
+        if (updated.getDepartmentName() == null && existing.getDepartmentName() != null) {
+            updated.setDepartmentName(existing.getDepartmentName());
+        }
+
+        if ((updated.getResponsibilities() == null || updated.getResponsibilities().isEmpty())
+                && existing.getResponsibilities() != null) {
+            updated.setResponsibilities(existing.getResponsibilities());
+        }
+
+        if ((updated.getOfficeHours() == null || updated.getOfficeHours().isEmpty())
+                && existing.getOfficeHours() != null) {
+            updated.setOfficeHours(existing.getOfficeHours());
+        }
+
+        if ((updated.getBenefits() == null || updated.getBenefits().isEmpty())
+                && existing.getBenefits() != null) {
+            updated.setBenefits(existing.getBenefits());
+        }
+    }
+    private void mergeParent(Parent updated, Parent existing) {
+
+        if (updated.getRelation() == null && existing.getRelation() != null) {
+            updated.setRelation(existing.getRelation());
+        }
+
+        if ((updated.getChildren() == null || updated.getChildren().isEmpty())
+                && existing.getChildren() != null) {
+            updated.setChildren(existing.getChildren());
+        }
+    }
+    private void mergeHR(HR updated, HR existing) {
+
+        if (updated.getSalary() == null && existing.getSalary() != null) {
+            updated.setSalary(existing.getSalary());
+        }
+
+        if (updated.getDepartmentName() == null && existing.getDepartmentName() != null) {
+            updated.setDepartmentName(existing.getDepartmentName());
+        }
+    }
+    private void mergeAdmin(Admin updated, Admin existing) {
+
+        if (updated.getSalary() == null && existing.getSalary() != null) {
+            updated.setSalary(existing.getSalary());
+        }
+    }
+    private User findExistingUserById(String id) {
+
+        Student s = fm.getStudent(id);
+        if (s != null) return s;
+
+        Instructor i = fm.getInstructor(id);
+        if (i != null) return i;
+
+        Parent p = fm.getParent(id);
+        if (p != null) return p;
+
+        HR hr = fm.getHR(id);
+        if (hr != null) return hr;
+
+        Admin a = fm.getAdmin(id);
+        if (a != null) return a;
+
+        return null;
+    }
+
+    public void updateUser(User user) {
+
+        // 1. Get existing user from ANY collection
+        User existingGeneral = findExistingUserById(user.getId());
+
+        // 2. Merge base fields if found
+        if (existingGeneral != null) {
+            mergeBaseUserFields(user, existingGeneral);
+        }
+
+        // 3. Merge subclass-specific fields
+        if (user instanceof Student) {
+            Student s = (Student) user;
+            Student existing = fm.getStudent(s.getId());
+            if (existing != null) mergeStudent(s, existing);
+            fm.addStudent(s);
+        }
+
+        else if (user instanceof Instructor) {
+            Instructor i = (Instructor) user;
+            Instructor existing = fm.getInstructor(i.getId());
+            if (existing != null) mergeInstructor(i, existing);
+            fm.addInstructor(i);
+        }
+
         else if (user instanceof Parent) {
-            Parent parent = (Parent) user;
-            Parent existing = fm.getParent(parent.getId());
+            Parent p = (Parent) user;
+            Parent existing = fm.getParent(p.getId());
+            if (existing != null) mergeParent(p, existing);
+            fm.addParent(p);
+        }
 
-            if (existing != null) {
-
-                if (parent.getRelation() == null && existing.getRelation() != null) {
-                    parent.setRelation(existing.getRelation());
-                }
-
-                if ((parent.getChildren() == null || parent.getChildren().isEmpty())
-                        && existing.getChildren() != null) {
-                    parent.setChildren(existing.getChildren());
-                }
-            }
-
-            fm.addParent(parent);
-        }else if (user instanceof HR) {
+        else if (user instanceof HR) {
             HR hr = (HR) user;
             HR existing = fm.getHR(hr.getId());
-
-            if (existing != null) {
-
-                if (hr.getSalary() == null && existing.getSalary() != null) {
-                    hr.setSalary(existing.getSalary());
-                }
-
-                if (hr.getDepartmentName() == null && existing.getDepartmentName() != null) {
-                    hr.setDepartmentName(existing.getDepartmentName());
-                }
-            }
-
+            if (existing != null) mergeHR(hr, existing);
             fm.addHR(hr);
-        } else if (user instanceof Admin) {
-            Admin admin = (Admin) user;
-            Admin existing = fm.getAdmin(admin.getId());
-
-            if (existing != null) {
-
-                if (admin.getSalary() == null && existing.getSalary() != null) {
-                    admin.setSalary(existing.getSalary());
-                }
-            }
-
-            fm.addAdmin(admin);
         }
 
-
-
-
+        else if (user instanceof Admin) {
+            Admin a = (Admin) user;
+            Admin existing = fm.getAdmin(a.getId());
+            if (existing != null) mergeAdmin(a, existing);
+            fm.addAdmin(a);
+        }
     }
+
 
 
 
