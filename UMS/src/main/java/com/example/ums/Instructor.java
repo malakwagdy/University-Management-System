@@ -10,7 +10,8 @@ public class Instructor extends User{
     private String role;
     private boolean departmentHead;
     private String departmentName;
-    private ArrayList<String> responsibilities;
+    @PropertyName("responsibilities")
+    private ArrayList<String> responsibilities = new ArrayList<>();
     private ArrayList<String> officeHours;
     private ArrayList<String> benefits;
 
