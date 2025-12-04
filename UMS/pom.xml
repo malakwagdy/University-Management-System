@@ -24,6 +24,20 @@
       <version>9.3.0</version>
     </dependency>
 
+    <!-- PostgreSQL JDBC driver -->
+    <dependency>
+      <groupId>org.postgresql</groupId>
+      <artifactId>postgresql</artifactId>
+      <version>42.7.4</version>
+    </dependency>
+
+    <!-- Hibernate ORM core (for JPA-style data access) -->
+    <dependency>
+      <groupId>org.hibernate</groupId>
+      <artifactId>hibernate-core</artifactId>
+      <version>5.6.15.Final</version>
+    </dependency>
+
     <dependency>
       <groupId>org.openjfx</groupId>
       <artifactId>javafx-fxml</artifactId>
