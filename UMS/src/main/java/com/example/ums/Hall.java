@@ -11,6 +11,7 @@ public class Hall {
     private Map<Timestamp, Boolean> slots;
     private String type;
     private boolean maintenance;
+    private String status;
 
     public Hall(String hallId, String hallCapacity, Map<Timestamp, Boolean> slots, String type, boolean maintenance) {
         this.hallId = hallId;

@@ -65,6 +65,31 @@ public class Admin extends User {
                 throw new IllegalArgumentException("Invalid ID: " + id);
         }
     }
+//    public void updateUser(User user){
+//        String code = user.getId().substring(2,3);
+//        switch (code) {
+//            case"A":
+//                fm.updateAdmin((Admin) user);
+//                break;
+//            case "S":
+//                fm.updateStudent((Student) user);
+//                break;
+//            case "I":
+//                fm.updateInstructor((Instructor) user);
+//                break;
+//            case "P":
+//                fm.updateParent((Parent) user);
+//                break;
+//            case "H":
+//                fm.updateHR((HR) user);
+//                break;
+//            default:
+//                throw new IllegalArgumentException("Invalid ID: " + user.getId());
+//        }
+//
+//    }
+
+
 
     public void updateDepartmentHead(String instructorId, Boolean isDepartmentHead) {
         Instructor instructor = fm.getInstructor(instructorId);

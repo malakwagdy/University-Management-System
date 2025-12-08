@@ -47,7 +47,8 @@ public class ViewAdmissionPopupController {
         if (admission == null) return;
         
         // Add all admission details
-        detailsBox.getChildren().add(new Label("Application ID: " + (admission.getAdmissionId() != null ? admission.getAdmissionId() : "N/A")));
+        String admissionIdLabel = admission.getAdmissionId() > 0 ? String.valueOf(admission.getAdmissionId()) : "N/A";
+        detailsBox.getChildren().add(new Label("Application ID: " + admissionIdLabel));
         detailsBox.getChildren().add(new Label("Name: " + (admission.getName() != null ? admission.getName() : "N/A")));
         detailsBox.getChildren().add(new Label("Email: " + (admission.getEmail() != null ? admission.getEmail() : "N/A")));
         detailsBox.getChildren().add(new Label("Phone Number: " + (admission.getPhoneNumber() != null ? admission.getPhoneNumber() : "N/A")));

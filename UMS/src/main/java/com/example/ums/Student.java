@@ -6,7 +6,6 @@ import java.util.ArrayList;
 import java.util.Map;
 
 public class Student extends User {
-    private String dateOfBirth;
     private ArrayList<String> currentCourses;
     private Map<String,String> takenCourses;
     private String gpa;
@@ -19,8 +18,7 @@ public class Student extends User {
     }
 
     public Student( String studentId, String phoneNumber, String email, String password, String name, String dateOfBirth, ArrayList<String> currentCourses, Map<String,String> takenCourses, String GPA, String semester, String major) {
-        super(studentId ,phoneNumber, email, password, name);
-        this.dateOfBirth = dateOfBirth;
+        super(studentId ,phoneNumber, email, password, name, dateOfBirth);
         this.currentCourses = currentCourses;
         this.takenCourses = takenCourses;
         this.gpa = GPA;
@@ -28,22 +26,13 @@ public class Student extends User {
         this.major = major;
     }
     public Student(String studentId, String phoneNumber, String email, String password, String name, String dateOfBirth,String major){
-        super(studentId,phoneNumber, email, password, name);
-        this.dateOfBirth = dateOfBirth;
+        super(studentId,phoneNumber, email, password, name, dateOfBirth);
 
         this.currentCourses = null;
         this.takenCourses = null;
         this.gpa = "0";
         this.semester = "1";
         this.major = major;
-    }
-    @PropertyName("dateOfBirth")
-    public String getdateOfBirth() {
-        return dateOfBirth;
-    }
-    @PropertyName("dateOfBirth")
-    public void setdateOfBirth(String dateOfBirth) {
-        this.dateOfBirth = dateOfBirth;
     }
     @PropertyName("currentCourses")
     public ArrayList<String> getCurrentCourses() {

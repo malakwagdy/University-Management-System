@@ -4,17 +4,23 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="3b0e75bd-c97a-490f-b811-f2c75cb1e98f" name="Changes" comment="-added accept, reject admission&#10;-few gets for admission&#10;-accept admission creates a student account">
+    <list default="true" id="3b0e75bd-c97a-490f-b811-f2c75cb1e98f" name="Changes" comment="-fixed the null fields in student">
       <change afterPath="$PROJECT_DIR$/.idea/copilot.data.migration.agent.xml" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/.idea/copilot.data.migration.ask.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/copilot.data.migration.ask2agent.xml" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/.idea/copilot.data.migration.edit.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/UMS/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/UMS/.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/UMS/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/UMS/pom.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/UMS/src/main/java/com/example/ums/Admin.java" beforeDir="false" afterPath="$PROJECT_DIR$/UMS/src/main/java/com/example/ums/Admin.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/UMS/src/main/java/com/example/ums/HR.java" beforeDir="false" afterPath="$PROJECT_DIR$/UMS/src/main/java/com/example/ums/HR.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/UMS/src/main/java/com/example/ums/Instructor.java" beforeDir="false" afterPath="$PROJECT_DIR$/UMS/src/main/java/com/example/ums/Instructor.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/UMS/src/main/java/com/example/ums/Parent.java" beforeDir="false" afterPath="$PROJECT_DIR$/UMS/src/main/java/com/example/ums/Parent.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/UMS/src/main/java/com/example/ums/Admission.java" beforeDir="false" afterPath="$PROJECT_DIR$/UMS/src/main/java/com/example/ums/Admission.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/UMS/src/main/java/com/example/ums/DatabaseManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/UMS/src/main/java/com/example/ums/DatabaseManager.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/UMS/src/main/java/com/example/ums/FirestoreManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/UMS/src/main/java/com/example/ums/FirestoreManager.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/UMS/src/main/java/com/example/ums/Hall.java" beforeDir="false" afterPath="$PROJECT_DIR$/UMS/src/main/java/com/example/ums/Hall.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/UMS/src/main/java/com/example/ums/SceneController.java" beforeDir="false" afterPath="$PROJECT_DIR$/UMS/src/main/java/com/example/ums/SceneController.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/UMS/src/main/java/com/example/ums/Student.java" beforeDir="false" afterPath="$PROJECT_DIR$/UMS/src/main/java/com/example/ums/Student.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/UMS/src/main/java/com/example/ums/User.java" beforeDir="false" afterPath="$PROJECT_DIR$/UMS/src/main/java/com/example/ums/User.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/UMS/src/main/java/com/example/ums/ViewAdmissionPopupController.java" beforeDir="false" afterPath="$PROJECT_DIR$/UMS/src/main/java/com/example/ums/ViewAdmissionPopupController.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -57,6 +63,7 @@
   </component>
   <component name="PropertiesComponent">{
   &quot;keyToString&quot;: {
+    &quot;Application.Launcher.executor&quot;: &quot;Run&quot;,
     &quot;Application.main.executor&quot;: &quot;Run&quot;,
     &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
@@ -71,6 +78,9 @@
     &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
     &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
     &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;project.structure.last.edited&quot;: &quot;Modules&quot;,
+    &quot;project.structure.proportion&quot;: &quot;0.0&quot;,
+    &quot;project.structure.side.proportion&quot;: &quot;0.0&quot;,
     &quot;settings.editor.selected.configurable&quot;: &quot;preferences.pluginManager&quot;,
     &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
@@ -79,6 +89,43 @@
     <key name="CopyFile.RECENT_KEYS">
       <recent name="C:\Users\pc\IdeaProjects\University-Management-System\UMS\src\main\resources" />
     </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\pc\IdeaProjects\University-Management-System" />
+    </key>
+  </component>
+  <component name="RunManager" selected="Application.main">
+    <configuration name="Launcher" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="com.example.ums.Launcher" />
+      <module name="UMS" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.example.ums.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="main" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="com.example.ums.main" />
+      <module name="UMS" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.example.ums.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Application.main" />
+        <item itemvalue="Application.Launcher" />
+      </list>
+    </recent_temporary>
   </component>
   <component name="SharedIndexes">
     <attachedChunks>
@@ -100,7 +147,15 @@
       <workItem from="1763558569469" duration="2940000" />
       <workItem from="1763572144454" duration="2195000" />
       <workItem from="1763575219312" duration="2113000" />
-      <workItem from="1763583487163" duration="714000" />
+      <workItem from="1763583487163" duration="2588000" />
+      <workItem from="1763588368002" duration="510000" />
+      <workItem from="1763665998057" duration="3446000" />
+      <workItem from="1763686920765" duration="1841000" />
+      <workItem from="1763688801403" duration="1639000" />
+      <workItem from="1764858746711" duration="2324000" />
+      <workItem from="1765208772118" duration="351000" />
+      <workItem from="1765209134796" duration="4622000" />
+      <workItem from="1765215148620" duration="9900000" />
     </task>
     <task id="LOCAL-00001" summary="-applied the schema to all classes&#10;-finished login (untested)&#10;-finished a few functions is databaseManager&#10;-fixed a few issues">
       <option name="closed" value="true" />
@@ -126,7 +181,47 @@
       <option name="project" value="LOCAL" />
       <updated>1763576738400</updated>
     </task>
-    <option name="localTasksCounter" value="4" />
+    <task id="LOCAL-00004" summary="-added account creation for all user types + validation">
+      <option name="closed" value="true" />
+      <created>1763584472923</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1763584472923</updated>
+    </task>
+    <task id="LOCAL-00005" summary="-email to id changes">
+      <option name="closed" value="true" />
+      <created>1763586648572</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1763586648572</updated>
+    </task>
+    <task id="LOCAL-00006" summary="-added delete user&#10;-added updateInstructor">
+      <option name="closed" value="true" />
+      <created>1763668112053</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1763668112053</updated>
+    </task>
+    <task id="LOCAL-00007" summary="-added delete admin">
+      <option name="closed" value="true" />
+      <created>1763668156292</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1763668156292</updated>
+    </task>
+    <task id="LOCAL-00008" summary="-fixed the null fields in student">
+      <option name="closed" value="true" />
+      <created>1763690207542</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1763690207542</updated>
+    </task>
+    <option name="localTasksCounter" value="9" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -136,7 +231,23 @@
     <MESSAGE value="-applied the schema to all classes&#10;-finished login (untested)&#10;-finished a few functions is databaseManager&#10;-fixed a few issues" />
     <MESSAGE value="-changed login function to use email&#10;-removed username from user" />
     <MESSAGE value="-added accept, reject admission&#10;-few gets for admission&#10;-accept admission creates a student account" />
-    <option name="LAST_COMMIT_MESSAGE" value="-added accept, reject admission&#10;-few gets for admission&#10;-accept admission creates a student account" />
+    <MESSAGE value="-added account creation for all user types + validation" />
+    <MESSAGE value="-email to id changes" />
+    <MESSAGE value="-added delete user&#10;-added updateInstructor" />
+    <MESSAGE value="-added delete admin" />
+    <MESSAGE value="-fixed the null fields in student" />
+    <option name="LAST_COMMIT_MESSAGE" value="-fixed the null fields in student" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/UMS/src/main/java/com/example/ums/main.java</url>
+          <line>4</line>
+          <option name="timeStamp" value="1" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
   </component>
   <component name="github-copilot-workspace">
     <instructionFileLocations>

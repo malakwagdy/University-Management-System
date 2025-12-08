@@ -5,7 +5,7 @@ import com.google.firebase.database.PropertyName;
 import java.time.LocalDate;
 
 public class Admission {
-    private String admissionId;
+    private int admissionId;
     private String name;
     private String phoneNumber;
     private String email;
@@ -19,7 +19,7 @@ public class Admission {
     public Admission() {
     }
 
-    public Admission(String admissionId, String name, String phoneNumber, String email, String dateOfBirth, String major, String highschoolGPA) {
+    public Admission(int admissionId, String name, String phoneNumber, String email, String dateOfBirth, String major, String highschoolGPA) {
         this.admissionId = admissionId;
         this.name = name;
         this.phoneNumber = phoneNumber;
@@ -38,7 +38,7 @@ public class Admission {
 
         Admission.validateInputs(name, phoneNumber, email, dateOfBirth, major, highschoolGPA);
 
-        Admission admission = new Admission(null, name, phoneNumber, email, dateOfBirth, major, highschoolGPA);
+        Admission admission = new Admission(0, name, phoneNumber, email, dateOfBirth, major, highschoolGPA);
 
         fm.addAdmission(admission);
     }
@@ -96,11 +96,11 @@ public class Admission {
         this.phoneNumber = phoneNumber;
     }
     @PropertyName("admissionId")
-    public String getAdmissionId() {
+    public int getAdmissionId() {
         return admissionId;
     }
     @PropertyName("admissionId")
-    public void setAdmissionId(String admissionId) {
+    public void setAdmissionId(int admissionId) {
         this.admissionId = admissionId;
     }
     @PropertyName("name")

@@ -18,24 +18,24 @@ public class SceneController {
     private static boolean maximizeByDefault = true;
 
     public static void switchScene(ActionEvent event, String fileName, String title) throws IOException {
-        // Convert to URL and load
-        String absolutePath = GlobalData.path + fileName;
-        FXMLLoader fxmlLoader = new FXMLLoader(new java.io.File(absolutePath).toURI().toURL());
+        FXMLLoader fxmlLoader = new FXMLLoader(
+                SceneController.class.getResource("/com/example/ums/" + fileName)
+        );
+
         Parent root = fxmlLoader.load();
         Stage stage = (Stage)((Node)event.getSource()).getScene().getWindow();
-        
-        // Save current maximized state
+
         boolean wasMaximized = stage.isMaximized();
-        
+
         stage.setScene(new Scene(root));
         stage.setTitle(title);
         stage.show();
-        
-        // Restore maximized state if it was maximized or if maximizeByDefault is true
+
         if (wasMaximized || maximizeByDefault) {
             Platform.runLater(() -> stage.setMaximized(true));
         }
     }
+
 
     public static void Popup(ActionEvent event, String fileName, String title) throws IOException {
         try {

@@ -1,6 +1,5 @@
 package com.example.ums;
 
-import com.google.cloud.firestore.FirestoreOptions;
 import com.google.firebase.database.PropertyName;
 
 public class User {
@@ -9,16 +8,23 @@ public class User {
     private String phoneNumber;
     private String name;
     private String id;
+    private String type;
+    private String dateOfBirth;
 
     public User() {
     }
 
     public User( String id, String phoneNumber, String email, String password, String name) {
+        this(id, phoneNumber, email, password, name, null);
+    }
+
+    public User( String id, String phoneNumber, String email, String password, String name, String dateOfBirth) {
         this.phoneNumber = phoneNumber;
         this.email = email;
         this.password = password;
         this.name = name;
         this.id = id;
+        this.dateOfBirth = dateOfBirth;
     }
     static FirestoreManager fm = FirestoreManager.getInstance();
 
@@ -141,7 +147,26 @@ public class User {
     public void setPhoneNumber(String phoneNumber) {
         this.phoneNumber = phoneNumber;
     }
+
+    @PropertyName("dateOfBirth")
+    public String getdateOfBirth() {
+        return dateOfBirth;
+    }
+
+    @PropertyName("dateOfBirth")
+    public void setdateOfBirth(String dateOfBirth) {
+        this.dateOfBirth = dateOfBirth;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
 }
+
 
 class LoginException extends Exception {
     public LoginException(String message) {
