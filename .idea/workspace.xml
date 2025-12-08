@@ -4,23 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="3b0e75bd-c97a-490f-b811-f2c75cb1e98f" name="Changes" comment="-fixed the null fields in student">
-      <change afterPath="$PROJECT_DIR$/.idea/copilot.data.migration.agent.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/copilot.data.migration.ask.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/copilot.data.migration.ask2agent.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/copilot.data.migration.edit.xml" afterDir="false" />
+    <list default="true" id="3b0e75bd-c97a-490f-b811-f2c75cb1e98f" name="Changes" comment="-partial db creation">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/UMS/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/UMS/.gitignore" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/UMS/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/UMS/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/UMS/src/main/java/com/example/ums/Admin.java" beforeDir="false" afterPath="$PROJECT_DIR$/UMS/src/main/java/com/example/ums/Admin.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/UMS/src/main/java/com/example/ums/Admission.java" beforeDir="false" afterPath="$PROJECT_DIR$/UMS/src/main/java/com/example/ums/Admission.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/UMS/src/main/java/com/example/ums/DatabaseManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/UMS/src/main/java/com/example/ums/DatabaseManager.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/UMS/src/main/java/com/example/ums/FirestoreManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/UMS/src/main/java/com/example/ums/FirestoreManager.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/UMS/src/main/java/com/example/ums/Hall.java" beforeDir="false" afterPath="$PROJECT_DIR$/UMS/src/main/java/com/example/ums/Hall.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/UMS/src/main/java/com/example/ums/SceneController.java" beforeDir="false" afterPath="$PROJECT_DIR$/UMS/src/main/java/com/example/ums/SceneController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/UMS/src/main/java/com/example/ums/Student.java" beforeDir="false" afterPath="$PROJECT_DIR$/UMS/src/main/java/com/example/ums/Student.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/UMS/src/main/java/com/example/ums/User.java" beforeDir="false" afterPath="$PROJECT_DIR$/UMS/src/main/java/com/example/ums/User.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/UMS/src/main/java/com/example/ums/ViewAdmissionPopupController.java" beforeDir="false" afterPath="$PROJECT_DIR$/UMS/src/main/java/com/example/ums/ViewAdmissionPopupController.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -155,7 +141,7 @@
       <workItem from="1764858746711" duration="2324000" />
       <workItem from="1765208772118" duration="351000" />
       <workItem from="1765209134796" duration="4622000" />
-      <workItem from="1765215148620" duration="9900000" />
+      <workItem from="1765215148620" duration="11506000" />
     </task>
     <task id="LOCAL-00001" summary="-applied the schema to all classes&#10;-finished login (untested)&#10;-finished a few functions is databaseManager&#10;-fixed a few issues">
       <option name="closed" value="true" />
@@ -221,7 +207,15 @@
       <option name="project" value="LOCAL" />
       <updated>1763690207542</updated>
     </task>
-    <option name="localTasksCounter" value="9" />
+    <task id="LOCAL-00009" summary="-partial db creation">
+      <option name="closed" value="true" />
+      <created>1765233997787</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1765233997787</updated>
+    </task>
+    <option name="localTasksCounter" value="10" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -236,7 +230,8 @@
     <MESSAGE value="-added delete user&#10;-added updateInstructor" />
     <MESSAGE value="-added delete admin" />
     <MESSAGE value="-fixed the null fields in student" />
-    <option name="LAST_COMMIT_MESSAGE" value="-fixed the null fields in student" />
+    <MESSAGE value="-partial db creation" />
+    <option name="LAST_COMMIT_MESSAGE" value="-partial db creation" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
