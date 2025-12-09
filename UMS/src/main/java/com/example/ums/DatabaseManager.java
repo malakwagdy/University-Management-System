@@ -217,6 +217,25 @@ public class DatabaseManager {
         }
         return students;
     }
+public ArrayList<Student> getStudentsByCourse(String courseCode) {
+    String sql = "SELECT userid FROM currentcourses WHERE coursecode = ?";
+    ArrayList<Student> students = new ArrayList<>();
+    try (Connection conn = getConnection();
+         PreparedStatement ps = conn.prepareStatement(sql)) {
+        ps.setString(1, courseCode);
+        try (ResultSet rs = ps.executeQuery()) {
+            while (rs.next()) {
+                Student student = getStudent(rs.getString("userid"));
+                if (student != null) {
+                    students.add(student);
+                }
+            }
+        }
+    } catch (SQLException e) {
+        throw new RuntimeException("Failed to load student by course", e);
+    }
+    return students;
+}
 
 public void addHR(HR hr) {
     String userSql = "INSERT INTO users (userid,usertype,name,email,userpassword,phoneNumber,dateofbirth) VALUES (?, ?, ?, ?, ?,?,?)";
