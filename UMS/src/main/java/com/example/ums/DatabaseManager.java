@@ -5,6 +5,7 @@ import io.github.cdimascio.dotenv.Dotenv;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 
 public class DatabaseManager {
 
@@ -200,6 +201,79 @@ public class DatabaseManager {
             }
         }
     }
+
+    public User getUser(String id) {
+        String sql = "SELECT * FROM users WHERE userid = ?";
+        try (Connection conn = getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, id);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                return mapUser(rs);
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return null;
+    }
+
+    // public Student getStudent(String id) {
+    //     try (Connection conn = getConnection()) {
+    //         Student student = fetchStudentCore(conn, id);
+    //         if (student == null) {
+    //             return null;
+    //         }
+    //         student.setCurrentCourses(fetchCurrentCourses(conn, id));
+    //         student.setTakenCourses(fetchTakenCourses(conn, id));
+    //         hydrateUserAttributeValues(conn, id, student);
+    //         return student;
+    //     } catch (SQLException e) {
+    //         throw new RuntimeException("Failed to load student " + id, e);
+    //     }
+    // }
+
+    // public ArrayList<Student> getAllStudents() {
+    //     ArrayList<Student> students = new ArrayList<>();
+    //     try (Connection conn = getConnection()) {
+    //         String sql = "SELECT userid FROM users WHERE usertype = 'Student'";
+    //         try (PreparedStatement ps = conn.prepareStatement(sql);
+    //              ResultSet rs = ps.executeQuery()) {
+    //             while (rs.next()) {
+    //                 String userId = rs.getString("userid");
+    //                 Student student = fetchStudentCore(conn, userId);
+    //                 if (student != null) {
+    //                     student.setCurrentCourses(fetchCurrentCourses(conn, userId));
+    //                     student.setTakenCourses(fetchTakenCourses(conn, userId));
+    //                     hydrateUserAttributeValues(conn, userId, student);
+    //                     students.add(student);
+    //                 }
+    //             }
+    //         }
+    //     } catch (SQLException e) {
+    //         throw new RuntimeException("Failed to load students", e);
+    //     }
+    //     return students;
+    // }
+
+public ArrayList<Student> getStudentsByCourse(String courseCode) {
+    String sql = "SELECT userid FROM currentcourses WHERE coursecode = ?";
+    ArrayList<Student> students = new ArrayList<>();
+    try (Connection conn = getConnection();
+         PreparedStatement ps = conn.prepareStatement(sql)) {
+        ps.setString(1, courseCode);
+        try (ResultSet rs = ps.executeQuery()) {
+            while (rs.next()) {
+                Student student = getStudent(rs.getString("userid"));
+                if (student != null) {
+                    students.add(student);
+                }
+            }
+        }
+    } catch (SQLException e) {
+        throw new RuntimeException("Failed to load student by course", e);
+    }
+    return students;
+}
 
     public Student getStudent(String id) throws SQLException {
         String sql = "SELECT u.userid, u.usertype, u.username, u.email, u.userpassword, u.phonenumber, u.dateofbirth, "
@@ -1093,6 +1167,132 @@ public class DatabaseManager {
         student.setSemester(rs.getString("semester"));
         return student;
     }
+
+    private User mapUser(ResultSet rs) throws SQLException {
+        User user = new User();
+        user.setId(rs.getString("userid"));
+        user.setType(rs.getString("usertype"));
+        user.setName(rs.getString("name"));
+        user.setEmail(rs.getString("email"));
+        user.setPassword(rs.getString("userpassword"));
+        user.setPhoneNumber(rs.getString("phonenumber"));
+        user.setdateOfBirth(rs.getString("dateofbirth"));
+        return user;
+    }
+
+    private Student fetchStudentCore(Connection conn, String id) throws SQLException {
+        String sql = "SELECT userid, usertype, name, email, userpassword, phonenumber, dateofbirth " +
+                "FROM users WHERE userid = ?";
+        try (PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, id);
+            ResultSet rs = ps.executeQuery();
+            if (!rs.next()) {
+                return null;
+            }
+            Student student = new Student();
+            student.setId(rs.getString("userid"));
+            student.setType(rs.getString("usertype"));
+            student.setName(rs.getString("name"));
+            student.setEmail(rs.getString("email"));
+            student.setPassword(rs.getString("userpassword"));
+            student.setPhoneNumber(rs.getString("phonenumber"));
+            student.setdateOfBirth(rs.getString("dateofbirth"));
+            return student;
+        }
+    }
+
+    private ArrayList<String> fetchCurrentCourses(Connection conn, String userId) throws SQLException {
+        ArrayList<String> courses = new ArrayList<>();
+        String sql = "SELECT coursecode FROM currentcourses WHERE userid = ?";
+        try (PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, userId);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                courses.add(rs.getString("coursecode"));
+            }
+        }
+        return courses;
+    }
+
+    private Map<String, String> fetchTakenCourses(Connection conn, String userId) throws SQLException {
+        Map<String, String> taken = new HashMap<>();
+        String sql = "SELECT coursecode, grade FROM takencourses WHERE userid = ?";
+        try (PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, userId);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                taken.put(rs.getString("coursecode"), rs.getString("grade"));
+            }
+        }
+        return taken;
+    }
+
+    private void hydrateUserAttributeValues(Connection conn, String userId, Student student) throws SQLException {
+        String sql = "SELECT ua.attributename, uv.attributevalue " +
+                "FROM uservalues uv " +
+                "JOIN userattributes ua ON uv.attributeid = ua.attributeid " +
+                "WHERE uv.userid = ?";
+        try (PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, userId);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                String name = rs.getString("attributename");
+                String raw = rs.getString("attributevalue");
+                String value = extractScalarValue(raw);
+                if (name == null) {
+                    continue;
+                }
+                switch (name) {
+                    case "gpa":
+                        student.setGpa(value);
+                        break;
+                    case "major":
+                        student.setMajor(value);
+                        break;
+                    case "semester":
+                        student.setSemester(value);
+                        break;
+                    default:
+                        break;
+                }
+            }
+        }
+    }
+
+    private String extractScalarValue(String json) {
+        if (json == null) {
+            return null;
+        }
+        String trimmed = json.trim();
+        if (trimmed.isEmpty() || trimmed.equalsIgnoreCase("null")) {
+            return null;
+        }
+        if (trimmed.startsWith("{") && trimmed.contains("\"value\"")) {
+            if (trimmed.contains("\"value\":null")) {
+                return null;
+            }
+            int start = trimmed.indexOf("\"value\"");
+            start = trimmed.indexOf(':', start);
+            if (start == -1) {
+                return trimmed;
+            }
+            start++;
+            while (start < trimmed.length() && Character.isWhitespace(trimmed.charAt(start))) {
+                start++;
+            }
+            if (start < trimmed.length() && trimmed.charAt(start) == '\"') {
+                start++;
+                int end = trimmed.indexOf("\"", start);
+                if (end > start) {
+                    return trimmed.substring(start, end)
+                            .replace("\\\"", "\"")
+                            .replace("\\\\", "\\");
+                }
+            }
+        }
+        return trimmed;
+    }
+
 
     // public static void addStudent(Student student) {
 

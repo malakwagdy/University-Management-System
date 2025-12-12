@@ -32,4 +32,12 @@ public class StudentDashboardController {
             e.printStackTrace();
         }
     }
+    @FXML
+    public void handleChangePassword(ActionEvent actionEvent) {
+        try {
+            SceneController.switchScene(actionEvent, "ChangePassword.fxml", "Change Password");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 }

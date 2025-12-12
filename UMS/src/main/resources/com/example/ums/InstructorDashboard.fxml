@@ -13,7 +13,7 @@
 <?import javafx.scene.layout.Region?>
 <?import javafx.scene.layout.VBox?>
 
-<BorderPane xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.ums.InstructorDashboardController">
+<BorderPane xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.ums.InstructorDashboardController">
    <top>
       <VBox spacing="10">
          <padding>
@@ -41,6 +41,7 @@
          <Button fx:id="quizzesBtn" maxWidth="1.7976931348623157E308" text="Quizzes" />
          <Button fx:id="officeHoursBtn" maxWidth="1.7976931348623157E308" text="Office Hours" />
          <Button fx:id="gradesBtn" maxWidth="1.7976931348623157E308" text="Grade Management" />
+         <Button fx:id="classroom_btn" mnemonicParsing="false" onAction="#viewClassrooms" prefHeight="26.0" prefWidth="172.0" text="Classrooms" />
          <Region VBox.vgrow="ALWAYS" />
          <Separator />
          <Button fx:id="leaveRequestBtn" maxWidth="1.7976931348623157E308" text="Leave Requests" />

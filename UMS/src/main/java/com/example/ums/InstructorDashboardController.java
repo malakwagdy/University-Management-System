@@ -31,4 +31,9 @@ public class InstructorDashboardController {
             e.printStackTrace();
         }
     }
+
+    @FXML
+    private void viewClassrooms() {
+
+    }
 }
