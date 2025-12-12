@@ -11,6 +11,9 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import javafx.scene.control.Label;
 
 public class AddUserController implements Initializable {
@@ -202,6 +205,7 @@ public class AddUserController implements Initializable {
     
     @FXML
     private void handleAddUserButton(ActionEvent event) {
+        String dateOfBirth = LocalDate.now().toString();
         String selectedType = userTypeChoiceBox.getValue();
         
         if (selectedType == null) {
@@ -234,16 +238,16 @@ public class AddUserController implements Initializable {
                     } else {
                         role = userRoleChoiceBox.getValue();
                     }
-                    admin.createInstructor(phoneNumber, password, name, department, role, isDepartmentHead);
+                    admin.createInstructor(phoneNumber, password, dateOfBirth, name, department, role, isDepartmentHead);
                     break;
                     
                 case "Admin":
-                    admin.createAdmin(phoneNumber, password, name, "0");
+                    admin.createAdmin(phoneNumber, password, dateOfBirth, name, "0");
                     break;
                     
                 case "HR":
                     department = departmentChoiceBox.getValue();
-                    admin.createHR(phoneNumber, password, name, "0", department);
+                    admin.createHR(phoneNumber, password, dateOfBirth, name, "0", department);
                     break;
                     
                 case "Parent":
@@ -258,7 +262,7 @@ public class AddUserController implements Initializable {
                         }
                     }
                     String relation = relationChoiceBox.getValue();
-                    admin.createParent(phoneNumber, password, name, relation, children);
+                    admin.createParent(phoneNumber, password, dateOfBirth, name, relation, children);
                     break;
             }
             // Only navigate back if user creation was successful

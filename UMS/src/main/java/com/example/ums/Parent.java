@@ -12,8 +12,8 @@ public class Parent extends User{
         super();
     }
 
-    public Parent(String id ,String phoneNumber, String email, String password, String name, String relation, ArrayList<String> children) {
-        super(id, phoneNumber, email, password, name);
+    public Parent(String id ,String phoneNumber, String email, String password, String name, String dateOfBirth, String relation, ArrayList<String> children) {
+        super(id, phoneNumber, email, password, name, dateOfBirth);
         this.relation = relation;
         this.children = children;
     }

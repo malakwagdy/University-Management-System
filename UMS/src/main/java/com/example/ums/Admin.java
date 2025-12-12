@@ -12,8 +12,8 @@ public class Admin extends User {
         super();
     }
 
-    public Admin(String id,String phoneNumber, String email, String password, String name, String salary) {
-        super(id,phoneNumber, email, password, name);
+    public Admin(String id,String phoneNumber, String email, String password, String dateOfBirth, String name, String salary) {
+        super(id,phoneNumber, email, password, name, dateOfBirth);
         this.salary = salary;
     }
     @PropertyName("salary")
@@ -26,9 +26,10 @@ public class Admin extends User {
     }
 
 
-    public void createAdmin(String phoneNumber,  String password, String name, String salary) {
+    public void createAdmin(String phoneNumber,  String password, String dateOfBirth, String name, String salary) {
         String id= this.generateID("admin");
         String email = id+"@ums.edu";
+        dateOfBirth = LocalDate.now().toString();
         validateCommonFields(phoneNumber, email, password, name);
         if (salary == null || salary.trim().isEmpty()) {
             throw new IllegalArgumentException("salary is required");
@@ -39,7 +40,7 @@ public class Admin extends User {
         if (phoneNumber == null || phoneNumber.trim().isEmpty()) {
             throw new IllegalArgumentException("Phone number is required");
         }
-        Admin admin=new Admin(id, phoneNumber, email, password, name, salary);
+        Admin admin=new Admin(id, phoneNumber, email, password, dateOfBirth, name, salary);
         fm.addAdmin(admin);
     }
 
@@ -108,9 +109,10 @@ public class Admin extends User {
         fm.updateInstructor(instructor);
     }
 
-    public void createHR(String phoneNumber,  String password, String name, String salary, String departmentName) {
+    public void createHR(String phoneNumber,  String password, String dateOfBirth, String name, String salary, String departmentName) {
         String id= this.generateID("hr");
         String email = id+"@ums.edu";
+        dateOfBirth = LocalDate.now().toString();
         validateCommonFields(phoneNumber, email, password, name);
         if (salary == null || salary.trim().isEmpty()) {
             throw new IllegalArgumentException("Salary is required");
@@ -121,12 +123,13 @@ public class Admin extends User {
         if (phoneNumber == null || phoneNumber.trim().isEmpty()) {
             throw new IllegalArgumentException("Phone number is required");
         }
-        HR hr=new HR(id, phoneNumber, email, password, name, salary, departmentName);
+        HR hr=new HR(id, phoneNumber, email, password, dateOfBirth, name, salary, departmentName);
         fm.addHR(hr);
     }
-    public void createInstructor(String phoneNumber,  String password, String name, String department,String role,Boolean departmentHead) {
+    public void createInstructor(String phoneNumber,  String password, String dateOfBirth, String name, String department,String role,Boolean departmentHead) {
         String id= this.generateID("instructor");
         String email = id+"@ums.edu";
+        dateOfBirth = LocalDate.now().toString();
         validateCommonFields(phoneNumber, email, password, name);
         if (department == null || department.trim().isEmpty()) {
             throw new IllegalArgumentException("Department is required");
@@ -140,13 +143,13 @@ public class Admin extends User {
         if (role == null || role.trim().isEmpty()) {
             throw new IllegalArgumentException("Role is required");
         }
-        Instructor instructor=new Instructor(id, phoneNumber, email, password, name, department, departmentHead, role);
+        Instructor instructor=new Instructor(id, phoneNumber, email, password, dateOfBirth, name, department, departmentHead, role);
         fm.addInstructor(instructor);
     }
-    public void createParent(String phoneNumber, String password, String name, String relation, ArrayList<String> children) {
+    public void createParent(String phoneNumber, String password, String dateOfBirth, String name, String relation, ArrayList<String> children) {
         String id= this.generateID("parent");
         String email = id+"@ums.edu";
-
+        dateOfBirth = LocalDate.now().toString();
         validateCommonFields(phoneNumber, email, password, name);
 
         if (relation == null || relation.trim().isEmpty()) {
@@ -168,7 +171,7 @@ public class Admin extends User {
             throw new IllegalArgumentException("Phone number is required");
         }
 
-        Parent parent=new Parent(id, phoneNumber, email, password, name, relation, children);
+        Parent parent=new Parent(id, phoneNumber, email, password, dateOfBirth, name, relation, children);
         fm.addParent(parent);
     }
 
