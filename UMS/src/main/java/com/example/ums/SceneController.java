@@ -129,5 +129,15 @@ public class SceneController {
         Parent root = loader.load();
         return new Scene(root);
     }
+
+    public static void switchTo(String resource) {
+        try {
+            switchScene(resource, "UMS System");
+        } catch (IOException e) {
+            e.printStackTrace();
+            System.out.println("ERROR: Could not switch to " + resource);
+        }
+    }
+
 }
 
