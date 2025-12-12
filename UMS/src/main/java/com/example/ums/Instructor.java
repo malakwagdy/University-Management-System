@@ -21,7 +21,7 @@ public class Instructor extends User{
     }
 
     public Instructor(String id , String phoneNumber, String email, String password, String dateOfBirth, String name, String salary, ArrayList<String> courses, String role, boolean departmentHead, String departmentName, ArrayList<String> responsibilities, ArrayList<String> officeHours, ArrayList<String> benefits) {
-        super( id, phoneNumber, email, password, name, dateOfBirth);
+        super( id, "Instructor", phoneNumber, email, password, name, dateOfBirth);
         this.salary = salary;
         this.courses = courses;
         this.role = role;
@@ -32,7 +32,7 @@ public class Instructor extends User{
         this.benefits = benefits;
     }
     public Instructor(String id , String phoneNumber, String email, String password, String dateOfBirth, String name, String department,boolean departmentHead,String role) {
-        super( id, phoneNumber, email, password, name, dateOfBirth);
+        super( id, "Instructor", phoneNumber, email, password, name, dateOfBirth);
         this.salary = "0";
         this.courses = new ArrayList<String>();
         this.role = role;

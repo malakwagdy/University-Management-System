@@ -2,6 +2,7 @@ package com.example.ums;
 
 import com.google.firebase.database.PropertyName;
 
+import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 
@@ -13,7 +14,7 @@ public class Admin extends User {
     }
 
     public Admin(String id,String phoneNumber, String email, String password, String dateOfBirth, String name, String salary) {
-        super(id,phoneNumber, email, password, name, dateOfBirth);
+        super(id, "Admin", phoneNumber, email, password, name, dateOfBirth);
         this.salary = salary;
     }
     @PropertyName("salary")
@@ -29,7 +30,6 @@ public class Admin extends User {
     public void createAdmin(String phoneNumber,  String password, String dateOfBirth, String name, String salary) {
         String id= this.generateID("admin");
         String email = id+"@ums.edu";
-        dateOfBirth = LocalDate.now().toString();
         validateCommonFields(phoneNumber, email, password, name);
         if (salary == null || salary.trim().isEmpty()) {
             throw new IllegalArgumentException("salary is required");
@@ -41,7 +41,7 @@ public class Admin extends User {
             throw new IllegalArgumentException("Phone number is required");
         }
         Admin admin=new Admin(id, phoneNumber, email, password, dateOfBirth, name, salary);
-        fm.addAdmin(admin);
+        dm.addAdmin(admin);
     }
 
     public void deleteUser(String id){
@@ -112,7 +112,6 @@ public class Admin extends User {
     public void createHR(String phoneNumber,  String password, String dateOfBirth, String name, String salary, String departmentName) {
         String id= this.generateID("hr");
         String email = id+"@ums.edu";
-        dateOfBirth = LocalDate.now().toString();
         validateCommonFields(phoneNumber, email, password, name);
         if (salary == null || salary.trim().isEmpty()) {
             throw new IllegalArgumentException("Salary is required");
@@ -124,12 +123,11 @@ public class Admin extends User {
             throw new IllegalArgumentException("Phone number is required");
         }
         HR hr=new HR(id, phoneNumber, email, password, dateOfBirth, name, salary, departmentName);
-        fm.addHR(hr);
+        dm.addHR(hr);
     }
     public void createInstructor(String phoneNumber,  String password, String dateOfBirth, String name, String department,String role,Boolean departmentHead) {
         String id= this.generateID("instructor");
         String email = id+"@ums.edu";
-        dateOfBirth = LocalDate.now().toString();
         validateCommonFields(phoneNumber, email, password, name);
         if (department == null || department.trim().isEmpty()) {
             throw new IllegalArgumentException("Department is required");
@@ -144,12 +142,11 @@ public class Admin extends User {
             throw new IllegalArgumentException("Role is required");
         }
         Instructor instructor=new Instructor(id, phoneNumber, email, password, dateOfBirth, name, department, departmentHead, role);
-        fm.addInstructor(instructor);
+        dm.addInstructor(instructor);
     }
     public void createParent(String phoneNumber, String password, String dateOfBirth, String name, String relation, ArrayList<String> children) {
         String id= this.generateID("parent");
         String email = id+"@ums.edu";
-        dateOfBirth = LocalDate.now().toString();
         validateCommonFields(phoneNumber, email, password, name);
 
         if (relation == null || relation.trim().isEmpty()) {
@@ -171,8 +168,8 @@ public class Admin extends User {
             throw new IllegalArgumentException("Phone number is required");
         }
 
-        Parent parent=new Parent(id, phoneNumber, email, password, dateOfBirth, name, relation, children);
-        fm.addParent(parent);
+        Parent parent=new Parent(id, phoneNumber, email, password, name, dateOfBirth, relation, children);
+        dm.addParent(parent);
     }
 
     private void mergeBaseUserFields(User updated, User existing) {
@@ -295,19 +292,44 @@ public class Admin extends User {
     }
     private User findExistingUserById(String id) {
 
-        Student s = fm.getStudent(id);
+        Student s = null;
+        try {
+            s = dm.getStudent(id);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
         if (s != null) return s;
 
-        Instructor i = fm.getInstructor(id);
+        Instructor i = null;
+        try {
+            i = dm.getInstructor(id);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
         if (i != null) return i;
 
-        Parent p = fm.getParent(id);
+        Parent p = null;
+        try {
+            p = dm.getParent(id);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
         if (p != null) return p;
 
-        HR hr = fm.getHR(id);
+        HR hr = null;
+        try {
+            hr = dm.getHR(id);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
         if (hr != null) return hr;
 
-        Admin a = fm.getAdmin(id);
+        Admin a = null;
+        try {
+            a = dm.getAdmin(id);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
         if (a != null) return a;
 
         return null;
@@ -367,26 +389,46 @@ public class Admin extends User {
     }
 
 
-
-
     public ArrayList<Admission> retrieveAdmissions() {
-        return fm.getAllAdmissions();
+        ArrayList<Admission> admissions = null;
+        try {
+            admissions = dm.getAllAdmissions();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return null;
+        }
+        return admissions;
     }
     public ArrayList<Admission> retrieveAdmissionsByStatus(String status) {
-        return fm.getAdmissionsByStatus(status);
+        ArrayList<Admission> admissions = null;
+        try {
+            admissions = dm.getAdmissionsByStatus(status);
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return null;
+        }
+        return admissions;
     }
     public void acceptAdmission(Admission admission) {
         String id= this.generateID("student");
         String email = id+"@ums.edu";
         Student student=new Student(id, admission.getPhoneNumber(), email,"12345", admission.getName(), admission.getDateOfBirth(), admission.getMajor());
         admission.setStatus("Accepted");
-        fm.addStudent(student);
-        fm.updateAdmissionStatus(admission.getAdmissionId(),"Accepted");
+        try {            
+            dm.addStudent(student);
+            dm.updateAdmissionStatus(admission);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
     public void rejectAdmission(Admission admission) {
         admission.setStatus("Rejected");
-        fm.updateAdmissionStatus(admission.getAdmissionId(),"Rejected");
+        try {
+            dm.updateAdmissionStatus(admission);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
 
@@ -418,34 +460,27 @@ public class Admin extends User {
     public String generateID(String type) {
         String year = String.valueOf(LocalDate.now().getYear()).substring(2);
         String letter;
-        String collection;
-
 
         switch (type.toLowerCase()) {
             case "student":
                 letter = "S";
-                collection = "Student";
                 break;
             case "instructor":
                 letter = "I";
-                collection = "Instructor";
                 break;
             case "parent":
                 letter = "P";
-                collection = "Parent";
                 break;
             case "hr":
                 letter = "H";
-                collection = "HR";
                 break;
             case "admin":
                 letter = "A";
-                collection = "Admin";
                 break;
             default:
                 throw new IllegalArgumentException("Invalid type: " + type);
         }
-        int highest = fm.getHighestIdNumber(collection, letter);
+        int highest = dm.getHighestIdNumber(type);
         int newNumber = highest + 1;
         String number = String.format("%03d", newNumber);
         return year + letter + number;

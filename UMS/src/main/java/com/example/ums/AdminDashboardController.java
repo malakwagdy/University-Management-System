@@ -12,6 +12,7 @@ import javafx.util.Callback;
 
 import java.io.IOException;
 import java.net.URL;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
 
@@ -67,13 +68,16 @@ public class AdminDashboardController implements Initializable {
     private ObservableList<Admission> allAdmissions;
     private ObservableList<User> allUsers;
     private Admin admin;
-
+    private DatabaseManager dm = new DatabaseManager();
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         // Initialize admin instance - get from GlobalData
         String currentUser = GlobalData.getCurrentlyLoggedIN();
-        FirestoreManager fm = FirestoreManager.getInstance();
-        admin = fm.getAdmin(currentUser);
+        try {
+            admin = dm.getAdmin(currentUser);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
         if (admin != null) {
             adminNameLabel.setText("Welcome, " + admin.getName());
         }
@@ -193,19 +197,44 @@ public class AdminDashboardController implements Initializable {
         ArrayList<User> usersList = new ArrayList<>();
         
         // Get all users from each collection
-        ArrayList<Student> students = fm.getAllStudents();
+        ArrayList<Student> students = null;
+        try {
+            students = dm.getAllStudents();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
         usersList.addAll(students);
         
-        ArrayList<Instructor> instructors = fm.getAllInstructors();
+        ArrayList<Instructor> instructors = null;
+        try {
+            instructors = dm.getAllInstructors();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
         usersList.addAll(instructors);
         
-        ArrayList<Admin> admins = fm.getAllAdmins();
+        ArrayList<Admin> admins = null;
+        try {
+            admins = dm.getAllAdmins();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
         usersList.addAll(admins);
         
-        ArrayList<HR> hrList = fm.getAllHR();
+        ArrayList<HR> hrList = null;
+        try {
+            hrList = dm.getAllHR();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
         usersList.addAll(hrList);
         
-        ArrayList<Parent> parents = fm.getAllParents();
+        ArrayList<Parent> parents = null;
+        try {
+            parents = dm.getAllParents();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
         usersList.addAll(parents);
         
         allUsers = FXCollections.observableArrayList(usersList);

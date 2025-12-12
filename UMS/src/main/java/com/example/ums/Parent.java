@@ -13,7 +13,7 @@ public class Parent extends User{
     }
 
     public Parent(String id ,String phoneNumber, String email, String password, String name, String dateOfBirth, String relation, ArrayList<String> children) {
-        super(id, phoneNumber, email, password, name, dateOfBirth);
+        super(id, "Parent", phoneNumber, email, password, name, dateOfBirth);
         this.relation = relation;
         this.children = children;
     }

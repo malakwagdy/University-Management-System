@@ -1,5 +1,7 @@
 package com.example.ums;
 
+import java.sql.SQLException;
+
 import com.google.firebase.database.PropertyName;
 
 public class User {
@@ -14,11 +16,12 @@ public class User {
     public User() {
     }
 
-    public User( String id, String phoneNumber, String email, String password, String name) {
-        this(id, phoneNumber, email, password, name, null);
+    public User( String id, String type, String phoneNumber, String email, String password, String name) {
+        this(id, type, phoneNumber, email, password, name, null);
     }
 
-    public User( String id, String phoneNumber, String email, String password, String name, String dateOfBirth) {
+    public User( String id, String type, String phoneNumber, String email, String password, String name, String dateOfBirth) {
+        this.type = type;
         this.phoneNumber = phoneNumber;
         this.email = email;
         this.password = password;
@@ -27,73 +30,114 @@ public class User {
         this.dateOfBirth = dateOfBirth;
     }
     static FirestoreManager fm = FirestoreManager.getInstance();
+    static DatabaseManager dm = new DatabaseManager();
 
+
+    // public void Login(String email, String Password) throws LoginException {
+
+    //     if (email == null) {
+    //         throw new LoginException("Email is incorrect.");
+    //     }
+    //     String id = email.substring(0, 6);
+    //     User user = fm.getAdmin(id);
+
+    //     if (user == null) {
+    //         user = fm.getInstructor(id);
+    //         if (user != null) {
+    //             if (user.getEmail().equals(email) && user.getPassword().equals(Password)) {
+    //                 if (((Instructor) user).isDepartmentHead()) {
+    //                     LoginController.isDepartmentHead = true;
+    //                 } else {
+    //                     LoginController.isInstructor = true;
+    //                 }
+    //             } else {
+    //                 throw new LoginException("Password is incorrect.");
+    //             }
+    //         } else  {
+    //             user = fm.getStudent(id);
+    //             if (user != null) {
+    //                 if (user.getEmail().equals(email) && user.getPassword().equals(Password)) {
+
+    //                     LoginController.isStudent = true;
+
+    //                 } else {
+    //                     throw new LoginException("Password is incorrect.");
+    //                 }
+    //             }else  {
+    //                 user = fm.getHR(id);
+    //                 if (user != null) {
+    //                     if (user.getEmail().equals(email) && user.getPassword().equals(Password)) {
+
+    //                         LoginController.isHr = true;
+
+    //                     } else {
+    //                         throw new LoginException("Password is incorrect.");
+    //                     }
+    //                 }else {
+    //                     user = fm.getParent(id);
+    //                     if (user != null) {
+    //                         if (user.getEmail().equals(email) && user.getPassword().equals(Password)) {
+
+    //                             LoginController.isParent = true;
+
+    //                         } else {
+    //                             throw new LoginException("Password is incorrect.");
+    //                         }
+    //                     }else{
+    //                         throw new LoginException("Email is incorrect.");
+    //                     }
+    //                 }
+    //             }
+    //         }
+    //     }else{
+    //         if (user.getEmail().equals(email) && user.getPassword().equals(Password)) {
+
+    //             //LoginController.isAdmin = true;
+    //         }else {
+    //             throw new LoginException("Password is incorrect.");
+    //         }
+    //     }
+    //     GlobalData.setCurrentlyLoggedIN(id);
+    // }
 
     public void Login(String email, String Password) throws LoginException {
 
         if (email == null) {
-            throw new LoginException("Email is incorrect.");
+            throw new LoginException("Incorrect email or password.");
         }
         String id = email.substring(0, 6);
-        User user = fm.getAdmin(id);
-
+        User user = dm.getUser(id);
         if (user == null) {
-            user = fm.getInstructor(id);
-            if (user != null) {
-                if (user.getEmail().equals(email) && user.getPassword().equals(Password)) {
-                    if (((Instructor) user).isDepartmentHead()) {
-                        LoginController.isDepartmentHead = true;
-                    } else {
-                        LoginController.isInstructor = true;
-                    }
-                } else {
-                    throw new LoginException("Password is incorrect.");
-                }
-            } else  {
-                user = fm.getStudent(id);
-                if (user != null) {
-                    if (user.getEmail().equals(email) && user.getPassword().equals(Password)) {
-
-                        LoginController.isStudent = true;
-
-                    } else {
-                        throw new LoginException("Password is incorrect.");
-                    }
-                }else  {
-                    user = fm.getHR(id);
-                    if (user != null) {
-                        if (user.getEmail().equals(email) && user.getPassword().equals(Password)) {
-
-                            LoginController.isHr = true;
-
-                        } else {
-                            throw new LoginException("Password is incorrect.");
-                        }
-                    }else {
-                        user = fm.getParent(id);
-                        if (user != null) {
-                            if (user.getEmail().equals(email) && user.getPassword().equals(Password)) {
-
-                                LoginController.isParent = true;
-
-                            } else {
-                                throw new LoginException("Password is incorrect.");
-                            }
-                        }else{
-                            throw new LoginException("Email is incorrect.");
-                        }
-                    }
-                }
-            }
-        }else{
-            if (user.getEmail().equals(email) && user.getPassword().equals(Password)) {
-
-                //LoginController.isAdmin = true;
-            }else {
-                throw new LoginException("Password is incorrect.");
-            }
+            throw new LoginException("Incorrect email or password.");
         }
-        GlobalData.setCurrentlyLoggedIN(id);
+        if (user.getEmail().equals(email) && user.getPassword().equals(Password)) {
+            GlobalData.setCurrentlyLoggedIN(id);
+            switch (user.getType()) {
+                case "Instructor":
+                try {    
+                Instructor instructor = dm.getInstructor(id);
+                if (instructor.isDepartmentHead()) {
+                    LoginController.isDepartmentHead = true;
+                } else {
+                    LoginController.isInstructor = true;
+                }
+                } catch (SQLException e) {
+                    throw new LoginException("Incorrect email or password.");
+                }
+                    break;
+                case "Student":
+                    LoginController.isStudent = true;
+                    break;
+                case "HR":
+                    LoginController.isHr = true;
+                    break;
+                case "Parent":
+                    LoginController.isParent = true;
+                    break;
+            }
+        } else {
+            throw new LoginException("Incorrect email or password.");
+        }
     }
 
     public static void Logout(){

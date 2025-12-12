@@ -12,7 +12,7 @@ public class HR extends User {
     }
 
     public HR( String id, String phoneNumber, String email, String password, String dateOfBirth, String name, String salary, String departmentName) {
-        super( id, phoneNumber, email, password, name, dateOfBirth);
+        super( id, "HR", phoneNumber, email, password, name, dateOfBirth);
         this.salary = salary;
         this.departmentName = departmentName;
     }

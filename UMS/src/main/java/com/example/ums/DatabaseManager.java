@@ -156,7 +156,7 @@ public class DatabaseManager {
      * - Insert attributes into UserAttributes / UserValues as JSONB
      */
     public void addStudent(Student student) {
-        String userSql = "INSERT INTO users (userid,usertype,name,email,userpassword,phoneNumber,dateofbirth) VALUES (?, ?, ?, ?, ?,?,?)";
+        String userSql = "INSERT INTO users (userid,usertype,username,email,userpassword,phoneNumber,dateofbirth) VALUES (?, ?, ?, ?, ?,?,?)";
         try (Connection conn = getConnection();
                 PreparedStatement ps = conn.prepareStatement(userSql)) {
             ps.setString(1, student.getId());
@@ -256,7 +256,7 @@ public class DatabaseManager {
     // }
 
 public ArrayList<Student> getStudentsByCourse(String courseCode) {
-    String sql = "SELECT userid FROM currentcourses WHERE coursecode = ?";
+    String sql = "SELECT userid FROM currentcourses WHERE courseid = ?";
     ArrayList<Student> students = new ArrayList<>();
     try (Connection conn = getConnection();
          PreparedStatement ps = conn.prepareStatement(sql)) {
@@ -423,7 +423,7 @@ public ArrayList<Student> getStudentsByCourse(String courseCode) {
     }
 
     public void addInstructor(Instructor instructor) {
-        String userSql = "INSERT INTO users (userid,usertype,name,email,userpassword,phoneNumber,dateofbirth) VALUES (?, ?, ?, ?, ?,?,?)";
+        String userSql = "INSERT INTO users (userid,usertype,username,email,userpassword,phoneNumber,dateofbirth) VALUES (?, ?, ?, ?, ?,?,?)";
         try (Connection conn = getConnection();
                 PreparedStatement ps = conn.prepareStatement(userSql)) {
             ps.setString(1, instructor.getId());
@@ -554,7 +554,7 @@ public ArrayList<Student> getStudentsByCourse(String courseCode) {
 
             if (hasData && userId != null) {
                 // Use constructor with major (7 params), defaulting to empty string if null
-                Instructor instructor = new Instructor(userId, phoneNumber, email, password, name, dateOfBirth,
+                Instructor instructor = new Instructor(userId, phoneNumber, email, password, dateOfBirth,name,
                         departmentName != null ? departmentName : "", isDepartmentHead != null ? isDepartmentHead : false, role != null ? role : "");
                 if (salary != null)
                     instructor.setSalary(salary);
@@ -599,7 +599,7 @@ public ArrayList<Student> getStudentsByCourse(String courseCode) {
 
     public ArrayList<String> getResponsibilities(String userId) throws SQLException {
         ArrayList<String> responsibilities = new ArrayList<>();
-        String sql = "SELECT responsibility FROM responsibilities WHERE instructorid = ?";
+        String sql = "SELECT responsibility FROM responsibilities WHERE userid = ?";
         try (Connection conn = getConnection();
                 PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setString(1, userId);
@@ -613,7 +613,7 @@ public ArrayList<Student> getStudentsByCourse(String courseCode) {
 
     public ArrayList<String> getOfficeHours(String userId) throws SQLException {
         ArrayList<String> officeHours = new ArrayList<>();
-        String sql = "SELECT officehour, officehourday FROM officehours WHERE instructorid = ?";
+        String sql = "SELECT officehour, officehourday FROM officehours WHERE userid = ?";
         try (Connection conn = getConnection();
                 PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setString(1, userId);
@@ -627,7 +627,7 @@ public ArrayList<Student> getStudentsByCourse(String courseCode) {
 
     public ArrayList<String> getBenefits(String userId) throws SQLException {
         ArrayList<String> benefits = new ArrayList<>();
-        String sql = "SELECT benefit FROM benefits WHERE instructorid = ?";
+        String sql = "SELECT benefit FROM benefits WHERE userid = ?";
         try (Connection conn = getConnection();
                 PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setString(1, userId);
@@ -640,7 +640,7 @@ public ArrayList<Student> getStudentsByCourse(String courseCode) {
     }
 
     public void addHR(HR hr) {
-        String userSql = "INSERT INTO users (userid,usertype,name,email,userpassword,phoneNumber,dateofbirth) VALUES (?, ?, ?, ?, ?,?,?)";
+        String userSql = "INSERT INTO users (userid,usertype,username,email,userpassword,phoneNumber,dateofbirth) VALUES (?, ?, ?, ?, ?,?,?)";
         try (Connection conn = getConnection();
                 PreparedStatement ps = conn.prepareStatement(userSql)) {
             ps.setString(1, hr.getId());
@@ -775,7 +775,7 @@ public ArrayList<Student> getStudentsByCourse(String courseCode) {
     }
 
     public void addAdmin(Admin admin) {
-        String userSql = "INSERT INTO users (userid,usertype,name,email,userpassword,phoneNumber,dateofbirth) VALUES (?, ?, ?, ?, ?,?,?)";
+        String userSql = "INSERT INTO users (userid,usertype,username,email,userpassword,phoneNumber,dateofbirth) VALUES (?, ?, ?, ?, ?,?,?)";
         try (Connection conn = getConnection();
                 PreparedStatement ps = conn.prepareStatement(userSql)) {
             ps.setString(1, admin.getId());
@@ -890,7 +890,7 @@ public ArrayList<Student> getStudentsByCourse(String courseCode) {
     }
 
     public void addParent(Parent parent) {
-        String userSql = "INSERT INTO users (userid,usertype,name,email,userpassword,phoneNumber,dateofbirth) VALUES (?, ?, ?, ?, ?,?,?)";
+        String userSql = "INSERT INTO users (userid,usertype,username,email,userpassword,phoneNumber,dateofbirth) VALUES (?, ?, ?, ?, ?,?,?)";
         try (Connection conn = getConnection();
                 PreparedStatement ps = conn.prepareStatement(userSql)) {
             ps.setString(1, parent.getId());
@@ -983,7 +983,7 @@ public ArrayList<Student> getStudentsByCourse(String courseCode) {
 
             if (hasData && userId != null) {
                 ArrayList<String> children = getChildren(userId);
-                Parent parent = new Parent(userId, phoneNumber, email, password, dateOfBirth, name, relation, children);
+                Parent parent = new Parent(userId, phoneNumber, email, password, name, dateOfBirth,relation, children);
                 return parent;
             }
         } catch (SQLException e) {
@@ -1043,6 +1043,55 @@ public ArrayList<Student> getStudentsByCourse(String courseCode) {
         }
     }
 
+    // public Course getCourse(String id) throws SQLException {
+    //     String sql = "SELECT * FROM courses WHERE courseid = ?";
+    //     try (Connection conn = getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
+    //         ps.setString(1, id);
+    //         ResultSet rs = ps.executeQuery();
+    //         if (!rs.next()) {
+    //             return null;
+    //         }
+    //         String courseName = rs.getString("coursename");
+    //         String courseDescription = rs.getString("coursedescription");
+    //         String year = rs.getString("courseyear");
+    //         return new Course(id, courseName, courseDescription, year);
+    //     }
+    // }
+
+    // public ArrayList<String> getMaterial(String id) throws SQLException {
+    //     String sql = "SELECT materialname FROM material WHERE courseid = ?";
+    //     ArrayList<String> material = new ArrayList<>();
+    //     try (Connection conn = getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
+    //         ps.setString(1, id);
+    //         ResultSet rs = ps.executeQuery();
+    //         while (rs.next()) {
+    //             material.add(rs.getString("materialname"));
+    //         }
+    //     } catch (SQLException e) {
+    //         System.out.println("Failed to get material");
+    //         e.printStackTrace();
+    //         return null;
+    //     }
+    //     return material;
+    // }
+
+    // public ArrayList<String> getAssignments(String id) throws SQLException {
+    //     String sql = "SELECT assignmen FROM assignments WHERE courseid = ?";
+    //     ArrayList<String> assignments = new ArrayList<>();
+    //     try (Connection conn = getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
+    //         ps.setString(1, id);
+    //         ResultSet rs = ps.executeQuery();
+    //         while (rs.next()) {
+    //             assignments.add(rs.getString("assignmentname"));
+    //         }
+    //     } catch (SQLException e) {
+    //         System.out.println("Failed to get assignments");
+    //         e.printStackTrace();
+    //         return null;
+    //     }
+    //     return assignments;
+    // }
+
     public int getHighestIdNumber(String usertype) {
         int highest = 0;
 
@@ -1052,7 +1101,13 @@ public ArrayList<Student> getStudentsByCourse(String courseCode) {
                 ps.setString(1, usertype);
                 ResultSet rs = ps.executeQuery();
                 if (rs.next()) {
-                    highest = Integer.parseInt(rs.getString(1).substring(3));
+                    String maxId = rs.getString(1);
+                    // Check if maxId is not null (MAX returns NULL when no rows exist)
+                    if (maxId != null && maxId.length() >= 6) {
+                        // Extract the number part (last 3 digits) from format: YYLetterNNN
+                        // e.g., "25I005" -> "005" -> 5
+                        highest = Integer.parseInt(maxId.substring(3));
+                    }
                 }
             }
         } catch (Exception e) {
@@ -1154,25 +1209,12 @@ public ArrayList<Student> getStudentsByCourse(String courseCode) {
         return admission;
     }
 
-    private Student mapStudent(ResultSet rs) throws SQLException {
-        Student student = new Student(
-                rs.getString("userid"),
-                rs.getString("phoneNumber"),
-                rs.getString("email"),
-                rs.getString("password"),
-                rs.getString("name"),
-                rs.getString("dateOfBirth"),
-                rs.getString("major") != null ? rs.getString("major") : "");
-        student.setGpa(rs.getString("gpa"));
-        student.setSemester(rs.getString("semester"));
-        return student;
-    }
-
+    
     private User mapUser(ResultSet rs) throws SQLException {
         User user = new User();
         user.setId(rs.getString("userid"));
         user.setType(rs.getString("usertype"));
-        user.setName(rs.getString("name"));
+        user.setName(rs.getString("username"));
         user.setEmail(rs.getString("email"));
         user.setPassword(rs.getString("userpassword"));
         user.setPhoneNumber(rs.getString("phonenumber"));
@@ -1181,7 +1223,7 @@ public ArrayList<Student> getStudentsByCourse(String courseCode) {
     }
 
     private Student fetchStudentCore(Connection conn, String id) throws SQLException {
-        String sql = "SELECT userid, usertype, name, email, userpassword, phonenumber, dateofbirth " +
+        String sql = "SELECT userid, usertype, username, email, userpassword, phonenumber, dateofbirth " +
                 "FROM users WHERE userid = ?";
         try (PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setString(1, id);
@@ -1192,7 +1234,7 @@ public ArrayList<Student> getStudentsByCourse(String courseCode) {
             Student student = new Student();
             student.setId(rs.getString("userid"));
             student.setType(rs.getString("usertype"));
-            student.setName(rs.getString("name"));
+            student.setName(rs.getString("username"));
             student.setEmail(rs.getString("email"));
             student.setPassword(rs.getString("userpassword"));
             student.setPhoneNumber(rs.getString("phonenumber"));
@@ -1201,18 +1243,18 @@ public ArrayList<Student> getStudentsByCourse(String courseCode) {
         }
     }
 
-    private ArrayList<String> fetchCurrentCourses(Connection conn, String userId) throws SQLException {
-        ArrayList<String> courses = new ArrayList<>();
-        String sql = "SELECT coursecode FROM currentcourses WHERE userid = ?";
-        try (PreparedStatement ps = conn.prepareStatement(sql)) {
-            ps.setString(1, userId);
-            ResultSet rs = ps.executeQuery();
-            while (rs.next()) {
-                courses.add(rs.getString("coursecode"));
-            }
-        }
-        return courses;
-    }
+    // private ArrayList<String> fetchCurrentCourses(Connection conn, String userId) throws SQLException {
+    //     ArrayList<String> courses = new ArrayList<>();
+    //     String sql = "SELECT coursecode FROM currentcourses WHERE userid = ?";
+    //     try (PreparedStatement ps = conn.prepareStatement(sql)) {
+    //         ps.setString(1, userId);
+    //         ResultSet rs = ps.executeQuery();
+    //         while (rs.next()) {
+    //             courses.add(rs.getString("coursecode"));
+    //         }
+    //     }
+    //     return courses;
+    // }
 
     private Map<String, String> fetchTakenCourses(Connection conn, String userId) throws SQLException {
         Map<String, String> taken = new HashMap<>();

@@ -9,6 +9,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
 import java.io.IOException;
 import java.net.URL;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
 import java.time.LocalDate;
@@ -205,7 +206,7 @@ public class AddUserController implements Initializable {
     
     @FXML
     private void handleAddUserButton(ActionEvent event) {
-        String dateOfBirth = LocalDate.now().toString();
+        String dateOfBirth = null;
         String selectedType = userTypeChoiceBox.getValue();
         
         if (selectedType == null) {
@@ -222,8 +223,12 @@ public class AddUserController implements Initializable {
 
         Admin admin = new Admin();      
         String currentUser = GlobalData.getCurrentlyLoggedIN();
-        FirestoreManager fm = FirestoreManager.getInstance();
-        admin = fm.getAdmin(currentUser);
+        DatabaseManager dm = new DatabaseManager();
+        try {
+            admin = dm.getAdmin(currentUser);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
 
         String password = "12345";
         
