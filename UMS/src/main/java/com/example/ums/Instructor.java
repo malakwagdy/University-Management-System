@@ -10,7 +10,8 @@ public class Instructor extends User{
     private String role;
     private boolean departmentHead;
     private String departmentName;
-    private ArrayList<String> responsibilities;
+    @PropertyName("responsibilities")
+    private ArrayList<String> responsibilities = new ArrayList<>();
     private ArrayList<String> officeHours;
     private ArrayList<String> benefits;
 
@@ -30,16 +31,16 @@ public class Instructor extends User{
         this.officeHours = officeHours;
         this.benefits = benefits;
     }
-    public Instructor(String id , String phoneNumber, String email, String password, String name, String department) {
+    public Instructor(String id , String phoneNumber, String email, String password, String name, String department,boolean departmentHead,String role) {
         super( id, phoneNumber, email, password, name);
         this.salary = "0";
-        this.courses = new ArrayList<>();
-        this.role = "Instructor";
-        this.departmentHead = false;
+        this.courses = new ArrayList<String>();
+        this.role = role;
+        this.departmentHead = departmentHead;
         this.departmentName = department;
-        this.responsibilities = new ArrayList<>();
-        this.officeHours = new ArrayList<>();
-        this.benefits = new ArrayList<>();
+        this.responsibilities = new ArrayList<String>();
+        this.officeHours = new ArrayList<String>();
+        this.benefits = new ArrayList<String>();
     }
 
 

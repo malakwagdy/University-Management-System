@@ -1,17 +1,17 @@
 package com.example.ums;
 
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.HBox;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
+import javafx.scene.control.Label;
 
 public class AddUserController implements Initializable {
 
@@ -25,68 +25,196 @@ public class AddUserController implements Initializable {
     private TextField phoneNumberField;
 
     @FXML
-    private TextField departmentField;
+    private ChoiceBox<String> departmentChoiceBox;
 
     @FXML
     private CheckBox departmentHeachCheckBox;
 
+    @FXML
+    private ChoiceBox<String> userRoleChoiceBox;
+    
+    @FXML
+    private HBox roleHBox;
+    
+    @FXML
+    private HBox departmentHBox;
+    
+    @FXML
+    private HBox departmentHeadHBox;
+
+    @FXML
+    private ChoiceBox<String> relationChoiceBox;
+
+    @FXML
+    private HBox relationHBox;
+
+    @FXML
+    private TextField childIdField;
+
+    @FXML
+    private HBox childIdHBox;
+
+    @FXML
+    private Label errorMsg;
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         // Populate the choice box with user types
-        ObservableList<String> userTypes = FXCollections.observableArrayList(
-            "Parent",
-            "HR",
-            "Admin",
-            "Instructor"
-        );
-        userTypeChoiceBox.setItems(userTypes);
+        userTypeChoiceBox.getItems().addAll("Parent", "HR", "Admin", "Instructor");
+
+        userRoleChoiceBox.getItems().addAll("Teaching Assistant", "Professor");
+
+        departmentChoiceBox.getItems().addAll("CESS", "COMM", "MCTA", "ERGY", "BLDG", "LAAR", "HOUD", "CISE", "MANF", "ENVR", "MATL");
+
+        relationChoiceBox.getItems().addAll("Father", "Mother");
         
-        // Initially disable Department Head checkbox and Department field
+        // Initially hide and disable Department Head checkbox, Department field, and Role field
         departmentHeachCheckBox.setDisable(true);
-        departmentField.setDisable(true);
+        departmentChoiceBox.setDisable(true);
+        userRoleChoiceBox.setDisable(true);
+
+        
+        // Hide the HBox containers initially
+        if (roleHBox != null) {
+            roleHBox.setVisible(false);
+            roleHBox.setManaged(false);
+        }
+        if (departmentHBox != null) {
+            departmentHBox.setVisible(false);
+            departmentHBox.setManaged(false);
+        }
+        if (departmentHeadHBox != null) {
+            departmentHeadHBox.setVisible(false);
+            departmentHeadHBox.setManaged(false);
+        }
+        if (relationHBox != null) {
+            relationHBox.setVisible(false);
+            relationHBox.setManaged(false);
+        }
+        if (childIdHBox != null) {
+            childIdHBox.setVisible(false);
+            childIdHBox.setManaged(false);
+        }
         
         // Add listener to user type choice box
         userTypeChoiceBox.setOnAction(event -> {
             String selectedType = userTypeChoiceBox.getValue();
             if ("Instructor".equals(selectedType)) {
-                // Enable Department Head checkbox and Department field for Instructor
+                // Show and enable Department Head checkbox, Department field, and Role field for Instructor
+                if (roleHBox != null) {
+                    roleHBox.setVisible(true);
+                    roleHBox.setManaged(true);
+                }
+                if (departmentHBox != null) {
+                    departmentHBox.setVisible(true);
+                    departmentHBox.setManaged(true);
+                }
+                if (departmentHeadHBox != null) {
+                    departmentHeadHBox.setVisible(true);
+                    departmentHeadHBox.setManaged(true);
+                }
+                if (relationHBox != null) {
+                    relationHBox.setVisible(false);
+                    relationHBox.setManaged(false);
+                }
+                if (childIdHBox != null) {
+                    childIdHBox.setVisible(false);
+                    childIdHBox.setManaged(false);
+                }
                 departmentHeachCheckBox.setDisable(false);
-                departmentField.setDisable(false);
-            } else {
-                // Disable for other user types
+                departmentChoiceBox.setDisable(false);
+                userRoleChoiceBox.setDisable(false);
+            } else if ("Parent".equals(selectedType)) {
+                // Show and enable Relation field and Child ID field for Parent
+                if (roleHBox != null) {
+                    roleHBox.setVisible(false);
+                    roleHBox.setManaged(false);
+                }
+                if (departmentHBox != null) {
+                    departmentHBox.setVisible(false);
+                    departmentHBox.setManaged(false);
+                }
+                if (departmentHeadHBox != null) {
+                    departmentHeadHBox.setVisible(false);
+                    departmentHeadHBox.setManaged(false);
+                }
+                if (relationHBox != null) {
+                    relationHBox.setVisible(true);
+                    relationHBox.setManaged(true);
+                }
+                if (childIdHBox != null) {
+                    childIdHBox.setVisible(true);
+                    childIdHBox.setManaged(true);
+                }
+                relationChoiceBox.setDisable(false);
+                childIdField.setDisable(false);
+            } else if ("HR".equals(selectedType)) {
+                if (roleHBox != null) {
+                    roleHBox.setVisible(false);
+                    roleHBox.setManaged(false);
+                }
+                if (departmentHBox != null) {
+                    departmentHBox.setVisible(true);
+                    departmentHBox.setManaged(true);
+                }
+                if (departmentHeadHBox != null) {
+                    departmentHeadHBox.setVisible(false);
+                    departmentHeadHBox.setManaged(false);
+                }
+                if (relationHBox != null) {
+                    relationHBox.setVisible(false);
+                    relationHBox.setManaged(false);
+                }
+                if (childIdHBox != null) {
+                    childIdHBox.setVisible(false);
+                    childIdHBox.setManaged(false);
+                }
+                departmentChoiceBox.setDisable(false);
+            }else {
+                // Hide and disable for other user types
+                if (roleHBox != null) {
+                    roleHBox.setVisible(false);
+                    roleHBox.setManaged(false);
+                }
+                if (departmentHBox != null) {
+                    departmentHBox.setVisible(false);
+                    departmentHBox.setManaged(false);
+                }
+                if (departmentHeadHBox != null) {
+                    departmentHeadHBox.setVisible(false);
+                    departmentHeadHBox.setManaged(false);
+                }
+                if (relationHBox != null) {
+                    relationHBox.setVisible(false);
+                    relationHBox.setManaged(false);
+                }
+                if (childIdHBox != null) {
+                    childIdHBox.setVisible(false);
+                    childIdHBox.setManaged(false);
+                }
                 departmentHeachCheckBox.setDisable(true);
                 departmentHeachCheckBox.setSelected(false);
-                departmentField.setDisable(true);
+                departmentChoiceBox.setDisable(true);
+                userRoleChoiceBox.setDisable(true);
             }
         });
     }
-
-    // @FXML
-    // private void handleDepartmentCheckBox(ActionEvent event) {
-    //     // This method is called when the checkbox is toggled
-    //     // The departmentHead boolean will be set when creating the Instructor instance
-    // }
     
     @FXML
     private void handleAddUserButton(ActionEvent event) {
         String selectedType = userTypeChoiceBox.getValue();
         
         if (selectedType == null) {
-            // Show error: user type not selected
+            if (errorMsg != null) {
+                errorMsg.setStyle("-fx-text-fill: red;");
+                errorMsg.setText("Please select a user type.");
+            }
             return;
         }
         
         // Get form data
         String name = fullNameField.getText();
         String phoneNumber = phoneNumberField.getText();
-        String department = departmentField.getText();
-        
-        // Validate required fields
-        if (name == null || name.trim().isEmpty() ||
-            phoneNumber == null || phoneNumber.trim().isEmpty()) {
-            // Show error: required fields missing
-            return;
-        }
 
         Admin admin = new Admin();      
         String currentUser = GlobalData.getCurrentlyLoggedIN();
@@ -95,40 +223,56 @@ public class AddUserController implements Initializable {
 
         String password = "12345";
         
-        switch (selectedType) {
-            case "Instructor":
-                boolean isDepartmentHead = departmentHeachCheckBox.isSelected();
-                if (department == null || department.trim().isEmpty()) {
-                    // Show error: department required for Instructor
-                    return;
-                }
-                admin.createInstructor(phoneNumber, password, name, department);
-                break;
-                
-            // case "Admin":
-                // user = new Admin(id, phoneNumber, email, password, name, "0");
-                // break;
-                
-            case "HR":
-                admin.createHR(phoneNumber, password, name, "0");
-                break;
-                
-            case "Parent":
-                ArrayList<String> children = new ArrayList<>();
-                admin.createParent(phoneNumber, password, name, "Parent", children);
-                break;
-        }
-        
-        // Clear form or navigate back
         try {
+            switch (selectedType) {
+                case "Instructor":
+                    String department = departmentChoiceBox.getValue();
+                    boolean isDepartmentHead = departmentHeachCheckBox.isSelected();
+                    String role = null;
+                    if (isDepartmentHead) {
+                        role = "Professor";
+                    } else {
+                        role = userRoleChoiceBox.getValue();
+                    }
+                    admin.createInstructor(phoneNumber, password, name, department, role, isDepartmentHead);
+                    break;
+                    
+                case "Admin":
+                    admin.createAdmin(phoneNumber, password, name, "0");
+                    break;
+                    
+                case "HR":
+                    department = departmentChoiceBox.getValue();
+                    admin.createHR(phoneNumber, password, name, "0", department);
+                    break;
+                    
+                case "Parent":
+                    String childId = childIdField.getText();
+                    // Split by comma and trim each ID
+                    String[] childIds = childId.split(",");
+                    ArrayList<String> children = new ArrayList<>();
+                    for (String id : childIds) {
+                        String trimmedId = id.trim();
+                        if (!trimmedId.isEmpty()) {
+                            children.add(trimmedId);
+                        }
+                    }
+                    String relation = relationChoiceBox.getValue();
+                    admin.createParent(phoneNumber, password, name, relation, children);
+                    break;
+            }
+            // Only navigate back if user creation was successful
             SceneController.switchScene(event, "AdminDashboard.fxml", "Admin Dashboard");
         } catch (IOException e) {
             e.printStackTrace();
+        } catch (IllegalArgumentException e) {
+            errorMsg.setStyle("-fx-text-fill: red;");
+            errorMsg.setText(e.getMessage());
         }
     }
 
     @FXML
-    private void handleBackButton(ActionEvent event) {
+    private void handleCancelButton(ActionEvent event) {
         try {
             SceneController.switchScene(event, "AdminDashboard.fxml", "Admin Dashboard");
         } catch (IOException e) {

@@ -3,6 +3,7 @@ package com.example.ums;
 import com.google.api.core.ApiFuture;
 import com.google.auth.oauth2.GoogleCredentials;
 import com.google.cloud.firestore.*;
+import com.google.cloud.firestore.Query;
 
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -17,7 +18,7 @@ public class FirestoreManager {
     public FirestoreManager() {
         try {
             FileInputStream serviceAccount =
-                    new FileInputStream("/Users/Malak/D/UNI/Senior-1 Year/Semester 7/Agile Software Engineering/Project/University-Management-System/UMS/src/main/resources/university-management-sy-9314c-firebase-adminsdk-fbsvc-7e85945818.json");
+                    new FileInputStream("C:/Users/pc/IdeaProjects/University-Management-System/UMS/src/main/resources/university-management-sy-9314c-firebase-adminsdk-fbsvc-7e85945818.json");
             GoogleCredentials credentials = GoogleCredentials.fromStream(serviceAccount);
             FirestoreOptions firestoreOptions = FirestoreOptions.newBuilder()
                     .setCredentials(credentials)
@@ -41,21 +42,21 @@ public class FirestoreManager {
     }
 
     public void addAdmission(Admission admission) {
-        DocumentReference ref = db.collection("Admission").document();
-        String generatedId = ref.getId();
-        admission.setAdmissionId(generatedId);
+        int assignedId = admission.getAdmissionId() > 0 ? admission.getAdmissionId() : getNextAdmissionId();
+        DocumentReference ref = db.collection("Admission").document(String.valueOf(assignedId));
+        admission.setAdmissionId(assignedId);
 
         ApiFuture<WriteResult> result = ref.set(admission);
         try {
             System.out.println("Admission added at: " + result.get().getUpdateTime());
-            System.out.println("Generated ID: " + generatedId);
+            System.out.println("Generated ID: " + assignedId);
         } catch (InterruptedException | ExecutionException e) {
             e.printStackTrace();
         }
     }
 
-    public void updateAdmissionStatus(String admissionId, String newStatus) {
-        DocumentReference ref = db.collection("Admission").document(admissionId);
+    public void updateAdmissionStatus(int admissionId, String newStatus) {
+        DocumentReference ref = db.collection("Admission").document(String.valueOf(admissionId));
         try {
             // Verify document exists
             DocumentSnapshot snapshot = ref.get().get();
@@ -83,11 +84,10 @@ public class FirestoreManager {
             List<QueryDocumentSnapshot> documents = future.get().getDocuments();
 
             for (QueryDocumentSnapshot doc : documents) {
-                Admission admission = doc.toObject(Admission.class);
-
-                admission.setAdmissionId(doc.getId());
-
-                admissionsList.add(admission);
+                Admission admission = materializeAdmission(doc);
+                if (admission != null) {
+                    admissionsList.add(admission);
+                }
             }
 
         } catch (InterruptedException | ExecutionException e) {
@@ -108,9 +108,7 @@ public class FirestoreManager {
 
             if (!documents.isEmpty()) {
                 QueryDocumentSnapshot doc = documents.get(0);
-                Admission admission = doc.toObject(Admission.class);
-                admission.setAdmissionId(doc.getId());
-                return admission;
+                return materializeAdmission(doc);
             }
 
         } catch (InterruptedException | ExecutionException e) {
@@ -131,11 +129,10 @@ public class FirestoreManager {
             List<QueryDocumentSnapshot> documents = future.get().getDocuments();
 
             for (QueryDocumentSnapshot doc : documents) {
-                Admission admission = doc.toObject(Admission.class);
-
-                admission.setAdmissionId(doc.getId());
-
-                admissionsList.add(admission);
+                Admission admission = materializeAdmission(doc);
+                if (admission != null) {
+                    admissionsList.add(admission);
+                }
             }
 
         } catch (InterruptedException | ExecutionException e) {
@@ -409,4 +406,162 @@ public class FirestoreManager {
         return parentsList;
     }
 
+    public void deleteHR(String id) {
+        try {
+            DocumentReference ref = db.collection("HR").document(id);
+            ApiFuture<WriteResult> future = ref.delete();
+            System.out.println("HR document deleted at: " + future.get().getUpdateTime());
+        } catch (InterruptedException | ExecutionException e) {
+            e.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+
+    public void deleteStudent(String id) {
+        try {
+            DocumentReference ref = db.collection("Student").document(id);
+            ApiFuture<WriteResult> future = ref.delete();
+            System.out.println("Student document deleted at: " + future.get().getUpdateTime());
+        } catch (InterruptedException | ExecutionException e) {
+            e.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    public void deleteParent(String id) {
+        try {
+            DocumentReference ref = db.collection("Parent").document(id);
+            ApiFuture<WriteResult> future = ref.delete();
+            System.out.println("Parent document deleted at: " + future.get().getUpdateTime());
+        } catch (InterruptedException | ExecutionException e) {
+            e.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    public void deleteInstructor(String id) {
+        try {
+            DocumentReference ref = db.collection("Instructor").document(id);
+            ApiFuture<WriteResult> future = ref.delete();
+            System.out.println("Instructor document deleted at: " + future.get().getUpdateTime());
+        } catch (InterruptedException | ExecutionException e) {
+            e.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void deleteAdmin(String id) {
+        try {
+            DocumentReference ref = db.collection("Admin").document(id);
+            ApiFuture<WriteResult> future = ref.delete();
+            System.out.println("Admin document deleted at: " + future.get().getUpdateTime());
+        } catch (InterruptedException | ExecutionException e) {
+            e.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    public void updateInstructor(Instructor instructor) {
+        try {
+            DocumentReference ref = db.collection("Instructor").document(instructor.getId());
+            ApiFuture<WriteResult> result = ref.set(instructor);
+            System.out.println("Instructor updated at: " + result.get().getUpdateTime());
+        } catch (InterruptedException | ExecutionException e) {
+            e.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    public void updateStudent(Student Student) {
+        try {
+            DocumentReference ref = db.collection("Student").document(Student.getId());
+            ApiFuture<WriteResult> result = ref.set(Student);
+            System.out.println("Student updated at: " + result.get().getUpdateTime());
+        } catch (InterruptedException | ExecutionException e) {
+            e.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    public void updateHR(HR HR) {
+        try {
+            DocumentReference ref = db.collection("HR").document(HR.getId());
+            ApiFuture<WriteResult> result = ref.set(HR);
+            System.out.println("HR updated at: " + result.get().getUpdateTime());
+        } catch (InterruptedException | ExecutionException e) {
+            e.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    public void updateParent(Parent Parent) {
+        try {
+            DocumentReference ref = db.collection("Parent").document(Parent.getId());
+            ApiFuture<WriteResult> result = ref.set(Parent);
+            System.out.println("Parent updated at: " + result.get().getUpdateTime());
+        } catch (InterruptedException | ExecutionException e) {
+            e.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    public void updateAdmin(Admin Admin) {
+        try {
+            DocumentReference ref = db.collection("Admin").document(Admin.getId());
+            ApiFuture<WriteResult> result = ref.set(Admin);
+            System.out.println("Admin updated at: " + result.get().getUpdateTime());
+        } catch (InterruptedException | ExecutionException e) {
+            e.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private Admission materializeAdmission(QueryDocumentSnapshot doc) {
+        try {
+            Admission admission = doc.toObject(Admission.class);
+            if (admission == null) {
+                return null;
+            }
+            admission.setAdmissionId(extractAdmissionId(doc));
+            return admission;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    private int extractAdmissionId(DocumentSnapshot doc) {
+        Long stored = doc.getLong("admissionId");
+        if (stored != null) {
+            return stored.intValue();
+        }
+        try {
+            return Integer.parseInt(doc.getId());
+        } catch (NumberFormatException e) {
+            return 0;
+        }
+    }
+
+    private int getNextAdmissionId() {
+        try {
+            ApiFuture<QuerySnapshot> future = db.collection("Admission")
+                    .orderBy("admissionId", Query.Direction.DESCENDING)
+                    .limit(1)
+                    .get();
+            List<QueryDocumentSnapshot> documents = future.get().getDocuments();
+            if (!documents.isEmpty()) {
+                Long current = documents.get(0).getLong("admissionId");
+                if (current != null) {
+                    return current.intValue() + 1;
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return 1;
+    }
 }

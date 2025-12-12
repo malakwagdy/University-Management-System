@@ -5,7 +5,6 @@
 <?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ScrollPane?>
-<?import javafx.scene.control.Separator?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TextField?>
@@ -38,12 +37,8 @@
          <Label text="HR Tools" />
          <Button fx:id="staffDirectoryBtn" maxWidth="1.7976931348623157E308" text="Staff Directory" />
          <Button fx:id="leaveRequestsBtn" maxWidth="1.7976931348623157E308" text="Leave Requests" />
-         <Button fx:id="recruitmentBtn" maxWidth="1.7976931348623157E308" text="Recruitment" />
          <Button fx:id="benefitsBtn" maxWidth="1.7976931348623157E308" text="Benefits" />
-         <Button fx:id="attendanceBtn" maxWidth="1.7976931348623157E308" text="Attendance" />
-         <Separator />
          <Button fx:id="equipmentBtn" maxWidth="1.7976931348623157E308" text="Equipment" />
-         <Button fx:id="issuesBtn" maxWidth="1.7976931348623157E308" text="HR Issues" />
          <Region VBox.vgrow="ALWAYS" />
       </VBox>
    </left>

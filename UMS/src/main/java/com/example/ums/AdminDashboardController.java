@@ -95,6 +95,34 @@ public class AdminDashboardController implements Initializable {
         applicantPhoneNoCol.setCellValueFactory(new PropertyValueFactory<>("phoneNumber"));
         applicantStatusCol.setCellValueFactory(new PropertyValueFactory<>("status"));
         
+        // Set up actions column for admissions table
+        actionsCol1.setCellFactory(new Callback<TableColumn<Admission, String>, TableCell<Admission, String>>() {
+            @Override
+            public TableCell<Admission, String> call(TableColumn<Admission, String> param) {
+                return new TableCell<Admission, String>() {
+                    private final Button viewBtn = new Button("View");
+                    private final HBox buttonBox = new HBox(5, viewBtn);
+                    
+                    {
+                        viewBtn.setOnAction(event -> {
+                            Admission admission = getTableView().getItems().get(getIndex());
+                            handleViewAdmissionButton(admission);
+                        });
+                    }
+                    
+                    @Override
+                    protected void updateItem(String item, boolean empty) {
+                        super.updateItem(item, empty);
+                        if (empty) {
+                            setGraphic(null);
+                        } else {
+                            setGraphic(buttonBox);
+                        }
+                    }
+                };
+            }
+        });
+        
         // Load all admissions initially
         loadAdmissions();
         
@@ -127,25 +155,11 @@ public class AdminDashboardController implements Initializable {
             @Override
             public TableCell<User, String> call(TableColumn<User, String> param) {
                 return new TableCell<User, String>() {
-                    private final Button viewBtn = new Button("View");
-                    private final Button editBtn = new Button("Edit");
-                    private final Button deleteBtn = new Button("Delete");
-                    private final HBox buttonBox = new HBox(5, viewBtn, editBtn, deleteBtn);
-                    
+                    private final Button viewBtn = new Button("View");                    
                     {
                         viewBtn.setOnAction(event -> {
                             User user = getTableView().getItems().get(getIndex());
-                            handleViewUser(user);
-                        });
-                        
-                        editBtn.setOnAction(event -> {
-                            User user = getTableView().getItems().get(getIndex());
-                            handleEditUser(user);
-                        });
-                        
-                        deleteBtn.setOnAction(event -> {
-                            User user = getTableView().getItems().get(getIndex());
-                            handleDeleteUser(user);
+                            handleViewUserButton(user);
                         });
                     }
                     
@@ -155,7 +169,7 @@ public class AdminDashboardController implements Initializable {
                         if (empty) {
                             setGraphic(null);
                         } else {
-                            setGraphic(buttonBox);
+                            setGraphic(viewBtn);
                         }
                     }
                 };
@@ -168,7 +182,7 @@ public class AdminDashboardController implements Initializable {
     
     private void loadAdmissions() {
         if (admin != null) {
-            ArrayList<Admission> admissions = admin.getAdmissions();
+            ArrayList<Admission> admissions = admin.retrieveAdmissions();
             allAdmissions = FXCollections.observableArrayList(admissions);
             admissionsTable.setItems(allAdmissions);
         }
@@ -251,7 +265,7 @@ public class AdminDashboardController implements Initializable {
         } else {
             // Filter by selected status
             if (admin != null) {
-                ArrayList<Admission> filteredAdmissions = admin.getAdmissionsByStatus(selectedStatus);
+                ArrayList<Admission> filteredAdmissions = admin.retrieveAdmissionsByStatus(selectedStatus);
                 ObservableList<Admission> filteredList = FXCollections.observableArrayList(filteredAdmissions);
                 admissionsTable.setItems(filteredList);
             }
@@ -268,83 +282,17 @@ public class AdminDashboardController implements Initializable {
         }
     }
     
-    private void handleViewUser(User user) {
-        // TODO: Implement view user details functionality
-        // Could open a popup window or navigate to a user details page
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle("User Details");
-        alert.setHeaderText("User Information");
-        alert.setContentText("ID: " + user.getId() + "\n" +
-                           "Name: " + user.getName() + "\n" +
-                           "Email: " + user.getEmail() + "\n" +
-                           "Type: " + getUserType(user));
-        alert.showAndWait();
-    }
-    
-    private void handleEditUser(User user) {
-        // TODO: Implement edit user functionality
-        // Could open a popup window with a form to edit user details
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle("Edit User");
-        alert.setHeaderText("Edit User: " + user.getName());
-        alert.setContentText("Edit functionality will be implemented here.");
-        alert.showAndWait();
-    }
-    
-    private void handleDeleteUser(User user) {
-        // Confirm deletion
-        Alert confirmAlert = new Alert(Alert.AlertType.CONFIRMATION);
-        confirmAlert.setTitle("Delete User");
-        confirmAlert.setHeaderText("Confirm Deletion");
-        confirmAlert.setContentText("Are you sure you want to delete user: " + user.getName() + "?\nThis action cannot be undone.");
-        
-        confirmAlert.showAndWait().ifPresent(response -> {
-            if (response == ButtonType.OK) {
-                // TODO: Implement delete user functionality
-                // Remove from Firestore and refresh the table
-                try {
-                    // FirestoreManager fm = FirestoreManager.getInstance();
-                    // String userId = user.getId();
-                    // String userType = getUserType(user);
-                    
-                    // Delete based on user type
-                    // switch (userType) {
-                    //     case "Student":
-                    //         fm.deleteStudent(userId);
-                    //         break;
-                    //     case "Instructor":
-                    //     case "Department Head":
-                    //         fm.deleteInstructor(userId);
-                    //         break;
-                    //     case "Admin":
-                    //         fm.deleteAdmin(userId);
-                    //         break;
-                    //     case "HR":
-                    //         fm.deleteHR(userId);
-                    //         break;
-                    //     case "Parent":
-                    //         fm.deleteParent(userId);
-                    //         break;
-                    // }
-                    
-                    // Refresh the table
-                    loadAllUsers();
-                    
-                    Alert successAlert = new Alert(Alert.AlertType.INFORMATION);
-                    successAlert.setTitle("Success");
-                    successAlert.setHeaderText("User Deleted");
-                    successAlert.setContentText("User " + user.getName() + " has been deleted successfully.");
-                    successAlert.showAndWait();
-                } catch (Exception e) {
-                    Alert errorAlert = new Alert(Alert.AlertType.ERROR);
-                    errorAlert.setTitle("Error");
-                    errorAlert.setHeaderText("Delete Failed");
-                    errorAlert.setContentText("Failed to delete user: " + e.getMessage());
-                    errorAlert.showAndWait();
-                }
-            }
+    private void handleViewAdmissionButton(Admission admission) {
+        ViewAdmissionPopupController.show(admission, admin, () -> {
+            loadAdmissions();
+            loadAllUsers();
         });
     }
+    
+    private void handleViewUserButton(User user) {
+        ViewUserPopupController.show(user, admin, () -> loadAllUsers());
+    }
+
     @FXML
     private void handleAddUserButton(ActionEvent event) {
         try {
