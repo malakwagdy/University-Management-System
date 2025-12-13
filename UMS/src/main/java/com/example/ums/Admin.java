@@ -28,7 +28,7 @@ public class Admin extends User {
 
 
     public void createAdmin(String phoneNumber,  String password, String dateOfBirth, String name, String salary) {
-        String id= this.generateID("admin");
+        String id= this.generateID("Admin");
         String email = id+"@ums.edu";
         validateCommonFields(phoneNumber, email, password, name);
         if (salary == null || salary.trim().isEmpty()) {
@@ -110,7 +110,7 @@ public class Admin extends User {
     }
 
     public void createHR(String phoneNumber,  String password, String dateOfBirth, String name, String salary, String departmentName) {
-        String id= this.generateID("hr");
+        String id= this.generateID("HR");
         String email = id+"@ums.edu";
         validateCommonFields(phoneNumber, email, password, name);
         if (salary == null || salary.trim().isEmpty()) {
@@ -126,7 +126,7 @@ public class Admin extends User {
         dm.addHR(hr);
     }
     public void createInstructor(String phoneNumber,  String password, String dateOfBirth, String name, String department,String role,Boolean departmentHead) {
-        String id= this.generateID("instructor");
+        String id= this.generateID("Instructor");
         String email = id+"@ums.edu";
         validateCommonFields(phoneNumber, email, password, name);
         if (department == null || department.trim().isEmpty()) {
@@ -145,7 +145,7 @@ public class Admin extends User {
         dm.addInstructor(instructor);
     }
     public void createParent(String phoneNumber, String password, String dateOfBirth, String name, String relation, ArrayList<String> children) {
-        String id= this.generateID("parent");
+        String id= this.generateID("Parent");
         String email = id+"@ums.edu";
         validateCommonFields(phoneNumber, email, password, name);
 
@@ -410,7 +410,7 @@ public class Admin extends User {
         return admissions;
     }
     public void acceptAdmission(Admission admission) {
-        String id= this.generateID("student");
+        String id= this.generateID("Student");
         String email = id+"@ums.edu";
         Student student=new Student(id, admission.getPhoneNumber(), email,"12345", admission.getName(), admission.getDateOfBirth(), admission.getMajor());
         admission.setStatus("Accepted");

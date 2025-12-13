@@ -1096,17 +1096,18 @@ public ArrayList<Student> getStudentsByCourse(String courseCode) {
         int highest = 0;
 
         try {
+            // Get the maximum userid (lexicographic comparison works because numbers are zero-padded)
+            // Format: YYLetterNNN (e.g., "25I005")
             String sql = "SELECT MAX(userid) FROM users WHERE usertype = ?";
             try (Connection conn = getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
                 ps.setString(1, usertype);
                 ResultSet rs = ps.executeQuery();
                 if (rs.next()) {
                     String maxId = rs.getString(1);
-                    // Check if maxId is not null (MAX returns NULL when no rows exist)
+                    // Extract the numeric part (last 3 digits) from the max ID
                     if (maxId != null && maxId.length() >= 6) {
-                        // Extract the number part (last 3 digits) from format: YYLetterNNN
-                        // e.g., "25I005" -> "005" -> 5
-                        highest = Integer.parseInt(maxId.substring(3));
+                        String numberPart = maxId.substring(3); // Get last 3 digits
+                        highest = Integer.parseInt(numberPart);
                     }
                 }
             }
