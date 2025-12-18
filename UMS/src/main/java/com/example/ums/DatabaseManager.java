@@ -9,7 +9,7 @@ import java.util.Map;
 
 public class DatabaseManager {
 
-    private static final Dotenv dotenv = Dotenv.load();
+    private static final Dotenv dotenv = Dotenv.configure().ignoreIfMissing().load();
 
     private static final String DB_USER = dotenv.get("DB_USER");
     private static final String DB_PASSWORD = dotenv.get("DB_PASSWORD");
@@ -21,6 +21,27 @@ public class DatabaseManager {
     public static Connection getConnection() throws SQLException {
         return DriverManager.getConnection(JDBC_URL, DB_USER, DB_PASSWORD);
     }
+
+    public static boolean bookClassroom(int hallId) {
+
+            String sql = "UPDATE halls SET availability = false WHERE hallid = ?";
+
+            try (Connection conn = getConnection();
+                 PreparedStatement ps = conn.prepareStatement(sql)) {
+
+                ps.setInt(1, hallId);
+                return ps.executeUpdate() == 1;
+
+            } catch (SQLException e) {
+                e.printStackTrace();
+                return false;
+            }
+        }
+
+    public static void AddClassroom() {
+        String sql = "Insert into halls  availability = false WHERE hallid = ?";
+    }
+
 
     public void addAdmission(Admission admission) throws SQLException {
         String sql = "INSERT INTO Admissions " +
@@ -215,6 +236,27 @@ public class DatabaseManager {
             throw new RuntimeException(e);
         }
         return null;
+    }
+
+    public ArrayList<Classroom> getAllClassrooms() throws SQLException {
+        String sql = "SELECT hallid, hallcapacity, halltype, hallmaintenance, availability FROM halls;";
+        ArrayList<Classroom> classrooms = new ArrayList<>();
+
+        try (Connection conn = getConnection();
+             Statement stmt = conn.createStatement();
+             ResultSet rs = stmt.executeQuery(sql)) {
+
+            while (rs.next()) {
+                classrooms.add(new Classroom(
+                        rs.getInt("hallid"),
+                        rs.getString("hallcapacity"),
+                        rs.getString("halltype"),
+                        rs.getBoolean("hallmaintenance"),
+                        rs.getBoolean("availability")
+                ));
+            }
+        }
+        return classrooms;
     }
 
     // public Student getStudent(String id) {

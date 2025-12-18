@@ -3,9 +3,7 @@ package com.example.ums;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.CheckBox;
-import javafx.scene.control.ChoiceBox;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
 import java.io.IOException;
 import java.net.URL;
@@ -15,7 +13,6 @@ import java.util.ResourceBundle;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import javafx.scene.control.Label;
 
 public class AddUserController implements Initializable {
 
@@ -36,13 +33,13 @@ public class AddUserController implements Initializable {
 
     @FXML
     private ChoiceBox<String> userRoleChoiceBox;
-    
+
     @FXML
     private HBox roleHBox;
-    
+
     @FXML
     private HBox departmentHBox;
-    
+
     @FXML
     private HBox departmentHeadHBox;
 
@@ -61,6 +58,9 @@ public class AddUserController implements Initializable {
     @FXML
     private Label errorMsg;
 
+    @FXML
+    private DatePicker dobPicker;
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         // Populate the choice box with user types
@@ -71,13 +71,13 @@ public class AddUserController implements Initializable {
         departmentChoiceBox.getItems().addAll("CESS", "COMM", "MCTA", "ERGY", "BLDG", "LAAR", "HOUD", "CISE", "MANF", "ENVR", "MATL");
 
         relationChoiceBox.getItems().addAll("Father", "Mother");
-        
+
         // Initially hide and disable Department Head checkbox, Department field, and Role field
         departmentHeachCheckBox.setDisable(true);
         departmentChoiceBox.setDisable(true);
         userRoleChoiceBox.setDisable(true);
 
-        
+
         // Hide the HBox containers initially
         if (roleHBox != null) {
             roleHBox.setVisible(false);
@@ -99,7 +99,7 @@ public class AddUserController implements Initializable {
             childIdHBox.setVisible(false);
             childIdHBox.setManaged(false);
         }
-        
+
         // Add listener to user type choice box
         userTypeChoiceBox.setOnAction(event -> {
             String selectedType = userTypeChoiceBox.getValue();
@@ -174,7 +174,7 @@ public class AddUserController implements Initializable {
                     childIdHBox.setManaged(false);
                 }
                 departmentChoiceBox.setDisable(false);
-            }else {
+            } else {
                 // Hide and disable for other user types
                 if (roleHBox != null) {
                     roleHBox.setVisible(false);
@@ -203,12 +203,17 @@ public class AddUserController implements Initializable {
             }
         });
     }
-    
+
     @FXML
     private void handleAddUserButton(ActionEvent event) {
-        String dateOfBirth = null;
+
         String selectedType = userTypeChoiceBox.getValue();
-        
+        if (dateOfBirth == null) {
+            errorMsg.setStyle("-fx-text-fill: red;");
+            errorMsg.setText("Please select date of birth.");
+            return;
+        }
+
         if (selectedType == null) {
             if (errorMsg != null) {
                 errorMsg.setStyle("-fx-text-fill: red;");
@@ -216,12 +221,12 @@ public class AddUserController implements Initializable {
             }
             return;
         }
-        
+
         // Get form data
         String name = fullNameField.getText();
         String phoneNumber = phoneNumberField.getText();
 
-        Admin admin = new Admin();      
+        Admin admin = new Admin();
         String currentUser = GlobalData.getCurrentlyLoggedIN();
         DatabaseManager dm = new DatabaseManager();
         try {
@@ -231,7 +236,7 @@ public class AddUserController implements Initializable {
         }
 
         String password = "12345";
-        
+
         try {
             switch (selectedType) {
                 case "Instructor":
@@ -245,16 +250,16 @@ public class AddUserController implements Initializable {
                     }
                     admin.createInstructor(phoneNumber, password, dateOfBirth, name, department, role, isDepartmentHead);
                     break;
-                    
+
                 case "Admin":
                     admin.createAdmin(phoneNumber, password, dateOfBirth, name, "0");
                     break;
-                    
+
                 case "HR":
                     department = departmentChoiceBox.getValue();
                     admin.createHR(phoneNumber, password, dateOfBirth, name, "0", department);
                     break;
-                    
+
                 case "Parent":
                     String childId = childIdField.getText();
                     // Split by comma and trim each ID
@@ -288,4 +293,26 @@ public class AddUserController implements Initializable {
             e.printStackTrace();
         }
     }
+
+    private String dateOfBirth;
+
+    @FXML
+    private void handleDatePicker(ActionEvent event) {
+
+        if (dobPicker == null) {
+            System.out.println("DOB Picker is NULL - check fx:id");
+            return;
+        }
+
+        LocalDate dob = dobPicker.getValue();
+
+        if (dob == null) {
+            dateOfBirth = null;
+            return;
+        }
+
+        dateOfBirth = dob.toString(); // yyyy-MM-dd
+        System.out.println("DOB selected: " + dateOfBirth);
+    }
+
 }

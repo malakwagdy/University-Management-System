@@ -1,19 +1,29 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
 
-
-<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.ums.ViewClassrooms">
+<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.ums.ViewClassroomsController">
    <children>
-      <Label layoutX="252.0" layoutY="51.0" text="View Classsrooms" />
-      <TableView layoutX="99.0" layoutY="151.0" prefHeight="170.0" prefWidth="411.0">
+      <Label layoutX="230.0" layoutY="66.0" text="View Classrooms">
+         <font>
+            <Font size="20.0" />
+         </font></Label>
+      <TableView fx:id="HallsTable" layoutX="77.0" layoutY="149.0" prefHeight="170.0" prefWidth="462.0">
         <columns>
-          <TableColumn prefWidth="207.20001220703125" text="classroom" />
-          <TableColumn prefWidth="203.20001220703125" text="availability" />
+          <TableColumn fx:id="colHallId" prefWidth="80.79998779296875" text="Classroom id" />
+          <TableColumn fx:id="colCapacity" minWidth="2.40008544921875" prefWidth="106.4000244140625" text="Student Capacity" />
+            <TableColumn fx:id="colType" prefWidth="78.4000244140625" text="Hall Type" />
+            <TableColumn fx:id="colMaintenance" prefWidth="99.20001220703125" text="Maintenance" />
+            <TableColumn fx:id="colAvailability" prefWidth="91.2000732421875" text="Availability" />
         </columns>
       </TableView>
+      <Button fx:id="back" layoutX="25.0" layoutY="353.0" mnemonicParsing="false" onAction="#handleBackbutton" text="Back" />
+      <Button fx:id="book_btn" layoutX="274.0" layoutY="341.0" mnemonicParsing="false" onAction="#handleBookbutton" text="Book" />
+      <Button fx:id="newClass_btn" layoutX="462.0" layoutY="354.0" mnemonicParsing="false" onAction="#handleNewclassroomButton" text="Add New Classroom" />
    </children>
 </AnchorPane>
