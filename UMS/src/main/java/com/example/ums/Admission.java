@@ -2,6 +2,7 @@ package com.example.ums;
 
 import com.google.firebase.database.PropertyName;
 
+import java.sql.SQLException;
 import java.time.LocalDate;
 
 public class Admission {
@@ -32,7 +33,7 @@ public class Admission {
 
     }
 
-    static FirestoreManager fm = FirestoreManager.getInstance();
+    static DatabaseManager dm = new DatabaseManager();
 
     public static void newAdmission(String name, String phoneNumber, String email, String dateOfBirth, String major, String highschoolGPA) {
 
@@ -40,7 +41,11 @@ public class Admission {
 
         Admission admission = new Admission(0, name, phoneNumber, email, dateOfBirth, major, highschoolGPA);
 
-        fm.addAdmission(admission);
+        try {
+            dm.addAdmission(admission);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 
 

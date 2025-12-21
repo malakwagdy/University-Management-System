@@ -110,7 +110,7 @@ public class User {
         if (user == null) {
             throw new LoginException("Incorrect email or password.");
         }
-        if (user.getEmail().equals(email) && user.getPassword().equals(Password)) {
+        if (user.getEmail().equals(email) && dm.checkPassword(Password, user.getPassword())) {
             GlobalData.setCurrentlyLoggedIN(id);
             switch (user.getType()) {
                 case "Instructor":
