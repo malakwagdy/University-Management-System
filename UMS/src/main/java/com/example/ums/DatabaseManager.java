@@ -1,11 +1,23 @@
 package com.example.ums;
 
+<<<<<<< HEAD
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+//=======
 import io.github.cdimascio.dotenv.Dotenv;
-
+import org.mindrot.jbcrypt.BCrypt;
 import java.sql.*;
+//>>>>>>> 6894aefbf49aa113820091831dba08c638722779
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+
+import io.github.cdimascio.dotenv.Dotenv;
+
 
 public class DatabaseManager {
 
@@ -21,7 +33,13 @@ public class DatabaseManager {
     public static Connection getConnection() throws SQLException {
         return DriverManager.getConnection(JDBC_URL, DB_USER, DB_PASSWORD);
     }
+    public String hashPassword(String password) {
+        return BCrypt.hashpw(password, BCrypt.gensalt(12));
+    }
 
+    public boolean checkPassword(String password, String hashedPassword) {
+        return BCrypt.checkpw(password, hashedPassword);
+    }
     public static boolean bookClassroom(int hallId) {
 
             String sql = "UPDATE halls SET availability = false WHERE hallid = ?";
@@ -58,7 +76,6 @@ public class DatabaseManager {
             }
         }
     }
-
 
 
     public void addAdmission(Admission admission) throws SQLException {
@@ -202,7 +219,7 @@ public class DatabaseManager {
             ps.setString(2, student.getType());
             ps.setString(3, student.getName());
             ps.setString(4, student.getEmail());
-            ps.setString(5, student.getPassword());
+            ps.setString(5, hashPassword(student.getPassword()));
             ps.setString(6, student.getPhoneNumber());
             ps.setString(7, student.getdateOfBirth());
             ps.executeUpdate();
@@ -490,7 +507,7 @@ public ArrayList<Student> getStudentsByCourse(String courseCode) {
             ps.setString(2, instructor.getType());
             ps.setString(3, instructor.getName());
             ps.setString(4, instructor.getEmail());
-            ps.setString(5, instructor.getPassword());
+            ps.setString(5, hashPassword(instructor.getPassword()));
             ps.setString(6, instructor.getPhoneNumber());
             ps.setString(7, instructor.getdateOfBirth());
             ps.executeUpdate();
@@ -842,7 +859,7 @@ public ArrayList<Student> getStudentsByCourse(String courseCode) {
             ps.setString(2, admin.getType());
             ps.setString(3, admin.getName());
             ps.setString(4, admin.getEmail());
-            ps.setString(5, admin.getPassword());
+            ps.setString(5, hashPassword(admin.getPassword()));
             ps.setString(6, admin.getPhoneNumber());
             ps.setString(7, admin.getdateOfBirth());
             ps.executeUpdate();
@@ -1568,6 +1585,461 @@ public ArrayList<Student> getStudentsByCourse(String courseCode) {
     // .replace("\r", "\\r")
     // .replace("\t", "\\t");
     // }
+
+    /**
+     * Update a student in the database
+     */
+    public void updateStudent(Student student) throws SQLException {
+        // Update users table
+        String userSql = "UPDATE users SET username = ?, email = ?, userpassword = ?, phonenumber = ?, dateofbirth = ? WHERE userid = ?";
+        try (Connection conn = getConnection();
+                PreparedStatement ps = conn.prepareStatement(userSql)) {
+            ps.setString(1, student.getName());
+            ps.setString(2, student.getEmail());
+            ps.setString(3, student.getPassword());
+            ps.setString(4, student.getPhoneNumber());
+            ps.setString(5, student.getdateOfBirth());
+            ps.setString(6, student.getId());
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            System.out.println("Failed to update student in users table");
+            e.printStackTrace();
+            throw e;
+        }
+
+        // Update or insert uservalues for attributes
+        // Try UPDATE first, then INSERT if no rows were affected
+        for (int i = 1; i <= 3; i++) {
+            String jsonValue = null;
+            switch (i) {
+                case 1:
+                    jsonValue = toJsonValue(student.getGpa());
+                    break;
+                case 2:
+                    jsonValue = toJsonValue(student.getMajor());
+                    break;
+                case 3:
+                    jsonValue = toJsonValue(student.getSemester());
+                    break;
+            }
+
+            try (Connection conn = getConnection()) {
+                // Try UPDATE first
+                String updateSql = "UPDATE uservalues SET attributeValue = ?::jsonb WHERE userid = ? AND attributeid = ?";
+                PreparedStatement ps = conn.prepareStatement(updateSql);
+                ps.setString(1, jsonValue);
+                ps.setString(2, student.getId());
+                ps.setInt(3, i);
+                int rowsAffected = ps.executeUpdate();
+                ps.close();
+
+                // If no rows were updated, insert new record
+                if (rowsAffected == 0) {
+                    String insertSql = "INSERT INTO uservalues (userid, attributeid, attributeValue) VALUES (?, ?, ?::jsonb)";
+                    PreparedStatement insertPs = conn.prepareStatement(insertSql);
+                    insertPs.setString(1, student.getId());
+                    insertPs.setInt(2, i);
+                    insertPs.setString(3, jsonValue);
+                    insertPs.executeUpdate();
+                    insertPs.close();
+                }
+            } catch (SQLException e) {
+                System.out.println("Failed to update student attributes for attributeid " + i);
+                e.printStackTrace();
+            }
+        }
+
+        // Update current courses - delete existing and insert new ones
+        String deleteCurrentCoursesSql = "DELETE FROM currentcourses WHERE userid = ?";
+        try (Connection conn = getConnection();
+                PreparedStatement ps = conn.prepareStatement(deleteCurrentCoursesSql)) {
+            ps.setString(1, student.getId());
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            System.out.println("Failed to delete current courses");
+            e.printStackTrace();
+        }
+
+        if (student.getCurrentCourses() != null && !student.getCurrentCourses().isEmpty()) {
+            String insertCurrentCoursesSql = "INSERT INTO currentcourses (userid, courseid) VALUES (?, ?)";
+            for (String courseId : student.getCurrentCourses()) {
+                try (Connection conn = getConnection();
+                        PreparedStatement ps = conn.prepareStatement(insertCurrentCoursesSql)) {
+                    ps.setString(1, student.getId());
+                    ps.setInt(2, Integer.parseInt(courseId));
+                    ps.executeUpdate();
+                } catch (SQLException e) {
+                    System.out.println("Failed to insert current course: " + courseId);
+                    e.printStackTrace();
+                }
+            }
+        }
+
+        // Update taken courses - delete existing and insert new ones
+        String deleteTakenCoursesSql = "DELETE FROM takencourses WHERE userid = ?";
+        try (Connection conn = getConnection();
+                PreparedStatement ps = conn.prepareStatement(deleteTakenCoursesSql)) {
+            ps.setString(1, student.getId());
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            System.out.println("Failed to delete taken courses");
+            e.printStackTrace();
+        }
+
+        if (student.getTakenCourses() != null && !student.getTakenCourses().isEmpty()) {
+            String insertTakenCoursesSql = "INSERT INTO takencourses (userid, courseid, grade) VALUES (?, ?, ?)";
+            for (Map.Entry<String, String> entry : student.getTakenCourses().entrySet()) {
+                try (Connection conn = getConnection();
+                        PreparedStatement ps = conn.prepareStatement(insertTakenCoursesSql)) {
+                    ps.setString(1, student.getId());
+                    ps.setInt(2, Integer.parseInt(entry.getKey()));
+                    ps.setString(3, entry.getValue() != null ? entry.getValue() : "");
+                    ps.executeUpdate();
+                } catch (SQLException e) {
+                    System.out.println("Failed to insert taken course: " + entry.getKey());
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
+
+    /**
+     * Update an instructor in the database
+     */
+    public void updateInstructor(Instructor instructor) throws SQLException {
+        // Update users table
+        String userSql = "UPDATE users SET username = ?, email = ?, userpassword = ?, phonenumber = ?, dateofbirth = ? WHERE userid = ?";
+        try (Connection conn = getConnection();
+                PreparedStatement ps = conn.prepareStatement(userSql)) {
+            ps.setString(1, instructor.getName());
+            ps.setString(2, instructor.getEmail());
+            ps.setString(3, instructor.getPassword());
+            ps.setString(4, instructor.getPhoneNumber());
+            ps.setString(5, instructor.getdateOfBirth());
+            ps.setString(6, instructor.getId());
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            System.out.println("Failed to update instructor in users table");
+            e.printStackTrace();
+            throw e;
+        }
+
+        // Update or insert uservalues for attributes
+        // Try UPDATE first, then INSERT if no rows were affected
+        for (int i = 4; i <= 7; i++) {
+            String jsonValue = null;
+            switch (i) {
+                case 4:
+                    jsonValue = toJsonValue(instructor.getDepartmentName());
+                    break;
+                case 5:
+                    jsonValue = toJsonValue(instructor.getSalary());
+                    break;
+                case 6:
+                    jsonValue = toJsonValue(instructor.getRole());
+                    break;
+                case 7:
+                    jsonValue = toJsonValue(instructor.isDepartmentHead());
+                    break;
+            }
+
+            try (Connection conn = getConnection()) {
+                // Try UPDATE first
+                String updateSql = "UPDATE uservalues SET attributeValue = ?::jsonb WHERE userid = ? AND attributeid = ?";
+                PreparedStatement ps = conn.prepareStatement(updateSql);
+                ps.setString(1, jsonValue);
+                ps.setString(2, instructor.getId());
+                ps.setInt(3, i);
+                int rowsAffected = ps.executeUpdate();
+                ps.close();
+
+                // If no rows were updated, insert new record
+                if (rowsAffected == 0) {
+                    String insertSql = "INSERT INTO uservalues (userid, attributeid, attributeValue) VALUES (?, ?, ?::jsonb)";
+                    PreparedStatement insertPs = conn.prepareStatement(insertSql);
+                    insertPs.setString(1, instructor.getId());
+                    insertPs.setInt(2, i);
+                    insertPs.setString(3, jsonValue);
+                    insertPs.executeUpdate();
+                    insertPs.close();
+                }
+            } catch (SQLException e) {
+                System.out.println("Failed to update instructor attributes for attributeid " + i);
+                e.printStackTrace();
+            }
+        }
+
+        // Update courses - delete existing and insert new ones
+        String deleteCoursesSql = "DELETE FROM currentcourses WHERE userid = ?";
+        try (Connection conn = getConnection();
+                PreparedStatement ps = conn.prepareStatement(deleteCoursesSql)) {
+            ps.setString(1, instructor.getId());
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            System.out.println("Failed to delete instructor courses");
+            e.printStackTrace();
+        }
+
+        if (instructor.getCourses() != null && !instructor.getCourses().isEmpty()) {
+            String insertCoursesSql = "INSERT INTO currentcourses (userid, courseid) VALUES (?, ?)";
+            for (String courseId : instructor.getCourses()) {
+                try (Connection conn = getConnection();
+                        PreparedStatement ps = conn.prepareStatement(insertCoursesSql)) {
+                    ps.setString(1, instructor.getId());
+                    ps.setInt(2, Integer.parseInt(courseId));
+                    ps.executeUpdate();
+                } catch (SQLException e) {
+                    System.out.println("Failed to insert instructor course: " + courseId);
+                    e.printStackTrace();
+                }
+            }
+        }
+
+        // Update responsibilities - delete existing and insert new ones
+        String deleteResponsibilitiesSql = "DELETE FROM responsibilities WHERE userid = ?";
+        try (Connection conn = getConnection();
+                PreparedStatement ps = conn.prepareStatement(deleteResponsibilitiesSql)) {
+            ps.setString(1, instructor.getId());
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            System.out.println("Failed to delete responsibilities");
+            e.printStackTrace();
+        }
+
+        if (instructor.getResponsibilities() != null && !instructor.getResponsibilities().isEmpty()) {
+            String insertResponsibilitiesSql = "INSERT INTO responsibilities (userid, responsibility) VALUES (?, ?)";
+            for (String responsibility : instructor.getResponsibilities()) {
+                try (Connection conn = getConnection();
+                        PreparedStatement ps = conn.prepareStatement(insertResponsibilitiesSql)) {
+                    ps.setString(1, instructor.getId());
+                    ps.setString(2, responsibility);
+                    ps.executeUpdate();
+                } catch (SQLException e) {
+                    System.out.println("Failed to insert responsibility: " + responsibility);
+                    e.printStackTrace();
+                }
+            }
+        }
+
+        // Update office hours - delete existing and insert new ones
+        String deleteOfficeHoursSql = "DELETE FROM officehours WHERE userid = ?";
+        try (Connection conn = getConnection();
+                PreparedStatement ps = conn.prepareStatement(deleteOfficeHoursSql)) {
+            ps.setString(1, instructor.getId());
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            System.out.println("Failed to delete office hours");
+            e.printStackTrace();
+        }
+
+        if (instructor.getOfficeHours() != null && !instructor.getOfficeHours().isEmpty()) {
+            String insertOfficeHoursSql = "INSERT INTO officehours (userid, officehour, officehourday) VALUES (?, ?, ?)";
+            for (String officeHour : instructor.getOfficeHours()) {
+                try (Connection conn = getConnection();
+                        PreparedStatement ps = conn.prepareStatement(insertOfficeHoursSql)) {
+                    // Parse office hour format: "time , day"
+                    String[] parts = officeHour.split(" , ");
+                    if (parts.length == 2) {
+                        ps.setString(1, instructor.getId());
+                        ps.setString(2, parts[0].trim());
+                        ps.setString(3, parts[1].trim());
+                        ps.executeUpdate();
+                    }
+                } catch (SQLException e) {
+                    System.out.println("Failed to insert office hour: " + officeHour);
+                    e.printStackTrace();
+                }
+            }
+        }
+
+        // Update benefits - delete existing and insert new ones
+        String deleteBenefitsSql = "DELETE FROM benefits WHERE userid = ?";
+        try (Connection conn = getConnection();
+                PreparedStatement ps = conn.prepareStatement(deleteBenefitsSql)) {
+            ps.setString(1, instructor.getId());
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            System.out.println("Failed to delete benefits");
+            e.printStackTrace();
+        }
+
+        if (instructor.getBenefits() != null && !instructor.getBenefits().isEmpty()) {
+            String insertBenefitsSql = "INSERT INTO benefits (userid, benefit) VALUES (?, ?)";
+            for (String benefit : instructor.getBenefits()) {
+                try (Connection conn = getConnection();
+                        PreparedStatement ps = conn.prepareStatement(insertBenefitsSql)) {
+                    ps.setString(1, instructor.getId());
+                    ps.setString(2, benefit);
+                    ps.executeUpdate();
+                } catch (SQLException e) {
+                    System.out.println("Failed to insert benefit: " + benefit);
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
+
+    /**
+     * Update an HR in the database
+     */
+    public void updateHR(HR hr) throws SQLException {
+        // Update users table
+        String userSql = "UPDATE users SET username = ?, email = ?, userpassword = ?, phonenumber = ?, dateofbirth = ? WHERE userid = ?";
+        try (Connection conn = getConnection();
+                PreparedStatement ps = conn.prepareStatement(userSql)) {
+            ps.setString(1, hr.getName());
+            ps.setString(2, hr.getEmail());
+            ps.setString(3, hr.getPassword());
+            ps.setString(4, hr.getPhoneNumber());
+            ps.setString(5, hr.getdateOfBirth());
+            ps.setString(6, hr.getId());
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            System.out.println("Failed to update HR in users table");
+            e.printStackTrace();
+            throw e;
+        }
+
+        // Update or insert uservalues for attributes
+        // Try UPDATE first, then INSERT if no rows were affected
+        for (int i = 4; i <= 5; i++) {
+            String jsonValue = null;
+            switch (i) {
+                case 4:
+                    jsonValue = toJsonValue(hr.getDepartmentName());
+                    break;
+                case 5:
+                    jsonValue = toJsonValue(hr.getSalary());
+                    break;
+            }
+
+            try (Connection conn = getConnection()) {
+                // Try UPDATE first
+                String updateSql = "UPDATE uservalues SET attributeValue = ?::jsonb WHERE userid = ? AND attributeid = ?";
+                PreparedStatement ps = conn.prepareStatement(updateSql);
+                ps.setString(1, jsonValue);
+                ps.setString(2, hr.getId());
+                ps.setInt(3, i);
+                int rowsAffected = ps.executeUpdate();
+                ps.close();
+
+                // If no rows were updated, insert new record
+                if (rowsAffected == 0) {
+                    String insertSql = "INSERT INTO uservalues (userid, attributeid, attributeValue) VALUES (?, ?, ?::jsonb)";
+                    PreparedStatement insertPs = conn.prepareStatement(insertSql);
+                    insertPs.setString(1, hr.getId());
+                    insertPs.setInt(2, i);
+                    insertPs.setString(3, jsonValue);
+                    insertPs.executeUpdate();
+                    insertPs.close();
+                }
+            } catch (SQLException e) {
+                System.out.println("Failed to update HR attributes for attributeid " + i);
+                e.printStackTrace();
+            }
+        }
+    }
+
+    /**
+     * Update an Admin in the database
+     */
+    public void updateAdmin(Admin admin) throws SQLException {
+        // Update users table
+        String userSql = "UPDATE users SET username = ?, email = ?, userpassword = ?, phonenumber = ?, dateofbirth = ? WHERE userid = ?";
+        try (Connection conn = getConnection();
+                PreparedStatement ps = conn.prepareStatement(userSql)) {
+            ps.setString(1, admin.getName());
+            ps.setString(2, admin.getEmail());
+            ps.setString(3, admin.getPassword());
+            ps.setString(4, admin.getPhoneNumber());
+            ps.setString(5, admin.getdateOfBirth());
+            ps.setString(6, admin.getId());
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            System.out.println("Failed to update admin in users table");
+            e.printStackTrace();
+            throw e;
+        }
+
+        // Note: Admin doesn't have attributes stored in uservalues currently
+        // If salary needs to be stored, it would be added here similar to other user types
+    }
+
+    /**
+     * Update a Parent in the database
+     */
+    public void updateParent(Parent parent) throws SQLException {
+        // Update users table
+        String userSql = "UPDATE users SET username = ?, email = ?, userpassword = ?, phonenumber = ?, dateofbirth = ? WHERE userid = ?";
+        try (Connection conn = getConnection();
+                PreparedStatement ps = conn.prepareStatement(userSql)) {
+            ps.setString(1, parent.getName());
+            ps.setString(2, parent.getEmail());
+            ps.setString(3, parent.getPassword());
+            ps.setString(4, parent.getPhoneNumber());
+            ps.setString(5, parent.getdateOfBirth());
+            ps.setString(6, parent.getId());
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            System.out.println("Failed to update parent in users table");
+            e.printStackTrace();
+            throw e;
+        }
+
+        // Update or insert uservalues for relation attribute (attributeid = 6)
+        // Try UPDATE first, then INSERT if no rows were affected
+        String jsonValue = toJsonValue(parent.getRelation());
+        try (Connection conn = getConnection()) {
+            // Try UPDATE first
+            String updateSql = "UPDATE uservalues SET attributeValue = ?::jsonb WHERE userid = ? AND attributeid = ?";
+            PreparedStatement ps = conn.prepareStatement(updateSql);
+            ps.setString(1, jsonValue);
+            ps.setString(2, parent.getId());
+            ps.setInt(3, 6);
+            int rowsAffected = ps.executeUpdate();
+            ps.close();
+
+            // If no rows were updated, insert new record
+            if (rowsAffected == 0) {
+                String insertSql = "INSERT INTO uservalues (userid, attributeid, attributeValue) VALUES (?, ?, ?::jsonb)";
+                PreparedStatement insertPs = conn.prepareStatement(insertSql);
+                insertPs.setString(1, parent.getId());
+                insertPs.setInt(2, 6);
+                insertPs.setString(3, jsonValue);
+                insertPs.executeUpdate();
+                insertPs.close();
+            }
+        } catch (SQLException e) {
+            System.out.println("Failed to update parent attributes");
+            e.printStackTrace();
+        }
+
+        // Update children - delete existing and insert new ones
+        String deleteChildrenSql = "DELETE FROM children WHERE parentid = ?";
+        try (Connection conn = getConnection();
+                PreparedStatement ps = conn.prepareStatement(deleteChildrenSql)) {
+            ps.setString(1, parent.getId());
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            System.out.println("Failed to delete children");
+            e.printStackTrace();
+        }
+
+        if (parent.getChildren() != null && !parent.getChildren().isEmpty()) {
+            String insertChildrenSql = "INSERT INTO children (parentid, childid) VALUES (?, ?)";
+            for (String childId : parent.getChildren()) {
+                try (Connection conn = getConnection();
+                        PreparedStatement ps = conn.prepareStatement(insertChildrenSql)) {
+                    ps.setString(1, parent.getId());
+                    ps.setString(2, childId);
+                    ps.executeUpdate();
+                } catch (SQLException e) {
+                    System.out.println("Failed to insert child: " + childId);
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
 
     /**
      * Simple connectivity test (optional).
