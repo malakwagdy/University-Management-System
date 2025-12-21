@@ -4,6 +4,8 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 
+import java.sql.SQLException;
+
 public class ChangePasswordController {
 
     @FXML
@@ -40,7 +42,11 @@ public class ChangePasswordController {
             return;
         }
 
-        // SUCCESS (Frontend only)
+        // SUCCESS
+        String currentUser = GlobalData.getCurrentlyLoggedIN();
+        DatabaseManager dm = new DatabaseManager();
+        User user = dm.getUser(currentUser);
+        user.changePassword(newPass);
         showMessage("Password Changed Successfully!", "green");
 
         // OPTIONAL: return to dashboard after 1.5 seconds

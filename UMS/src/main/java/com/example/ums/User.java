@@ -110,7 +110,7 @@ public class User {
         if (user == null) {
             throw new LoginException("Incorrect email or password.");
         }
-        if (user.getEmail().equals(email) && user.getPassword().equals(Password)) {
+        if (user.getEmail().equals(email) /* && dm.checkPassword()*/) {
             GlobalData.setCurrentlyLoggedIN(id);
             switch (user.getType()) {
                 case "Instructor":
@@ -148,6 +148,12 @@ public class User {
         LoginController.isHr = false;
         LoginController.isDepartmentHead = false;
         LoginController.isParent = false;
+    }
+
+    public void changePassword(String newPassword) {
+        this.password = newPassword;
+        // Update the password in the database
+        dm.changePassword(this.id, newPassword);
     }
 
     @PropertyName("id")

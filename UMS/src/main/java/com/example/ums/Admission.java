@@ -15,6 +15,8 @@ public class Admission {
     private String status;
     private String yearOfAdmission;
 
+    static  DatabaseManager dm = new DatabaseManager();
+
     // No-arg constructor required for Firestore deserialization
     public Admission() {
     }
@@ -32,15 +34,19 @@ public class Admission {
 
     }
 
-    static FirestoreManager fm = FirestoreManager.getInstance();
-
     public static void newAdmission(String name, String phoneNumber, String email, String dateOfBirth, String major, String highschoolGPA) {
 
         Admission.validateInputs(name, phoneNumber, email, dateOfBirth, major, highschoolGPA);
 
         Admission admission = new Admission(0, name, phoneNumber, email, dateOfBirth, major, highschoolGPA);
 
-        fm.addAdmission(admission);
+        try {
+        dm.addAdmission(admission);
+        } catch (Exception e) {
+            System.out.println("Failed to add admission");
+            e.printStackTrace();
+            return;
+        }
     }
 
 

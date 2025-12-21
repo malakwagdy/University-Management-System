@@ -260,44 +260,6 @@ public class DatabaseManager {
         return classrooms;
     }
 
-    // public Student getStudent(String id) {
-    //     try (Connection conn = getConnection()) {
-    //         Student student = fetchStudentCore(conn, id);
-    //         if (student == null) {
-    //             return null;
-    //         }
-    //         student.setCurrentCourses(fetchCurrentCourses(conn, id));
-    //         student.setTakenCourses(fetchTakenCourses(conn, id));
-    //         hydrateUserAttributeValues(conn, id, student);
-    //         return student;
-    //     } catch (SQLException e) {
-    //         throw new RuntimeException("Failed to load student " + id, e);
-    //     }
-    // }
-
-    // public ArrayList<Student> getAllStudents() {
-    //     ArrayList<Student> students = new ArrayList<>();
-    //     try (Connection conn = getConnection()) {
-    //         String sql = "SELECT userid FROM users WHERE usertype = 'Student'";
-    //         try (PreparedStatement ps = conn.prepareStatement(sql);
-    //              ResultSet rs = ps.executeQuery()) {
-    //             while (rs.next()) {
-    //                 String userId = rs.getString("userid");
-    //                 Student student = fetchStudentCore(conn, userId);
-    //                 if (student != null) {
-    //                     student.setCurrentCourses(fetchCurrentCourses(conn, userId));
-    //                     student.setTakenCourses(fetchTakenCourses(conn, userId));
-    //                     hydrateUserAttributeValues(conn, userId, student);
-    //                     students.add(student);
-    //                 }
-    //             }
-    //         }
-    //     } catch (SQLException e) {
-    //         throw new RuntimeException("Failed to load students", e);
-    //     }
-    //     return students;
-    // }
-
 public ArrayList<Student> getStudentsByCourse(String courseCode) {
     String sql = "SELECT userid FROM currentcourses WHERE courseid = ?";
     ArrayList<Student> students = new ArrayList<>();
@@ -954,7 +916,7 @@ public ArrayList<Student> getStudentsByCourse(String courseCode) {
         String attributeSql = "INSERT INTO uservalues (userid, attributeid, attributeValue) VALUES (?, ?, ?::jsonb)";
         try (Connection conn = getConnection(); PreparedStatement ps = conn.prepareStatement(attributeSql)) {
             ps.setString(1, parent.getId());
-            ps.setInt(2, 6);
+            ps.setInt(2, 8);
             ps.setString(3, toJsonValue(parent.getRelation()));
             ps.executeUpdate();
         } catch (SQLException e) {
@@ -1086,6 +1048,19 @@ public ArrayList<Student> getStudentsByCourse(String courseCode) {
         }
     }
 
+    public void deleteUser(String id) {
+        String userSql = "DELETE FROM users WHERE userid = ?";
+        try (Connection conn = getConnection();
+             PreparedStatement ps = conn.prepareStatement(userSql)) {
+            ps.setString(1, id);
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            System.out.println("Failed to delete user");
+            e.printStackTrace();
+            return;
+        }
+    }
+
     // public Course getCourse(String id) throws SQLException {
     //     String sql = "SELECT * FROM courses WHERE courseid = ?";
     //     try (Connection conn = getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
@@ -1134,6 +1109,19 @@ public ArrayList<Student> getStudentsByCourse(String courseCode) {
     //     }
     //     return assignments;
     // }
+
+    public void changePassword(String id, String newPassword) {
+        String sql = "UPDATE users SET userpassword = ? WHERE userid = ?";
+        try (Connection conn = getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, newPassword);
+            ps.setString(2, id);
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            System.out.println("Failed to change password");
+            e.printStackTrace();
+            return;
+        }
+    }
 
     public int getHighestIdNumber(String usertype) {
         int highest = 0;
