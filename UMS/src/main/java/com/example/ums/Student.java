@@ -34,43 +34,33 @@ public class Student extends User {
         this.semester = "1";
         this.major = major;
     }
-    @PropertyName("currentCourses")
     public ArrayList<String> getCurrentCourses() {
         return currentCourses;
     }
-    @PropertyName("currentCourses")
     public void setCurrentCourses(ArrayList<String> currentCourses) {
         this.currentCourses = currentCourses;
     }
-    @PropertyName("takenCourses")
     public Map<String,String> getTakenCourses() {
         return takenCourses;
     }
-    @PropertyName("takenCourses")
     public void setTakenCourses(Map<String,String> takenCourses) {
         this.takenCourses = takenCourses;
     }
-    @PropertyName("gpa")
     public String getGpa() {
         return gpa;
     }
-    @PropertyName("gpa")
     public void setGpa(String GPA) {
         this.gpa = GPA;
     }
-    @PropertyName("semester")
     public String getSemester() {
         return semester;
     }
-    @PropertyName("semester")
     public void setSemester(String semester) {
         this.semester = semester;
     }
-    @PropertyName("major")
     public String getMajor() {
         return major;
     }
-    @PropertyName("major")
     public void setMajor(String major) {
         this.major = major;
     }

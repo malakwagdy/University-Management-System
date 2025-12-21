@@ -1,7 +1,6 @@
 package com.example.ums;
 
-import com.google.firebase.database.PropertyName;
-
+import java.sql.SQLException;
 import java.time.LocalDate;
 
 public class Admission {
@@ -14,8 +13,6 @@ public class Admission {
     private String highschoolGPA;
     private String status;
     private String yearOfAdmission;
-
-    static  DatabaseManager dm = new DatabaseManager();
 
     // No-arg constructor required for Firestore deserialization
     public Admission() {
@@ -33,6 +30,8 @@ public class Admission {
         this.yearOfAdmission = String.valueOf(LocalDate.now().getYear());
 
     }
+
+    static DatabaseManager dm = new DatabaseManager();
 
     public static void newAdmission(String name, String phoneNumber, String email, String dateOfBirth, String major, String highschoolGPA) {
 
@@ -75,77 +74,76 @@ public class Admission {
         }
     }
 
-    @PropertyName("yearOfAdmission")
     public String getYearOfAdmission() {
         return yearOfAdmission;
     }
-    @PropertyName("yearOfAdmission")
+
     public void setYearOfAdmission(String yearOfAdmission) {
         this.yearOfAdmission = yearOfAdmission;
     }
 
-    @PropertyName("status")
+
     public String getStatus() {
         return status;
     }
-    @PropertyName("status")
+
     public void setStatus(String status) {
         this.status = status;
     }
 
-    @PropertyName("phoneNumber")
+
     public String getPhoneNumber() {
         return phoneNumber;
     }
-    @PropertyName("phoneNumber")
+
     public void setPhoneNumber(String phoneNumber) {
         this.phoneNumber = phoneNumber;
     }
-    @PropertyName("admissionId")
+
     public int getAdmissionId() {
         return admissionId;
     }
-    @PropertyName("admissionId")
+
     public void setAdmissionId(int admissionId) {
         this.admissionId = admissionId;
     }
-    @PropertyName("name")
+
     public String getName() {
         return name;
     }
-    @PropertyName("name")
+
     public void setName(String name) {
         this.name = name;
     }
-    @PropertyName("email")
+
     public String getEmail() {
         return email;
     }
-    @PropertyName("email")
+
     public void setEmail(String email) {
         this.email = email;
     }
-    @PropertyName("dateOfBirth")
+
     public String getDateOfBirth() {
         return dateOfBirth;
     }
-    @PropertyName("dateOfBirth")
+
     public void setDateOfBirth(String dateOfBirth) {
         this.dateOfBirth = dateOfBirth;
     }
-    @PropertyName("major")
+
     public String getMajor() {
         return major;
     }
-    @PropertyName("major")
+
     public void setMajor(String major) {
         this.major = major;
     }
-    @PropertyName("highschoolGPA")
+
     public String getHighschoolGPA() {
         return highschoolGPA;
     }
-    @PropertyName("highschoolGPA")
+
     public void setHighschoolGPA(String highschoolGPA) {
         this.highschoolGPA = highschoolGPA;
     }

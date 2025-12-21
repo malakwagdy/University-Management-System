@@ -4,8 +4,23 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="3b0e75bd-c97a-490f-b811-f2c75cb1e98f" name="Changes" comment="-few users getters">
-      <change beforePath="$PROJECT_DIR$/UMS/src/main/java/com/example/ums/DatabaseManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/UMS/src/main/java/com/example/ums/DatabaseManager.java" afterDir="false" />
+    <list default="true" id="3b0e75bd-c97a-490f-b811-f2c75cb1e98f" name="Changes" comment="-login + admission fix +added dependency">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/UMS/src/main/java/com/example/ums/Admin.java" beforeDir="false" afterPath="$PROJECT_DIR$/UMS/src/main/java/com/example/ums/Admin.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/UMS/src/main/java/com/example/ums/Admission.java" beforeDir="false" afterPath="$PROJECT_DIR$/UMS/src/main/java/com/example/ums/Admission.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/UMS/src/main/java/com/example/ums/Assignment.java" beforeDir="false" afterPath="$PROJECT_DIR$/UMS/src/main/java/com/example/ums/Assignment.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/UMS/src/main/java/com/example/ums/Course.java" beforeDir="false" afterPath="$PROJECT_DIR$/UMS/src/main/java/com/example/ums/Course.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/UMS/src/main/java/com/example/ums/Equipment.java" beforeDir="false" afterPath="$PROJECT_DIR$/UMS/src/main/java/com/example/ums/Equipment.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/UMS/src/main/java/com/example/ums/HR.java" beforeDir="false" afterPath="$PROJECT_DIR$/UMS/src/main/java/com/example/ums/HR.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/UMS/src/main/java/com/example/ums/Instructor.java" beforeDir="false" afterPath="$PROJECT_DIR$/UMS/src/main/java/com/example/ums/Instructor.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/UMS/src/main/java/com/example/ums/Issue.java" beforeDir="false" afterPath="$PROJECT_DIR$/UMS/src/main/java/com/example/ums/Issue.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/UMS/src/main/java/com/example/ums/LeaveRequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/UMS/src/main/java/com/example/ums/LeaveRequest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/UMS/src/main/java/com/example/ums/Material.java" beforeDir="false" afterPath="$PROJECT_DIR$/UMS/src/main/java/com/example/ums/Material.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/UMS/src/main/java/com/example/ums/Parent.java" beforeDir="false" afterPath="$PROJECT_DIR$/UMS/src/main/java/com/example/ums/Parent.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/UMS/src/main/java/com/example/ums/Quiz.java" beforeDir="false" afterPath="$PROJECT_DIR$/UMS/src/main/java/com/example/ums/Quiz.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/UMS/src/main/java/com/example/ums/Software.java" beforeDir="false" afterPath="$PROJECT_DIR$/UMS/src/main/java/com/example/ums/Software.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/UMS/src/main/java/com/example/ums/Student.java" beforeDir="false" afterPath="$PROJECT_DIR$/UMS/src/main/java/com/example/ums/Student.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/UMS/src/main/java/com/example/ums/User.java" beforeDir="false" afterPath="$PROJECT_DIR$/UMS/src/main/java/com/example/ums/User.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -78,7 +93,7 @@
       <recent name="C:\Users\pc\IdeaProjects\University-Management-System" />
     </key>
   </component>
-  <component name="RunManager" selected="Application.main">
+  <component name="RunManager" selected="Application.Launcher">
     <configuration name="Launcher" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="com.example.ums.Launcher" />
       <module name="UMS" />
@@ -107,8 +122,8 @@
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="Application.main" />
         <item itemvalue="Application.Launcher" />
+        <item itemvalue="Application.main" />
       </list>
     </recent_temporary>
   </component>
@@ -140,7 +155,8 @@
       <workItem from="1764858746711" duration="2324000" />
       <workItem from="1765208772118" duration="351000" />
       <workItem from="1765209134796" duration="4622000" />
-      <workItem from="1765215148620" duration="11869000" />
+      <workItem from="1765215148620" duration="13224000" />
+      <workItem from="1766353120423" duration="2520000" />
     </task>
     <task id="LOCAL-00001" summary="-applied the schema to all classes&#10;-finished login (untested)&#10;-finished a few functions is databaseManager&#10;-fixed a few issues">
       <option name="closed" value="true" />
@@ -222,7 +238,23 @@
       <option name="project" value="LOCAL" />
       <updated>1765235920855</updated>
     </task>
-    <option name="localTasksCounter" value="11" />
+    <task id="LOCAL-00011" summary="-few users getters">
+      <option name="closed" value="true" />
+      <created>1765240313553</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1765240313553</updated>
+    </task>
+    <task id="LOCAL-00012" summary="-login + admission fix +added dependency">
+      <option name="closed" value="true" />
+      <created>1766355190037</created>
+      <option name="number" value="00012" />
+      <option name="presentableId" value="LOCAL-00012" />
+      <option name="project" value="LOCAL" />
+      <updated>1766355190037</updated>
+    </task>
+    <option name="localTasksCounter" value="13" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -239,7 +271,8 @@
     <MESSAGE value="-fixed the null fields in student" />
     <MESSAGE value="-partial db creation" />
     <MESSAGE value="-few users getters" />
-    <option name="LAST_COMMIT_MESSAGE" value="-few users getters" />
+    <MESSAGE value="-login + admission fix +added dependency" />
+    <option name="LAST_COMMIT_MESSAGE" value="-login + admission fix +added dependency" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

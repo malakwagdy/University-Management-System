@@ -110,7 +110,7 @@ public class User {
         if (user == null) {
             throw new LoginException("Incorrect email or password.");
         }
-        if (user.getEmail().equals(email) /* && dm.checkPassword()*/) {
+        if (user.getEmail().equals(email) && dm.checkPassword(Password, user.getPassword())) {
             GlobalData.setCurrentlyLoggedIN(id);
             switch (user.getType()) {
                 case "Instructor":
@@ -150,60 +150,60 @@ public class User {
         LoginController.isParent = false;
     }
 
+
     public void changePassword(String newPassword) {
         this.password = newPassword;
         // Update the password in the database
         dm.changePassword(this.id, newPassword);
     }
 
-    @PropertyName("id")
     public String getId() {
         return id;
     }
-    @PropertyName("id")
+
     public void setId(String id) {
         this.id = id;
     }
 
-    @PropertyName("password")
+
     public String getPassword() {
         return password;
     }
-    @PropertyName("password")
+
     public void setPassword(String password) {
         this.password = password;
     }
-    @PropertyName("name")
+
     public String getName() {
         return name;
     }
-    @PropertyName("name")
+
     public void setName(String name) {
         this.name = name;
     }
-    @PropertyName("email")
+
     public String getEmail() {
         return email;
     }
-    @PropertyName("email")
+
     public void setEmail(String email) {
         this.email = email;
     }
-    @PropertyName("phoneNumber")
+
     public String getPhoneNumber() {
         return phoneNumber;
     }
-    @PropertyName("phoneNumber")
+
     public void setPhoneNumber(String phoneNumber) {
         this.phoneNumber = phoneNumber;
     }
 
-    @PropertyName("dateOfBirth")
+
     public String getdateOfBirth() {
         return dateOfBirth;
     }
 
-    @PropertyName("dateOfBirth")
+
     public void setdateOfBirth(String dateOfBirth) {
         this.dateOfBirth = dateOfBirth;
     }
