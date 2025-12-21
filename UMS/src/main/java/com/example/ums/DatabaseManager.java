@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+
 public class DatabaseManager {
 
     private static final Dotenv dotenv = Dotenv.configure().ignoreIfMissing().load();
