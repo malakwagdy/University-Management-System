@@ -18,7 +18,7 @@ public class FirestoreManager {
     public FirestoreManager() {
         try {
             FileInputStream serviceAccount =
-                    new FileInputStream("C:/Users/pc/IdeaProjects/University-Management-System/UMS/src/main/resources/university-management-sy-9314c-firebase-adminsdk-fbsvc-7e85945818.json");
+                    new FileInputStream("C:/Users/salma/IdeaProjects/University-Management-System/UMS/src/main/resources/university-management-sy-9314c-firebase-adminsdk-fbsvc-7e85945818.json");
             GoogleCredentials credentials = GoogleCredentials.fromStream(serviceAccount);
             FirestoreOptions firestoreOptions = FirestoreOptions.newBuilder()
                     .setCredentials(credentials)

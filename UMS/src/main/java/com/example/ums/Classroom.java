@@ -5,17 +5,24 @@ public class Classroom {
     private String hallCapacity;
     private String hallType;
     private boolean hallMaintenance;
-    private boolean availability;
+    private boolean availability = true;
 
-    public Classroom(int hallId, String hallCapacity, String hallType,
-                     boolean hallMaintenance, boolean availability) {
-        this.hallId = hallId;
+    public Classroom(String hallCapacity, String hallType) {
+
+        this.hallCapacity = hallCapacity;
+        this.hallType = hallType;
+        //this.hallMaintenance = hallMaintenance;
+    }
+
+    public Classroom(int hallId,String hallCapacity, String hallType, boolean hallMaintenance,boolean availability) {
+        this.hallId=hallId;
         this.hallCapacity = hallCapacity;
         this.hallType = hallType;
         this.hallMaintenance = hallMaintenance;
-        this.availability = availability;
+        this.availability= availability;
     }
 
+    public void setHallId(int hallId) { this.hallId = hallId; }
     public int getHallId() { return hallId; }
     public String getHallCapacity() { return hallCapacity; }
     public String getHallType() { return hallType; }

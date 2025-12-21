@@ -41,7 +41,7 @@
          <Button fx:id="quizzesBtn" maxWidth="1.7976931348623157E308" text="Quizzes" />
          <Button fx:id="officeHoursBtn" maxWidth="1.7976931348623157E308" text="Office Hours" />
          <Button fx:id="gradesBtn" maxWidth="1.7976931348623157E308" text="Grade Management" />
-         <Button fx:id="classroom_btn" mnemonicParsing="false" onAction="#viewClassrooms" prefHeight="26.0" prefWidth="172.0" text="Classrooms" />
+         <Button fx:id="classroom_btn" mnemonicParsing="false" onAction="#ViewClassroom" prefHeight="26.0" prefWidth="172.0" text="Classrooms" />
          <Region VBox.vgrow="ALWAYS" />
          <Separator />
          <Button fx:id="leaveRequestBtn" maxWidth="1.7976931348623157E308" text="Leave Requests" />

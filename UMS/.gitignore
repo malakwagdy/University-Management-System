@@ -31,6 +31,7 @@ target/
 build/
 !**/src/main/**/build/
 !**/src/test/**/build/
+src/main/java/com/example/ums/GlobalData.java
 
 ### VS Code ###
 .vscode/

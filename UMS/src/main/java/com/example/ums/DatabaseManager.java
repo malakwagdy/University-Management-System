@@ -38,9 +38,27 @@ public class DatabaseManager {
             }
         }
 
-    public static void AddClassroom() {
-        String sql = "Insert into halls  availability = false WHERE hallid = ?";
+    public static void AddClassroom(Classroom classroom) throws SQLException {
+        String sql =
+                "INSERT INTO halls " +
+                        "(hallcapacity, halltype)" +
+                        "VALUES (?, ?)";
+        try (Connection conn = getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, classroom.getHallCapacity());
+            ps.setString(2, classroom.getHallType());
+
+
+            ps.executeUpdate();
+
+            try (ResultSet rs = ps.getGeneratedKeys()) {
+                if (rs.next()) {
+                    classroom.setHallId(rs.getInt(1));
+                }
+            }
+        }
     }
+
 
 
     public void addAdmission(Admission admission) throws SQLException {

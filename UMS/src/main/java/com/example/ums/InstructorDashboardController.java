@@ -33,7 +33,12 @@ public class InstructorDashboardController {
     }
 
     @FXML
-    private void viewClassrooms() {
+    private void ViewClassroom(ActionEvent event) {
+        try {
+            SceneController.switchScene(event, "ViewClassrooms.fxml", "View Classrooms");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
     }
 }

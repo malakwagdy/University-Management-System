@@ -50,7 +50,7 @@ public class ViewClassroomsController {
     }
 
 
-    private void showAlert(String title, String message) {
+    public static void showAlert(String title, String message) {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle(title);
         alert.setHeaderText(null);
@@ -72,11 +72,11 @@ public class ViewClassroomsController {
 
             while (rs.next()) {
                 hallList.add(new Classroom(
-                        rs.getInt("hallid"),
+                        //rs.getInt("hallid"),
                         rs.getString("hallcapacity"),
-                        rs.getString("halltype"),
-                        rs.getBoolean("hallmaintenance"),
-                        rs.getBoolean("availability")
+                        rs.getString("halltype")
+                        //rs.getBoolean("hallmaintenance"),
+                        //rs.getBoolean("availability")
                 ));
             }
 
@@ -104,11 +104,11 @@ private void loadHallDataAsync() {
 
                 while (rs.next()) {
                     hallList.add(new Classroom(
-                            rs.getInt("hallid"),
+                            //rs.getInt("hallid"),
                             rs.getString("hallcapacity"),
-                            rs.getString("halltype"),
-                            rs.getBoolean("hallmaintenance"),
-                            rs.getBoolean("availability")
+                            rs.getString("halltype")
+                            //rs.getBoolean("hallmaintenance"),
+                            //rs.getBoolean("availability")
                     ));
                 }
             }
@@ -189,10 +189,13 @@ private void loadHallDataAsync() {
         }
     }
 
-    private void handleNewclassroomButton(){
-        DatabaseManager.AddClassroom();
-        HallsTable.refresh();               // update UI
-        showAlert("Success", "Classroom added successfully.");
+    @FXML
+    public void handleNewclassroomButton(ActionEvent event){
+        try {
+            SceneController.switchScene(event, "AddClassroom.fxml", "Add new Classroom");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
 
     }
