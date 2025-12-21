@@ -1,11 +1,17 @@
 package com.example.ums;
 
+<<<<<<< HEAD
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+=======
+import io.github.cdimascio.dotenv.Dotenv;
+import org.mindrot.jbcrypt.BCrypt;
+import java.sql.*;
+>>>>>>> 6894aefbf49aa113820091831dba08c638722779
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -27,7 +33,13 @@ public class DatabaseManager {
     public static Connection getConnection() throws SQLException {
         return DriverManager.getConnection(JDBC_URL, DB_USER, DB_PASSWORD);
     }
+    public String hashPassword(String password) {
+        return BCrypt.hashpw(password, BCrypt.gensalt(12));
+    }
 
+    public boolean checkPassword(String password, String hashedPassword) {
+        return BCrypt.checkpw(password, hashedPassword);
+    }
     public static boolean bookClassroom(int hallId) {
 
             String sql = "UPDATE halls SET availability = false WHERE hallid = ?";
@@ -189,7 +201,7 @@ public class DatabaseManager {
             ps.setString(2, student.getType());
             ps.setString(3, student.getName());
             ps.setString(4, student.getEmail());
-            ps.setString(5, student.getPassword());
+            ps.setString(5, hashPassword(student.getPassword()));
             ps.setString(6, student.getPhoneNumber());
             ps.setString(7, student.getdateOfBirth());
             ps.executeUpdate();
@@ -477,7 +489,7 @@ public ArrayList<Student> getStudentsByCourse(String courseCode) {
             ps.setString(2, instructor.getType());
             ps.setString(3, instructor.getName());
             ps.setString(4, instructor.getEmail());
-            ps.setString(5, instructor.getPassword());
+            ps.setString(5, hashPassword(instructor.getPassword()));
             ps.setString(6, instructor.getPhoneNumber());
             ps.setString(7, instructor.getdateOfBirth());
             ps.executeUpdate();
@@ -694,7 +706,7 @@ public ArrayList<Student> getStudentsByCourse(String courseCode) {
             ps.setString(2, hr.getType());
             ps.setString(3, hr.getName());
             ps.setString(4, hr.getEmail());
-            ps.setString(5, hr.getPassword());
+            ps.setString(5, hashPassword(hr.getPassword()));
             ps.setString(6, hr.getPhoneNumber());
             ps.setString(7, hr.getdateOfBirth());
             ps.executeUpdate();
@@ -829,7 +841,7 @@ public ArrayList<Student> getStudentsByCourse(String courseCode) {
             ps.setString(2, admin.getType());
             ps.setString(3, admin.getName());
             ps.setString(4, admin.getEmail());
-            ps.setString(5, admin.getPassword());
+            ps.setString(5, hashPassword(admin.getPassword()));
             ps.setString(6, admin.getPhoneNumber());
             ps.setString(7, admin.getdateOfBirth());
             ps.executeUpdate();
