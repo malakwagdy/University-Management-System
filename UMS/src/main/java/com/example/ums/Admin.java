@@ -1,6 +1,6 @@
 package com.example.ums;
 
-import com.google.firebase.database.PropertyName;
+
 
 import java.sql.SQLException;
 import java.time.LocalDate;
@@ -17,11 +17,11 @@ public class Admin extends User {
         super(id, "Admin", phoneNumber, email, password, name, dateOfBirth);
         this.salary = salary;
     }
-    @PropertyName("salary")
+
     public String getSalary() {
         return salary;
     }
-    @PropertyName("salary")
+
     public void setSalary(String salary) {
         this.salary = salary;
     }
