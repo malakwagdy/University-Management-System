@@ -1144,21 +1144,63 @@ public ArrayList<Student> getStudentsByCourse(String courseCode) {
             return;
         }
     }
+    public ArrayList<Course> getAllCourses() throws SQLException {
+        ArrayList<Course> courses = new ArrayList<>();
+        String sql = "SELECT * FROM courses";
+        try (Connection conn = getConnection();
+                PreparedStatement ps = conn.prepareStatement(sql)) {
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                int courseId = rs.getInt("courseid");
+                String courseName = rs.getString("coursename");
+                String courseDescription = rs.getString("coursedescription");
+                String year = rs.getString("courseyear");
+                Course course = new Course(courseId, courseName, courseDescription, year);
+                courses.add(course);
+            }
+        } catch (SQLException e) {
+            System.out.println("Failed to get all courses");
+            e.printStackTrace();
+            throw e;
+        }
+        return courses;
+    }
 
-    // public Course getCourse(String id) throws SQLException {
-    //     String sql = "SELECT * FROM courses WHERE courseid = ?";
-    //     try (Connection conn = getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
-    //         ps.setString(1, id);
-    //         ResultSet rs = ps.executeQuery();
-    //         if (!rs.next()) {
-    //             return null;
-    //         }
-    //         String courseName = rs.getString("coursename");
-    //         String courseDescription = rs.getString("coursedescription");
-    //         String year = rs.getString("courseyear");
-    //         return new Course(id, courseName, courseDescription, year);
-    //     }
-    // }
+    public void updateCourse(Course course) {
+        String courseSql = "UPDATE courses SET coursename = ?, coursedescription = ?, courseyear = ? WHERE courseid = ?";
+        try (Connection conn = getConnection(); PreparedStatement ps = conn.prepareStatement(courseSql)) {
+            ps.setString(1, course.getCourseName());
+            ps.setString(2, course.getCourseDescription());
+            ps.setString(3, course.getYear());
+            ps.setInt(4, course.getCourseId());
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            System.out.println("Failed to update course");
+            e.printStackTrace();
+            return;
+        }
+    }
+    public Course getCourse(int courseId) {
+        String courseSql = "SELECT * FROM courses WHERE courseid = ?";
+        try (Connection conn = getConnection(); PreparedStatement ps = conn.prepareStatement(courseSql)) {
+            ps.setInt(1, courseId);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                String courseName = rs.getString("coursename");
+                String courseDescription = rs.getString("coursedescription");
+                String year = rs.getString("courseyear");
+                Course course = new Course(courseId, courseName, courseDescription, year);
+                return course;
+            }
+        } catch (SQLException e) {
+            System.out.println("Failed to get course");
+            e.printStackTrace();
+           return null;
+        }
+        return null;
+    }
+
+
 
     // public ArrayList<String> getMaterial(String id) throws SQLException {
     //     String sql = "SELECT materialname FROM material WHERE courseid = ?";
