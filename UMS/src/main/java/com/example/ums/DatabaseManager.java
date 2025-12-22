@@ -290,6 +290,21 @@ public class DatabaseManager {
         }
         return classrooms;
     }
+    private Map<Integer, String> getTakenCourses(String userId) throws SQLException {
+        HashMap<Integer, String> courses = new HashMap<>();
+        String sql = "SELECT courseid, grade FROM takencourses WHERE userid = ?";
+        try (Connection conn = getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, userId);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                Integer courseId = rs.getInt("courseid");
+                String grade = rs.getString("grade");
+                courses.put(courseId, grade != null ? grade : "");
+            }
+        }
+        return courses;
+    }
 
     // public Student getStudent(String id) {
     //     try (Connection conn = getConnection()) {
@@ -425,7 +440,7 @@ public ArrayList<Student> getStudentsByCourse(String courseCode) {
                 student.setCurrentCourses(currentCourses);
                 
                 // Fetch taken courses
-                HashMap<String, String> takenCourses = getTakenCourses(userId);
+                Map<Integer, String> takenCourses = getTakenCourses(userId);
                 student.setTakenCourses(takenCourses);
                 
                 return student;
@@ -480,17 +495,30 @@ public ArrayList<Student> getStudentsByCourse(String courseCode) {
     /**
      * Get taken courses with grades for a student
      */
-    private HashMap<String, String> getTakenCourses(String userId) throws SQLException {
-        HashMap<String, String> courses = new HashMap<>();
-        String sql = "SELECT courseid, grade FROM takencourses WHERE userid = ?";
+    public Map<Course, String> getTakenCoursesForTranscript(String userId) throws SQLException {
+        Map<Course, String> courses = new HashMap<>();
+        String sql = "SELECT c.courseid, c.coursename, c.coursedescription, c.courseyear, tc.grade " +
+                "FROM takencourses tc " +
+                "JOIN courses c ON tc.courseid = c.courseid " +
+                "WHERE tc.userid = ?";
         try (Connection conn = getConnection();
                 PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setString(1, userId);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
-                String courseId = String.valueOf(rs.getInt("courseid"));
+                int courseId = rs.getInt("courseid");
+                String courseName = rs.getString("coursename");
+                String courseDescription = rs.getString("coursedescription");
+                String courseYear = rs.getString("courseyear");
                 String grade = rs.getString("grade");
-                courses.put(courseId, grade != null ? grade : "");
+
+                Course course = new Course(
+                        courseId,
+                        courseName,
+                        courseDescription,
+                        courseYear
+                );
+                courses.put(course, grade != null ? grade : "");
             }
         }
         return courses;
@@ -1105,7 +1133,7 @@ public ArrayList<Student> getStudentsByCourse(String courseCode) {
     public void addCourse(Course course) {
         String courseSql = "INSERT INTO courses (courseid, coursename, coursedescription, courseyear) VALUES (?, ?, ?, ?)";
         try (Connection conn = getConnection(); PreparedStatement ps = conn.prepareStatement(courseSql)) {
-            ps.setString(1, course.getCourseId());
+            ps.setInt(1, course.getCourseId());
             ps.setString(2, course.getCourseName());
             ps.setString(3, course.getCourseDescription());
             ps.setString(4, course.getYear());

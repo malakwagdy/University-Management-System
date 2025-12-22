@@ -5,6 +5,7 @@ import com.google.firebase.database.PropertyName;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Map;
 
 public class Admin extends User {
     private String salary;
@@ -414,7 +415,7 @@ public class Admin extends User {
         String email = id+"@ums.edu";
         Student student=new Student(id, admission.getPhoneNumber(), email,"12345", admission.getName(), admission.getDateOfBirth(), admission.getMajor());
         admission.setStatus("Accepted");
-        try {            
+        try {
             dm.addStudent(student);
             dm.updateAdmissionStatus(admission);
         } catch (SQLException e) {
@@ -484,6 +485,25 @@ public class Admin extends User {
         int newNumber = highest + 1;
         String number = String.format("%03d", newNumber);
         return year + letter + number;
+    }
+
+    public Map<Course,String>generateTranscript(String studentId) {
+        Student student = null;
+        try {
+            student = dm.getStudent(studentId);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        if (student == null) {
+            throw new IllegalArgumentException("Student not found with ID: " + studentId);
+        }
+        Map<Course, String> transcript = null;
+        try {
+            transcript = dm.getTakenCoursesForTranscript(studentId);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return transcript;
     }
 
 }
