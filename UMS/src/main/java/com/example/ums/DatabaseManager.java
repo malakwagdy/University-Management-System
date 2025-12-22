@@ -1,17 +1,14 @@
 package com.example.ums;
 
-<<<<<<< HEAD
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-//=======
 import io.github.cdimascio.dotenv.Dotenv;
 import org.mindrot.jbcrypt.BCrypt;
 import java.sql.*;
-//>>>>>>> 6894aefbf49aa113820091831dba08c638722779
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -724,7 +721,7 @@ public ArrayList<Student> getStudentsByCourse(String courseCode) {
             ps.setString(2, hr.getType());
             ps.setString(3, hr.getName());
             ps.setString(4, hr.getEmail());
-            ps.setString(5, hr.getPassword());
+            ps.setString(5, hashPassword(hr.getPassword()));
             ps.setString(6, hr.getPhoneNumber());
             ps.setString(7, hr.getdateOfBirth());
             ps.executeUpdate();
