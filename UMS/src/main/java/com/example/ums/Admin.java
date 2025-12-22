@@ -483,5 +483,32 @@ public class Admin extends User {
         }
         return transcript;
     }
+    public ArrayList<Course> getAllCourse() {
+        ArrayList<Course> courses = null;
+        try {
+            courses = dm.getAllCourses();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return null;
+        }
+        return  courses;
+    }
+    public void editCourseDetails(int courseId, String courseName, String courseDescription, String year) {
+        Course course = null;
+        course = dm.getCourse(courseId);
+        if (course == null) {
+            throw new IllegalArgumentException("Course not found with ID: " + courseId);
+        }
+        if (courseName != null && !courseName.trim().isEmpty()) {
+            course.setCourseName(courseName);
+        }
+        if (courseDescription != null && !courseDescription.trim().isEmpty()) {
+            course.setCourseDescription(courseDescription);
+        }
+        if (year != null && !year.trim().isEmpty()) {
+            course.setYear(year);
+        }
+        dm.updateCourse(course);
+    }
 
 }
