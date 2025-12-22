@@ -1,7 +1,5 @@
 package com.example.ums;
 
-import com.google.firebase.database.PropertyName;
-
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -18,11 +16,10 @@ public class Admin extends User {
         super(id, "Admin", phoneNumber, email, password, name, dateOfBirth);
         this.salary = salary;
     }
-    @PropertyName("salary")
     public String getSalary() {
         return salary;
     }
-    @PropertyName("salary")
+
     public void setSalary(String salary) {
         this.salary = salary;
     }
@@ -46,26 +43,7 @@ public class Admin extends User {
     }
 
     public void deleteUser(String id){
-        String code = id.substring(2,3);
-        switch (code) {
-            case"A":
-                fm.deleteAdmin(id);
-                break;
-            case "S":
-                fm.deleteStudent(id);
-                break;
-            case "I":
-                fm.deleteInstructor(id);
-                break;
-            case "P":
-                fm.deleteParent(id);
-                break;
-            case "H":
-                fm.deleteHR(id);
-                break;
-            default:
-                throw new IllegalArgumentException("Invalid ID: " + id);
-        }
+        dm.deleteUser(id);
     }
 //    public void updateUser(User user){
 //        String code = user.getId().substring(2,3);

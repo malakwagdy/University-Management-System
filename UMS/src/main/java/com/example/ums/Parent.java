@@ -1,7 +1,5 @@
 package com.example.ums;
 
-import com.google.firebase.database.PropertyName;
-
 import java.util.ArrayList;
 
 public class Parent extends User{
@@ -17,19 +15,19 @@ public class Parent extends User{
         this.relation = relation;
         this.children = children;
     }
-    @PropertyName("relation")
+
     public String getRelation() {
         return relation;
     }
-    @PropertyName("relation")
+
     public void setRelation(String relation) {
         this.relation = relation;
     }
-    @PropertyName("children")
+
     public ArrayList<String> getChildren() {
         return children;
     }
-    @PropertyName("children")
+
     public void setChildren(ArrayList<String> children) {
         this.children = children;
     }

@@ -58,70 +58,70 @@ public class ViewClassroomsController {
         alert.showAndWait();
     }
 
-    private void loadHallData() {
-        ObservableList<Classroom> hallList = FXCollections.observableArrayList();
-
-        String sql = "SELECT hallid, hallcapacity, halltype, hallmaintenance, availability FROM hall";
-
-        try (Connection conn = DriverManager.getConnection(
-                "jdbc:postgresql://localhost:5432/yourDB",
-                "username",
-                "password");
-             Statement stmt = conn.createStatement();
-             ResultSet rs = stmt.executeQuery(sql)) {
-
-            while (rs.next()) {
-                hallList.add(new Classroom(
-                        //rs.getInt("hallid"),
-                        rs.getString("hallcapacity"),
-                        rs.getString("halltype")
-                        //rs.getBoolean("hallmaintenance"),
-                        //rs.getBoolean("availability")
-                ));
-            }
-
-            HallsTable.setItems(hallList);
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-private void loadHallDataAsync() {
-
-    Task<ObservableList<Classroom>> task = new Task<>() {
-        @Override
-        protected ObservableList<Classroom> call() throws Exception {
-            ObservableList<Classroom> hallList = FXCollections.observableArrayList();
-
-            String sql = "SELECT hallid, hallcapacity, halltype, hallmaintenance, availability FROM hall";
-
-            try (Connection conn = DriverManager.getConnection(
-                    "jdbc:postgresql://localhost:5432/ums_db",
-                    "postgres",
-                    "Postgres@2025");
-                 Statement stmt = conn.createStatement();
-                 ResultSet rs = stmt.executeQuery(sql)) {
-
-                while (rs.next()) {
-                    hallList.add(new Classroom(
-                            //rs.getInt("hallid"),
-                            rs.getString("hallcapacity"),
-                            rs.getString("halltype")
-                            //rs.getBoolean("hallmaintenance"),
-                            //rs.getBoolean("availability")
-                    ));
-                }
-            }
-
-            return hallList;
-        }
-    };
-
-    task.setOnSucceeded(e -> HallsTable.setItems(task.getValue()));
-    task.setOnFailed(e -> task.getException().printStackTrace());
-
-    new Thread(task).start();
-}
+//    private void loadHallData() {
+//        ObservableList<Classroom> hallList = FXCollections.observableArrayList();
+//
+//        String sql = "SELECT hallid, hallcapacity, halltype, hallmaintenance, availability FROM hall";
+//
+//        try (Connection conn = DriverManager.getConnection(
+//                "jdbc:postgresql://localhost:5432/yourDB",
+//                "username",
+//                "password");
+//             Statement stmt = conn.createStatement();
+//             ResultSet rs = stmt.executeQuery(sql)) {
+//
+//            while (rs.next()) {
+//                hallList.add(new Classroom(
+//                        //rs.getInt("hallid"),
+//                        rs.getString("hallcapacity"),
+//                        rs.getString("halltype")
+//                        //rs.getBoolean("hallmaintenance"),
+//                        //rs.getBoolean("availability")
+//                ));
+//            }
+//
+//            HallsTable.setItems(hallList);
+//
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//    }
+//private void loadHallDataAsync() {
+//
+//    Task<ObservableList<Classroom>> task = new Task<>() {
+//        @Override
+//        protected ObservableList<Classroom> call() throws Exception {
+//            ObservableList<Classroom> hallList = FXCollections.observableArrayList();
+//
+//            String sql = "SELECT hallid, hallcapacity, halltype, hallmaintenance, availability FROM hall";
+//
+//            try (Connection conn = DriverManager.getConnection(
+//                    "jdbc:postgresql://localhost:5432/ums_db",
+//                    "postgres",
+//                    "Postgres@2025");
+//                 Statement stmt = conn.createStatement();
+//                 ResultSet rs = stmt.executeQuery(sql)) {
+//
+//                while (rs.next()) {
+//                    hallList.add(new Classroom(
+//                            //rs.getInt("hallid"),
+//                            rs.getString("hallcapacity"),
+//                            rs.getString("halltype")
+//                            //rs.getBoolean("hallmaintenance"),
+//                            //rs.getBoolean("availability")
+//                    ));
+//                }
+//            }
+//
+//            return hallList;
+//        }
+//    };
+//
+//    task.setOnSucceeded(e -> HallsTable.setItems(task.getValue()));
+//    task.setOnFailed(e -> task.getException().printStackTrace());
+//
+//    new Thread(task).start();
+//}
 
     private void loadHallsData() {
 
