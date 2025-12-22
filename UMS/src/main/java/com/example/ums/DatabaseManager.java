@@ -1713,11 +1713,11 @@ public ArrayList<Student> getStudentsByCourse(String courseCode) {
 
         if (student.getTakenCourses() != null && !student.getTakenCourses().isEmpty()) {
             String insertTakenCoursesSql = "INSERT INTO takencourses (userid, courseid, grade) VALUES (?, ?, ?)";
-            for (Map.Entry<String, String> entry : student.getTakenCourses().entrySet()) {
+            for (Map.Entry<Integer, String> entry : student.getTakenCourses().entrySet()) {
                 try (Connection conn = getConnection();
                         PreparedStatement ps = conn.prepareStatement(insertTakenCoursesSql)) {
                     ps.setString(1, student.getId());
-                    ps.setInt(2, Integer.parseInt(entry.getKey()));
+                    ps.setInt(2, entry.getKey());
                     ps.setString(3, entry.getValue() != null ? entry.getValue() : "");
                     ps.executeUpdate();
                 } catch (SQLException e) {
