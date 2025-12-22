@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.Map;
 
 public class Course {
-    private String courseId;
+    private int courseId;
     private String courseName;
     private String courseDescription;
     private String year;
@@ -17,7 +17,7 @@ public class Course {
     private Map<String, String> finals;
 
 
-    public Course(String courseId, String courseName, String courseDescription, String year, ArrayList<String> material, ArrayList<String> assignments, ArrayList<String> quizzes, Map<String, String> midterm, Map<String, String> finals, ArrayList<String> students) {
+    public Course(int courseId, String courseName, String courseDescription, String year, ArrayList<String> material, ArrayList<String> assignments, ArrayList<String> quizzes, Map<String, String> midterm, Map<String, String> finals, ArrayList<String> students) {
         this.courseId = courseId;
         this.courseName = courseName;
         this.courseDescription = courseDescription;
@@ -30,11 +30,17 @@ public class Course {
 
     }
 
-    public String getCourseId() {
+    public Course(int courseId, String courseName, String courseDescription, String year) {
+        this.courseId = courseId;
+        this.courseName = courseName;
+        this.courseDescription = courseDescription;
+        this.year = year;
+    }
+    public int getCourseId() {
         return courseId;
     }
 
-    public void setCourseId(String courseId) {
+    public void setCourseId(int courseId) {
         this.courseId = courseId;
     }
 
