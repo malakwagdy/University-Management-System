@@ -92,10 +92,10 @@
                </HBox>
                <TableView fx:id="instructorsTable" prefHeight="250.0">
                   <columns>
-                     <TableColumn fx:id="instructorNameCol" prefWidth="133.0" text="Instructor ID" />
-                     <TableColumn fx:id="instructorEmailCol" prefWidth="174.0" text="Name" />
-                     <TableColumn fx:id="coursesCountCol" prefWidth="236.0" text="Email" />
-                     <TableColumn fx:id="roleCol" prefWidth="124.0" text="Role" />
+                     <TableColumn fx:id="instructorIdCol" prefWidth="133.0" text="Instructor ID" />
+                     <TableColumn fx:id="instructorNameCol" prefWidth="174.0" text="Name" />
+                     <TableColumn fx:id="instructorEmailCol" prefWidth="236.0" text="Email" />
+                     <TableColumn fx:id="instructorRoleCol" prefWidth="124.0" text="Role" />
                      <TableColumn fx:id="actionsCol" prefWidth="153.0" text="Actions" />
                   </columns>
                </TableView>

@@ -92,19 +92,18 @@
             <!-- Professional Development -->
             <VBox spacing="10">
                <HBox alignment="CENTER_LEFT" spacing="10">
-                  <Label text="Professional Development Activities" />
+                  <Label text="Department Employees" />
                   <Region HBox.hgrow="ALWAYS" />
-                  <TextField fx:id="trainingSearchField" promptText="Search activities" />
-                  <Button fx:id="addTrainingBtn" text="+ Add Activity" />
+                  <ComboBox fx:id="employeeRoleFilter" onAction="#handleEmployeeRoleFilter" promptText="Filter by Role" />
                </HBox>
-               <TableView fx:id="trainingTable" prefHeight="220.0">
+               <TableView fx:id="employeeTable" prefHeight="220.0">
                   <columns>
-                     <TableColumn fx:id="trainingEmployeeCol" prefWidth="180.0" text="Employee" />
-                     <TableColumn fx:id="trainingNameCol" prefWidth="200.0" text="Activity" />
-                     <TableColumn fx:id="trainingDateCol" prefWidth="120.0" text="Date" />
-                     <TableColumn fx:id="trainingStatusCol" prefWidth="120.0" text="Status" />
-                     <TableColumn fx:id="trainingCreditsCol" prefWidth="100.0" text="Credits" />
-                     <TableColumn fx:id="trainingActionsCol" prefWidth="150.0" text="Actions" />
+                     <TableColumn fx:id="employeeIdCol" prefWidth="108.0" text="EmployeeID" />
+                     <TableColumn fx:id="nameCol" prefWidth="183.0" text="Name" />
+                     <TableColumn fx:id="emailCol" prefWidth="276.0" text="Email" />
+                     <TableColumn fx:id="roleCol" prefWidth="128.0" text="Role" />
+                     <TableColumn fx:id="salaryCol" prefWidth="114.0" text="Salary" />
+                     <TableColumn fx:id="actionsCol" prefWidth="182.0" text="Actions" />
                   </columns>
                </TableView>
             </VBox>

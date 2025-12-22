@@ -11,6 +11,10 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -32,7 +36,7 @@ public class EditUserPopupController {
     @FXML
     private HBox dateOfBirthHBox;
     @FXML
-    private TextField dateOfBirthField;
+    private DatePicker dateOfBirthField;
     @FXML
     private HBox majorHBox;
     @FXML
@@ -68,9 +72,11 @@ public class EditUserPopupController {
     @FXML
     private CheckBox departmentHeadCheckBox;
     @FXML
-    private HBox instructorSalaryHBox;
+    private HBox SalaryHBox;
     @FXML
-    private Label instructorSalaryValue;
+    private Label SalaryValue;
+    @FXML
+    private TextField salaryField;
     @FXML
     private HBox coursesHBox;
     @FXML
@@ -87,23 +93,9 @@ public class EditUserPopupController {
     private HBox benefitsHBox;
     @FXML
     private Label benefitsValue;
-    
-    // Admin fields
     @FXML
-    private HBox adminSalaryHBox;
-    @FXML
-    private Label adminSalaryValue;
-    
-    // HR fields
-    @FXML
-    private HBox hrDepartmentHBox;
-    @FXML
-    private ChoiceBox<String> hrDepartmentChoiceBox;
-    @FXML
-    private HBox hrSalaryHBox;
-    @FXML
-    private Label hrSalaryValue;
-    
+    private TextField benefitsField;
+
     // Parent fields
     @FXML
     private HBox relationHBox;
@@ -114,16 +106,12 @@ public class EditUserPopupController {
     @FXML
     private TextField childIdField;
     
-    // Buttons
-    @FXML
-    private Button saveBtn;
-    @FXML
-    private Button cancelBtn;
-    
     private User user;
     private Admin admin;
     private Runnable onSuccess;
     private Stage popupStage;
+    private User currentlyLoggedInUser;
+    static DatabaseManager dm = new DatabaseManager();
     
     public static void show(User user, Admin admin, Runnable onSuccess) {
         if (user == null) {
@@ -147,6 +135,9 @@ public class EditUserPopupController {
             controller.admin = admin;
             controller.onSuccess = onSuccess;
             controller.popupStage = popupStage;
+            
+            // Get currently logged in user
+            controller.loadCurrentlyLoggedInUser();
             
             controller.initializeFields();
             
@@ -176,18 +167,38 @@ public class EditUserPopupController {
         // Populate choice boxes
         majorChoiceBox.getItems().addAll("CESS", "COMM", "MCTA", "ERGY", "BLDG", "LAAR", "HOUD", "CISE", "MANF", "ENVR", "MATL");
         departmentChoiceBox.getItems().addAll("CESS", "COMM", "MCTA", "ERGY", "BLDG", "LAAR", "HOUD", "CISE", "MANF", "ENVR", "MATL");
-        hrDepartmentChoiceBox.getItems().addAll("CESS", "COMM", "MCTA", "ERGY", "BLDG", "LAAR", "HOUD", "CISE", "MANF", "ENVR", "MATL", "HR");
         roleChoiceBox.getItems().addAll("Teaching Assistant", "Professor");
         relationChoiceBox.getItems().addAll("Father", "Mother");
+        
+        // Initialize salary and benefits fields - hide TextFields and show Labels by default
+        if (salaryField != null) {
+            salaryField.setVisible(false);
+            salaryField.setManaged(false);
+        }
+        if (SalaryValue != null) {
+            SalaryValue.setVisible(true);
+            SalaryValue.setManaged(true);
+        }
+        if (benefitsField != null) {
+            benefitsField.setVisible(false);
+            benefitsField.setManaged(false);
+        }
+        if (benefitsValue != null) {
+            benefitsValue.setVisible(true);
+            benefitsValue.setManaged(true);
+        }
         
         // Hide all type-specific fields initially
         hideAllFields();
         
-        // Show and populate fields based on user type
+        // Determine who is editing and apply appropriate restrictions
+        String editorType = getCurrentlyLoggedInUserType();
+        
+        // Show and populate fields based on user type and editor permissions
         if (user instanceof Student) {
             setupStudentFields((Student) user);
         } else if (user instanceof Instructor) {
-            setupInstructorFields((Instructor) user);
+            setupInstructorFields((Instructor) user, editorType);
         } else if (user instanceof Admin) {
             setupAdminFields((Admin) user);
         } else if (user instanceof HR) {
@@ -237,9 +248,9 @@ public class EditUserPopupController {
             departmentHeadHBox.setVisible(false);
             departmentHeadHBox.setManaged(false);
         }
-        if (instructorSalaryHBox != null) {
-            instructorSalaryHBox.setVisible(false);
-            instructorSalaryHBox.setManaged(false);
+        if (SalaryHBox != null) {
+            SalaryHBox.setVisible(false);
+            SalaryHBox.setManaged(false);
         }
         if (coursesHBox != null) {
             coursesHBox.setVisible(false);
@@ -256,22 +267,6 @@ public class EditUserPopupController {
         if (benefitsHBox != null) {
             benefitsHBox.setVisible(false);
             benefitsHBox.setManaged(false);
-        }
-        
-        // Admin fields
-        if (adminSalaryHBox != null) {
-            adminSalaryHBox.setVisible(false);
-            adminSalaryHBox.setManaged(false);
-        }
-        
-        // HR fields
-        if (hrDepartmentHBox != null) {
-            hrDepartmentHBox.setVisible(false);
-            hrDepartmentHBox.setManaged(false);
-        }
-        if (hrSalaryHBox != null) {
-            hrSalaryHBox.setVisible(false);
-            hrSalaryHBox.setManaged(false);
         }
         
         // Parent fields
@@ -300,10 +295,10 @@ public class EditUserPopupController {
         takenCoursesHBox.setVisible(true);
         takenCoursesHBox.setManaged(true);
         
-        // Populate fields
-        if (student.getdateOfBirth() != null) {
-            dateOfBirthField.setText(student.getdateOfBirth());
-        }
+        // Populate date of birth in DatePicker
+        populateDateOfBirth(student.getdateOfBirth());
+        
+        // Populate other fields
         if (student.getMajor() != null) {
             majorChoiceBox.setValue(student.getMajor());
         }
@@ -328,16 +323,21 @@ public class EditUserPopupController {
         }
     }
     
-    private void setupInstructorFields(Instructor instructor) {
-        // Show instructor fields
+    private void setupInstructorFields(Instructor instructor, String editorType) {
+        // Determine what fields to show and make editable based on editor type
+        boolean isHR = "HR".equals(editorType);
+        boolean isDeptHead = "DepartmentHead".equals(editorType);
+        boolean isAdmin = "Admin".equals(editorType);
+        
+        // Show all instructor fields
         departmentHBox.setVisible(true);
         departmentHBox.setManaged(true);
         roleHBox.setVisible(true);
         roleHBox.setManaged(true);
         departmentHeadHBox.setVisible(true);
         departmentHeadHBox.setManaged(true);
-        instructorSalaryHBox.setVisible(true);
-        instructorSalaryHBox.setManaged(true);
+        SalaryHBox.setVisible(true);
+        SalaryHBox.setManaged(true);
         coursesHBox.setVisible(true);
         coursesHBox.setManaged(true);
         responsibilitiesHBox.setVisible(true);
@@ -358,7 +358,45 @@ public class EditUserPopupController {
         if (instructor.isDepartmentHead()) {
             roleChoiceBox.setValue("Professor");
         }
-        instructorSalaryValue.setText(instructor.getSalary() != null ? instructor.getSalary() : "N/A");
+        
+        // Set salary - show as editable field for HR only, label for others
+        if (instructor.getSalary() != null) {
+            if (isHR) {
+                // HR: Show TextField, hide Label
+                if (salaryField != null) {
+                    salaryField.setText(instructor.getSalary());
+                    salaryField.setVisible(true);
+                    salaryField.setManaged(true);
+                }
+                if (SalaryValue != null) {
+                    SalaryValue.setVisible(false);
+                    SalaryValue.setManaged(false);
+                }
+            } else {
+                // Non-HR (Admin, DeptHead, etc.): Show Label, hide TextField
+                if (SalaryValue != null) {
+                    SalaryValue.setText(instructor.getSalary());
+                    SalaryValue.setVisible(true);
+                    SalaryValue.setManaged(true);
+                }
+                if (salaryField != null) {
+                    salaryField.setVisible(false);
+                    salaryField.setManaged(false);
+                }
+            }
+        } else {
+            // No salary value - show Label with "N/A", hide TextField
+            if (SalaryValue != null) {
+                SalaryValue.setText("N/A");
+                SalaryValue.setVisible(true);
+                SalaryValue.setManaged(true);
+            }
+            if (salaryField != null) {
+                salaryField.setVisible(false);
+                salaryField.setManaged(false);
+            }
+        }
+        
         if (instructor.getCourses() != null && !instructor.getCourses().isEmpty()) {
             coursesField.setText(String.join(", ", instructor.getCourses()));
         }
@@ -370,30 +408,66 @@ public class EditUserPopupController {
                 ? String.join(", ", instructor.getOfficeHours()) 
                 : "N/A"
         );
-        benefitsValue.setText(
-            instructor.getBenefits() != null && !instructor.getBenefits().isEmpty() 
-                ? String.join(", ", instructor.getBenefits()) 
-                : "N/A"
-        );
         
+        // Set benefits - show as editable field for HR only, label for others
+        if (instructor.getBenefits() != null && !instructor.getBenefits().isEmpty()) {
+            String benefitsStr = String.join(", ", instructor.getBenefits());
+            if (isHR) {
+                // HR: Show TextField, hide Label
+                if (benefitsField != null) {
+                    benefitsField.setText(benefitsStr);
+                    benefitsField.setVisible(true);
+                    benefitsField.setManaged(true);
+                }
+                if (benefitsValue != null) {
+                    benefitsValue.setVisible(false);
+                    benefitsValue.setManaged(false);
+                }
+            } else {
+                // Non-HR (Admin, DeptHead, etc.): Show Label, hide TextField
+                if (benefitsValue != null) {
+                    benefitsValue.setText(benefitsStr);
+                    benefitsValue.setVisible(true);
+                    benefitsValue.setManaged(true);
+                }
+                if (benefitsField != null) {
+                    benefitsField.setVisible(false);
+                    benefitsField.setManaged(false);
+                }
+            }
+        } else {
+            // No benefits value - show Label with "N/A", hide TextField
+            if (benefitsValue != null) {
+                benefitsValue.setText("N/A");
+                benefitsValue.setVisible(true);
+                benefitsValue.setManaged(true);
+            }
+            if (benefitsField != null) {
+                benefitsField.setVisible(false);
+                benefitsField.setManaged(false);
+            }
+        }
+        
+        // Apply edit restrictions based on editor type
+        applyEditRestrictions(isHR, isDeptHead, isAdmin);
     }
     
     private void setupAdminFields(Admin adminUser) {
-        adminSalaryHBox.setVisible(true);
-        adminSalaryHBox.setManaged(true);
-        adminSalaryValue.setText(adminUser.getSalary() != null ? adminUser.getSalary() : "N/A");
+        SalaryHBox.setVisible(true);
+        SalaryHBox.setManaged(true);
+        SalaryValue.setText(adminUser.getSalary() != null ? adminUser.getSalary() : "N/A");
     }
     
     private void setupHRFields(HR hr) {
-        hrDepartmentHBox.setVisible(true);
-        hrDepartmentHBox.setManaged(true);
-        hrSalaryHBox.setVisible(true);
-        hrSalaryHBox.setManaged(true);
+        departmentHBox.setVisible(true);
+        departmentHBox.setManaged(true);
+        SalaryHBox.setVisible(true);
+        SalaryHBox.setManaged(true);
         
         if (hr.getDepartmentName() != null) {
-            hrDepartmentChoiceBox.setValue(hr.getDepartmentName());
+            departmentChoiceBox.setValue(hr.getDepartmentName());
         }
-        hrSalaryValue.setText(hr.getSalary() != null ? hr.getSalary() : "N/A");
+        SalaryValue.setText(hr.getSalary() != null ? hr.getSalary() : "N/A");
     }
     
     private void setupParentFields(Parent parent) {
@@ -409,7 +483,28 @@ public class EditUserPopupController {
             childIdField.setText(String.join(", ", parent.getChildren()));
         }
     }
-    
+
+    private String dateOfBirth;
+
+    @FXML
+    private void handleDatePicker(ActionEvent event) {
+        if (dateOfBirthField == null) {
+            System.out.println("DOB Picker is NULL - check fx:id");
+            return;
+        }
+
+        LocalDate dob = dateOfBirthField.getValue();
+
+        if (dob == null) {
+            dateOfBirth = null;
+            return;
+        }
+
+        dateOfBirth = dob.toString(); // yyyy-MM-dd format
+        System.out.println("DOB selected: " + dateOfBirth);
+    }
+
+
     @FXML
     private void handleSaveButton(ActionEvent event) {
         try {
@@ -417,10 +512,20 @@ public class EditUserPopupController {
             user.setName(nameField.getText());
             user.setPhoneNumber(phoneField.getText());
             
+            // Get editor type to determine what can be saved
+            String editorType = getCurrentlyLoggedInUserType();
+            boolean isHR = "HR".equals(editorType);
+            boolean isDeptHead = "DepartmentHead".equals(editorType);
+            
             // Update type-specific fields and save
             if (user instanceof Student) {
                 Student student = (Student) user;
-                student.setdateOfBirth(dateOfBirthField.getText().trim());
+                // Update date of birth from DatePicker
+                if (dateOfBirth != null) {
+                    student.setdateOfBirth(dateOfBirth);
+                } else if (dateOfBirthField.getValue() != null) {
+                    student.setdateOfBirth(dateOfBirthField.getValue().toString());
+                }
                 if (majorChoiceBox.getValue() != null) {
                     student.setMajor(majorChoiceBox.getValue());
                 }
@@ -459,29 +564,41 @@ public class EditUserPopupController {
                 
             } else if (user instanceof Instructor) {
                 Instructor instructor = (Instructor) user;
-                if (departmentChoiceBox.getValue() != null) {
-                    instructor.setDepartmentName(departmentChoiceBox.getValue());
-                }
-                instructor.setDepartmentHead(departmentHeadCheckBox.isSelected());
-                if (departmentHeadCheckBox.isSelected()) {
-                    instructor.setRole("Professor");
-                } else {
+                
+                // Apply restrictions based on editor type
+                if (!isHR && !isDeptHead) {
+                    // Admin can edit everything
+                    if (departmentChoiceBox.getValue() != null) {
+                        instructor.setDepartmentName(departmentChoiceBox.getValue());
+                    }
+                    instructor.setDepartmentHead(departmentHeadCheckBox.isSelected());
+                    if (departmentHeadCheckBox.isSelected()) {
+                        instructor.setRole("Professor");
+                    } else {
+                        if (roleChoiceBox.getValue() != null) {
+                            instructor.setRole(roleChoiceBox.getValue());
+                        }
+                    }
+                    if (!coursesField.getText().trim().isEmpty()) {
+                        String[] courses = coursesField.getText().split(",");
+                        ArrayList<String> coursesList = new ArrayList<>();
+                        for (String course : courses) {
+                            String trimmed = course.trim();
+                            if (!trimmed.isEmpty()) {
+                                coursesList.add(trimmed);
+                            }
+                        }
+                        instructor.setCourses(coursesList);
+                    }
+                } else if (isDeptHead) {
+                    // Department Head can only edit roles and responsibilities
                     if (roleChoiceBox.getValue() != null) {
                         instructor.setRole(roleChoiceBox.getValue());
                     }
                 }
-                if (!coursesField.getText().trim().isEmpty()) {
-                    String[] courses = coursesField.getText().split(",");
-                    ArrayList<String> coursesList = new ArrayList<>();
-                    for (String course : courses) {
-                        String trimmed = course.trim();
-                        if (!trimmed.isEmpty()) {
-                            coursesList.add(trimmed);
-                        }
-                    }
-                    instructor.setCourses(coursesList);
-                }
-                if (!responsibilitiesField.getText().trim().isEmpty()) {
+                
+                // Responsibilities can be edited by both Dept Head and Admin
+                if (!isHR && !responsibilitiesField.getText().trim().isEmpty()) {
                     String[] responsibilities = responsibilitiesField.getText().split(",");
                     ArrayList<String> responsibilitiesList = new ArrayList<>();
                     for (String resp : responsibilities) {
@@ -492,6 +609,24 @@ public class EditUserPopupController {
                     }
                     instructor.setResponsibilities(responsibilitiesList);
                 }
+                
+                // Salary and benefits can only be edited by HR and Admin
+                if ((isHR) && salaryField != null && salaryField.isVisible() && !salaryField.getText().trim().isEmpty()) {
+                    instructor.setSalary(salaryField.getText().trim());
+                }
+                
+                if ((isHR) && benefitsField != null && benefitsField.isVisible() && !benefitsField.getText().trim().isEmpty()) {
+                    String[] benefits = benefitsField.getText().split(",");
+                    ArrayList<String> benefitsList = new ArrayList<>();
+                    for (String benefit : benefits) {
+                        String trimmed = benefit.trim();
+                        if (!trimmed.isEmpty()) {
+                            benefitsList.add(trimmed);
+                        }
+                    }
+                    instructor.setBenefits(benefitsList);
+                }
+                
                 admin.updateUser(user);
                 
             } else if (user instanceof Admin) {
@@ -499,8 +634,8 @@ public class EditUserPopupController {
                 
             } else if (user instanceof HR) {
                 HR hr = (HR) user;
-                if (hrDepartmentChoiceBox.getValue() != null) {
-                    hr.setDepartmentName(hrDepartmentChoiceBox.getValue());
+                if (departmentChoiceBox.getValue() != null) {
+                    hr.setDepartmentName(departmentChoiceBox.getValue());
                 }
                 admin.updateUser(user);
                 
@@ -565,5 +700,137 @@ public class EditUserPopupController {
         if (user instanceof HR) return "HR";
         if (user instanceof Parent) return "Parent";
         return "Unknown";
+    }
+    
+    /**
+     * Loads the currently logged in user from the database
+     */
+    private void loadCurrentlyLoggedInUser() {
+        String currentUserId = GlobalData.getCurrentlyLoggedIN();
+        if (currentUserId != null) {
+            try {
+                currentlyLoggedInUser = dm.getUser(currentUserId);
+                // If it's an instructor, check if they're a department head
+                if (currentlyLoggedInUser instanceof Instructor) {
+                    Instructor instructor = dm.getInstructor(currentUserId);
+                    if (instructor != null && instructor.isDepartmentHead()) {
+                        // We'll handle this in getCurrentlyLoggedInUserType
+                    }
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+                currentlyLoggedInUser = null;
+            }
+        }
+    }
+    
+    /**
+     * Gets the type of the currently logged in user
+     * Returns: "Admin", "HR", "DepartmentHead", "Instructor", "Student", "Parent", or "Unknown"
+     */
+    private String getCurrentlyLoggedInUserType() {
+        if (currentlyLoggedInUser == null) {
+            return "Admin"; // Default to Admin if not found (backward compatibility)
+        }
+        
+        if (currentlyLoggedInUser instanceof Admin) {
+            return "Admin";
+        } else if (currentlyLoggedInUser instanceof HR) {
+            return "HR";
+        } else if (currentlyLoggedInUser instanceof Instructor) {
+            try {
+                Instructor instructor = dm.getInstructor(currentlyLoggedInUser.getId());
+                if (instructor != null && instructor.isDepartmentHead()) {
+                    return "DepartmentHead";
+                }
+                return "Instructor";
+            } catch (SQLException e) {
+                e.printStackTrace();
+                return "Instructor";
+            }
+        } else if (currentlyLoggedInUser instanceof Student) {
+            return "Student";
+        } else if (currentlyLoggedInUser instanceof Parent) {
+            return "Parent";
+        }
+        
+        return "Unknown";
+    }
+    
+    /**
+     * Populates the DatePicker with the user's date of birth
+     */
+    private void populateDateOfBirth(String dateOfBirthStr) {
+        if (dateOfBirthStr != null && !dateOfBirthStr.trim().isEmpty()) {
+            try {
+                // Try parsing as yyyy-MM-dd format
+                LocalDate dob = LocalDate.parse(dateOfBirthStr, DateTimeFormatter.ISO_LOCAL_DATE);
+                dateOfBirthField.setValue(dob);
+                dateOfBirth = dateOfBirthStr;
+            } catch (DateTimeParseException e) {
+                // If parsing fails, try other common formats
+                try {
+                    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+                    LocalDate dob = LocalDate.parse(dateOfBirthStr, formatter);
+                    dateOfBirthField.setValue(dob);
+                    dateOfBirth = dob.format(DateTimeFormatter.ISO_LOCAL_DATE);
+                } catch (DateTimeParseException e2) {
+                    // If all parsing fails, leave it empty
+                    System.out.println("Could not parse date of birth: " + dateOfBirthStr);
+                }
+            }
+        }
+    }
+    
+    /**
+     * Applies edit restrictions based on the editor type
+     * HR can only edit salary and benefits
+     * Department Head can only edit roles and responsibilities
+     * Admin can edit everything
+     */
+    private void applyEditRestrictions(boolean isHR, boolean isDeptHead, boolean isAdmin) {
+        if (isHR) {
+            // HR can only edit salary and benefits
+            departmentChoiceBox.setDisable(true);
+            roleChoiceBox.setDisable(true);
+            departmentHeadCheckBox.setDisable(true);
+            coursesField.setEditable(false);
+            responsibilitiesField.setEditable(false);
+            // Ensure salary and benefits fields are editable for HR
+            if (salaryField != null) {
+                salaryField.setEditable(true);
+            }
+            if (benefitsField != null) {
+                benefitsField.setEditable(true);
+            }
+        } else if (isDeptHead) {
+            // Department Head can only edit roles and responsibilities
+            departmentChoiceBox.setDisable(true);
+            departmentHeadCheckBox.setDisable(true);
+            coursesField.setEditable(false);
+            if (salaryField != null) {
+                salaryField.setEditable(false);
+            }
+            if (benefitsField != null) {
+                benefitsField.setEditable(false);
+            }
+            // Ensure role and responsibilities fields are editable for Dept Head
+            roleChoiceBox.setDisable(false);
+            responsibilitiesField.setEditable(true);
+        } else if (isAdmin) {
+            // Admin can edit everything except salary and benefits
+            departmentChoiceBox.setDisable(false);
+            roleChoiceBox.setDisable(false);
+            departmentHeadCheckBox.setDisable(false);
+            coursesField.setEditable(true);
+            responsibilitiesField.setEditable(true);
+            // Admin cannot edit salary and benefits - they remain as labels
+            if (salaryField != null) {
+                salaryField.setEditable(false);
+            }
+            if (benefitsField != null) {
+                benefitsField.setEditable(false);
+            }
+        }
     }
 }

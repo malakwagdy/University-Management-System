@@ -648,7 +648,20 @@ public ArrayList<Student> getStudentsByCourse(String courseCode) {
                             role = parsedValue;
                             break;
                         case 7:
-                            isDepartmentHead = parsedValue != null ? Boolean.parseBoolean(parsedValue) : null;
+                            // Parse boolean value - handle "true", "false", or null
+                            if (parsedValue != null) {
+                                String trimmed = parsedValue.trim();
+                                if ("true".equalsIgnoreCase(trimmed)) {
+                                    isDepartmentHead = true;
+                                } else if ("false".equalsIgnoreCase(trimmed)) {
+                                    isDepartmentHead = false;
+                                } else {
+                                    // If value is not a valid boolean, default to false
+                                    isDepartmentHead = false;
+                                }
+                            } else {
+                                isDepartmentHead = null;
+                            }
                             break;
                     }
                 }
@@ -894,18 +907,17 @@ public ArrayList<Student> getStudentsByCourse(String courseCode) {
             e.printStackTrace();
             return;
         }
-        // String attributeSql = "INSERT INTO uservalues (userid, attributeid,
-        // attributeValue) VALUES (?, ?, ?::jsonb)";
-        // try (Connection conn = getConnection(); PreparedStatement ps =
-        // conn.prepareStatement(attributeSql)) {
-        // ps.setString(1, admin.getId());
-        // ps.setInt(2, 6);
-        // ps.setString(3, toJsonValue(admin.getSalary()));
-        // ps.executeUpdate();
-        // } catch (SQLException e) {
-        // System.out.println("Failed to add admin attributes");
-        // e.printStackTrace();
-        // }
+         String attributeSql = "INSERT INTO uservalues (userid, attributeid, attributeValue) VALUES (?, ?, ?::jsonb)";
+         try (Connection conn = getConnection(); PreparedStatement ps =
+             conn.prepareStatement(attributeSql)) {
+             ps.setString(1, admin.getId());
+             ps.setInt(2, 5);
+             ps.setString(3, toJsonValue(admin.getSalary()));
+             ps.executeUpdate();
+         } catch (SQLException e) {
+             System.out.println("Failed to add admin attributes");
+             e.printStackTrace();
+         }
     }
     
     public Admin getAdmin(String id) throws SQLException {
@@ -1314,11 +1326,12 @@ public ArrayList<Student> getStudentsByCourse(String courseCode) {
                 return unescapeJson(value);
             }
         } else if (jsonValue.startsWith("{\"value\":")) {
-            // Boolean or number value
+            // Boolean or number value (e.g., {"value":true} or {"value": false})
             int start = 9; // Length of {"value":
             int end = jsonValue.length() - 1; // Remove }
             if (end > start) {
-                return jsonValue.substring(start, end);
+                String value = jsonValue.substring(start, end).trim();
+                return value;
             }
         }
 

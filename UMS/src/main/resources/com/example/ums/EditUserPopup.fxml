@@ -1,10 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.Insets?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.ChoiceBox?>
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
 
-<VBox spacing="15.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.ums.EditUserPopupController">
+<VBox spacing="15.0" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.ums.EditUserPopupController">
    <padding>
       <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
    </padding>
@@ -31,12 +38,14 @@
             <HBox spacing="10.0">
                <children>
                   <Label minWidth="100.0" text="Full Name:" />
+                  <Label fx:id="nameLabel" />
                   <TextField fx:id="nameField" prefWidth="200.0" />
                </children>
             </HBox>
             <HBox spacing="10.0">
                <children>
                   <Label minWidth="100.0" text="Phone Number:" />
+                  <Label fx:id="phoneLabel" />
                   <TextField fx:id="phoneField" prefWidth="200.0" />
                </children>
             </HBox>
@@ -51,36 +60,42 @@
             <HBox fx:id="dateOfBirthHBox" spacing="10.0">
                <children>
                   <Label minWidth="100.0" text="Date of Birth:" />
-                  <TextField fx:id="dateOfBirthField" prefWidth="200.0" />
+                  <Label fx:id="dateOfBirthLabel" />
+                  <DatePicker fx:id="dateOfBirthField" prefHeight="26.0" prefWidth="200.0" />
                </children>
             </HBox>
             <HBox fx:id="majorHBox" spacing="10.0">
                <children>
                   <Label minWidth="100.0" text="Major:" />
+                  <Label fx:id="majorLabel" />
                   <ChoiceBox fx:id="majorChoiceBox" prefWidth="200.0" />
                </children>
             </HBox>
             <HBox fx:id="gpaHBox" spacing="10.0">
                <children>
                   <Label minWidth="100.0" text="GPA:" />
+                  <Label fx:id="gpaLabel" />
                   <TextField fx:id="gpaField" prefWidth="200.0" />
                </children>
             </HBox>
             <HBox fx:id="semesterHBox" spacing="10.0">
                <children>
                   <Label minWidth="100.0" text="Semester:" />
+                  <Label fx:id="semesterLabel" />
                   <TextField fx:id="semesterField" prefWidth="200.0" />
                </children>
             </HBox>
             <HBox fx:id="currentCoursesHBox" spacing="10.0">
                <children>
                   <Label minWidth="100.0" text="Current Courses:" />
+                  <Label fx:id="currentCoursesLabel" />
                   <TextField fx:id="currentCoursesField" prefWidth="200.0" />
                </children>
             </HBox>
             <HBox fx:id="takenCoursesHBox" spacing="10.0">
                <children>
                   <Label minWidth="100.0" text="Taken Courses:" />
+                  <Label fx:id="takenCoursesLabel" />
                   <TextField fx:id="takenCoursesField" prefWidth="200.0" />
                </children>
             </HBox>
@@ -89,36 +104,44 @@
             <HBox fx:id="departmentHBox" spacing="10.0">
                <children>
                   <Label minWidth="100.0" text="Department:" />
+                  <Label fx:id="departmentLabel" />
                   <ChoiceBox fx:id="departmentChoiceBox" prefWidth="200.0" />
                </children>
             </HBox>
             <HBox fx:id="roleHBox" spacing="10.0">
                <children>
                   <Label minWidth="100.0" text="Role:" />
+                  <Label fx:id="roleLabel" />
                   <ChoiceBox fx:id="roleChoiceBox" prefWidth="200.0" />
                </children>
             </HBox>
             <HBox fx:id="departmentHeadHBox" spacing="10.0">
                <children>
                   <Label minWidth="100.0" text="Department Head:" />
-                  <CheckBox fx:id="departmentHeadCheckBox" onAction="#handleDepartmentHeadCheckBox" />
+                  <CheckBox fx:id="departmentHeadCheckBox" onAction="#handleDepartmentHeadCheckBox">
+                     <HBox.margin>
+                        <Insets left="10.0" />
+                     </HBox.margin></CheckBox>
                </children>
             </HBox>
-            <HBox fx:id="instructorSalaryHBox" spacing="10.0">
+            <HBox fx:id="SalaryHBox" spacing="10.0">
                <children>
                   <Label minWidth="100.0" text="Salary:" />
-                  <Label fx:id="instructorSalaryValue" style="-fx-font-weight: bold;" />
+                  <Label fx:id="SalaryValue" style="-fx-font-weight: bold;" />
+                  <TextField fx:id="salaryField" prefWidth="200.0" />
                </children>
             </HBox>
             <HBox fx:id="coursesHBox" spacing="10.0">
                <children>
                   <Label minWidth="100.0" text="Courses:" />
+                  <Label fx:id="coursesLabel" />
                   <TextField fx:id="coursesField" prefWidth="200.0" />
                </children>
             </HBox>
             <HBox fx:id="responsibilitiesHBox" spacing="10.0">
                <children>
                   <Label minWidth="100.0" text="Responsibilities:" />
+                  <Label fx:id="responsibilitiesLabel" />
                   <TextField fx:id="responsibilitiesField" prefWidth="200.0" />
                </children>
             </HBox>
@@ -132,28 +155,7 @@
                <children>
                   <Label minWidth="100.0" text="Benefits:" />
                   <Label fx:id="benefitsValue" style="-fx-font-weight: bold;" />
-               </children>
-            </HBox>
-            
-            <!-- Admin fields -->
-            <HBox fx:id="adminSalaryHBox" spacing="10.0">
-               <children>
-                  <Label minWidth="100.0" text="Salary:" />
-                  <Label fx:id="adminSalaryValue" style="-fx-font-weight: bold;" />
-               </children>
-            </HBox>
-            
-            <!-- HR fields -->
-            <HBox fx:id="hrDepartmentHBox" spacing="10.0">
-               <children>
-                  <Label minWidth="100.0" text="Department:" />
-                  <ChoiceBox fx:id="hrDepartmentChoiceBox" prefWidth="200.0" />
-               </children>
-            </HBox>
-            <HBox fx:id="hrSalaryHBox" spacing="10.0">
-               <children>
-                  <Label minWidth="100.0" text="Salary:" />
-                  <Label fx:id="hrSalaryValue" style="-fx-font-weight: bold;" />
+                  <TextField fx:id="benefitsField" prefWidth="200.0" />
                </children>
             </HBox>
             
@@ -161,12 +163,14 @@
             <HBox fx:id="relationHBox" spacing="10.0">
                <children>
                   <Label minWidth="100.0" text="Relation:" />
+                  <Label fx:id="relationLabel" />
                   <ChoiceBox fx:id="relationChoiceBox" prefWidth="200.0" />
                </children>
             </HBox>
             <HBox fx:id="childIdHBox" spacing="10.0">
                <children>
                   <Label minWidth="100.0" text="Children IDs:" />
+                  <Label fx:id="childIdLabel" />
                   <TextField fx:id="childIdField" prefWidth="200.0" />
                </children>
             </HBox>
@@ -184,4 +188,3 @@
       </HBox>
    </children>
 </VBox>
-
