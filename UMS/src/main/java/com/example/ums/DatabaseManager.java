@@ -1,17 +1,14 @@
 package com.example.ums;
 
-<<<<<<< HEAD
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-=======
 import io.github.cdimascio.dotenv.Dotenv;
 import org.mindrot.jbcrypt.BCrypt;
 import java.sql.*;
->>>>>>> 6894aefbf49aa113820091831dba08c638722779
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
