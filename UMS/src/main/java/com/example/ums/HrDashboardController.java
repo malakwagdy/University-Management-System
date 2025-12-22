@@ -5,18 +5,22 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.event.ActionEvent;
 import java.io.IOException;
+import java.sql.SQLException;
 
 public class HrDashboardController {
     @FXML
     private Label hrNameLabel;
 
-    @FXML
-    private Button logoutBtn;
+    static DatabaseManager dm = new DatabaseManager();
 
     @FXML
     private void initialize() {
-        FirestoreManager fm = FirestoreManager.getInstance();
-        HR hr = fm.getHR(GlobalData.getCurrentlyLoggedIN());
+        HR hr = null;
+        try {
+            hr = dm.getHR(GlobalData.getCurrentlyLoggedIN());
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
         if (hr != null) {
             hrNameLabel.setText("Welcome, " + hr.getName());
         }

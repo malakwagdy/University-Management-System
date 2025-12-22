@@ -318,7 +318,7 @@ public class EditUserPopupController {
         }
         if (student.getTakenCourses() != null && !student.getTakenCourses().isEmpty()) {
             StringBuilder takenCoursesStr = new StringBuilder();
-            for (Map.Entry<String, String> entry : student.getTakenCourses().entrySet()) {
+            for (Map.Entry<Integer, String> entry : student.getTakenCourses().entrySet()) {
                 if (takenCoursesStr.length() > 0) {
                     takenCoursesStr.append(", ");
                 }
@@ -439,13 +439,17 @@ public class EditUserPopupController {
                 }
                 if (!takenCoursesField.getText().trim().isEmpty()) {
                     String[] entries = takenCoursesField.getText().split(",");
-                    Map<String, String> takenCourses = new HashMap<>();
+                    Map<Integer, String> takenCourses = new HashMap<>();
                     for (String entry : entries) {
                         String trimmed = entry.trim();
                         if (!trimmed.isEmpty() && trimmed.contains(":")) {
                             String[] parts = trimmed.split(":", 2);
                             if (parts.length == 2) {
-                                takenCourses.put(parts[0].trim(), parts[1].trim());
+                                try {
+                                    takenCourses.put(Integer.parseInt(parts[0].trim()), parts[1].trim());
+                                } catch (NumberFormatException e) {
+                                    // Skip invalid course ID
+                                }
                             }
                         }
                     }

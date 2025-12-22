@@ -8,6 +8,8 @@ import java.util.Map;
 public class Admin extends User {
     private String salary;
 
+    static DatabaseManager dm = new DatabaseManager();
+
     public Admin() {
         super();
     }
@@ -45,47 +47,38 @@ public class Admin extends User {
     public void deleteUser(String id){
         dm.deleteUser(id);
     }
-//    public void updateUser(User user){
-//        String code = user.getId().substring(2,3);
-//        switch (code) {
-//            case"A":
-//                fm.updateAdmin((Admin) user);
-//                break;
-//            case "S":
-//                fm.updateStudent((Student) user);
-//                break;
-//            case "I":
-//                fm.updateInstructor((Instructor) user);
-//                break;
-//            case "P":
-//                fm.updateParent((Parent) user);
-//                break;
-//            case "H":
-//                fm.updateHR((HR) user);
-//                break;
-//            default:
-//                throw new IllegalArgumentException("Invalid ID: " + user.getId());
-//        }
-//
-//    }
-
-
 
     public void updateDepartmentHead(String instructorId, Boolean isDepartmentHead) {
-        Instructor instructor = fm.getInstructor(instructorId);
+        Instructor instructor = null;
+        try {
+            instructor = dm.getInstructor(instructorId);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
         if (instructor == null) {
             throw new IllegalArgumentException("Instructor not found with ID: " + instructorId);
         }
         instructor.setDepartmentHead(isDepartmentHead);
-        fm.updateInstructor(instructor);
+        try {
+            dm.updateInstructor(instructor);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
     public void updateRole(String instructorId, String role) {
-        Instructor instructor = fm.getInstructor(instructorId);
-        if (instructor == null) {
+        Instructor instructor = null;
+        try {
+            instructor = dm.getInstructor(instructorId);
+        } catch (SQLException e) {
+            e.printStackTrace();
             throw new IllegalArgumentException("Instructor not found with ID: " + instructorId);
         }
         instructor.setRole(role);
-        fm.updateInstructor(instructor);
+        try {
+            dm.updateInstructor(instructor);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
     public void createHR(String phoneNumber,  String password, String dateOfBirth, String name, String salary, String departmentName) {
@@ -327,37 +320,62 @@ public class Admin extends User {
         // 3. Merge subclass-specific fields
         if (user instanceof Student) {
             Student s = (Student) user;
-            Student existing = fm.getStudent(s.getId());
+            Student existing = null;
+            try {
+                existing = dm.getStudent(s.getId());
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
             if (existing != null) mergeStudent(s, existing);
-            fm.addStudent(s);
+            dm.addStudent(s);
         }
 
         else if (user instanceof Instructor) {
             Instructor i = (Instructor) user;
-            Instructor existing = fm.getInstructor(i.getId());
+            Instructor existing = null;
+            try {
+                existing = dm.getInstructor(i.getId());
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
             if (existing != null) mergeInstructor(i, existing);
-            fm.addInstructor(i);
+            dm.addInstructor(i);
         }
 
         else if (user instanceof Parent) {
             Parent p = (Parent) user;
-            Parent existing = fm.getParent(p.getId());
+            Parent existing = null;
+            try {
+                existing = dm.getParent(p.getId());
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
             if (existing != null) mergeParent(p, existing);
-            fm.addParent(p);
+            dm.addParent(p);
         }
 
         else if (user instanceof HR) {
             HR hr = (HR) user;
-            HR existing = fm.getHR(hr.getId());
+            HR existing = null;
+            try {
+                existing = dm.getHR(hr.getId());
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
             if (existing != null) mergeHR(hr, existing);
-            fm.addHR(hr);
+            dm.addHR(hr);
         }
 
         else if (user instanceof Admin) {
             Admin a = (Admin) user;
-            Admin existing = fm.getAdmin(a.getId());
+            Admin existing = null;
+            try {
+                existing = dm.getAdmin(a.getId());
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
             if (existing != null) mergeAdmin(a, existing);
-            fm.addAdmin(a);
+            dm.addAdmin(a);
         }
     }
     private String normalize(String value) {

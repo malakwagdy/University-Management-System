@@ -27,7 +27,6 @@ public class User {
         this.id = id;
         this.dateOfBirth = dateOfBirth;
     }
-    static FirestoreManager fm = FirestoreManager.getInstance();
     static DatabaseManager dm = new DatabaseManager();
 
 

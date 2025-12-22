@@ -5,6 +5,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.event.ActionEvent;
 import java.io.IOException;
+import java.sql.SQLException;
 
 public class StudentDashboardController {
 
@@ -14,10 +15,16 @@ public class StudentDashboardController {
     @FXML
     private Button logoutBtn;
 
+    static DatabaseManager dm = new DatabaseManager();
+
     @FXML
     private void initialize() {
-        FirestoreManager fm = FirestoreManager.getInstance();
-        Student student = fm.getStudent(GlobalData.getCurrentlyLoggedIN());
+        Student student = null;
+        try {
+            student = dm.getStudent(GlobalData.getCurrentlyLoggedIN());
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
         if (student != null) {
             studentNameLabel.setText("Welcome, " + student.getName());
         }

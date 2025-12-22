@@ -5,18 +5,22 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.event.ActionEvent;
 import java.io.IOException;
+import java.sql.SQLException;
 
 public class ParentDashboardController {
     @FXML
     private Label parentNameLabel;
 
-    @FXML
-    private Button logoutBtn;
+    static DatabaseManager dm = new DatabaseManager();
 
     @FXML
     private void initialize() {
-        FirestoreManager fm = FirestoreManager.getInstance();
-        Parent parent = fm.getParent(GlobalData.getCurrentlyLoggedIN());
+        Parent parent = null;
+        try {
+            parent = dm.getParent(GlobalData.getCurrentlyLoggedIN());
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
         if (parent != null) {
             parentNameLabel.setText("Welcome, " + parent.getName());
         }

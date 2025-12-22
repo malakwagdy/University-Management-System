@@ -193,7 +193,6 @@ public class AdminDashboardController implements Initializable {
     }
     
     private void loadAllUsers() {
-        FirestoreManager fm = FirestoreManager.getInstance();
         ArrayList<User> usersList = new ArrayList<>();
         
         // Get all users from each collection

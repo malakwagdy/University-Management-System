@@ -69,7 +69,7 @@ public class ViewUserPopupController {
             }
             if (student.getTakenCourses() != null && !student.getTakenCourses().isEmpty()) {
                 StringBuilder takenCoursesStr = new StringBuilder();
-                for (Map.Entry<String, String> entry : student.getTakenCourses().entrySet()) {
+                for (Map.Entry<Integer, String> entry : student.getTakenCourses().entrySet()) {
                     if (takenCoursesStr.length() > 0) {
                         takenCoursesStr.append(", ");
                     }

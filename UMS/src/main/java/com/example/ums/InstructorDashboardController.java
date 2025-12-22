@@ -5,20 +5,28 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.event.ActionEvent;
 import java.io.IOException;
+import java.sql.SQLException;
 
 public class InstructorDashboardController {
     @FXML
     private Label instructorNameLabel;
 
     @FXML
-    private Button logoutBtn;
+    private Label departmentLabel;
+
+    static DatabaseManager dm = new DatabaseManager();
 
     @FXML
     private void initialize() {
-        FirestoreManager fm = FirestoreManager.getInstance();
-        Instructor instructor = fm.getInstructor(GlobalData.getCurrentlyLoggedIN());
+        Instructor instructor = null;
+        try {
+            instructor = dm.getInstructor(GlobalData.getCurrentlyLoggedIN());
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
         if (instructor != null) {
             instructorNameLabel.setText("Welcome, " + instructor.getName());
+            departmentLabel.setText("Department: " + instructor.getDepartmentName());
         }
     }
 
