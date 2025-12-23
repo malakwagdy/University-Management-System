@@ -1226,12 +1226,11 @@ public ArrayList<Student> getStudentsByCourse(String courseCode) {
     }
 
     public void addCourse(Course course) {
-        String courseSql = "INSERT INTO courses (courseid, coursename, coursedescription, courseyear) VALUES (?, ?, ?, ?)";
+        String courseSql = "INSERT INTO courses (coursename, coursedescription, courseyear) VALUES (?, ?, ?)";
         try (Connection conn = getConnection(); PreparedStatement ps = conn.prepareStatement(courseSql)) {
-            ps.setInt(1, course.getCourseId());
-            ps.setString(2, course.getCourseName());
-            ps.setString(3, course.getCourseDescription());
-            ps.setString(4, course.getYear());
+            ps.setString(1, course.getCourseName());
+            ps.setString(2, course.getCourseDescription());
+            ps.setString(3, course.getYear());
             ps.executeUpdate();
         } catch (SQLException e) {
             System.out.println("Failed to add course");
@@ -1293,6 +1292,18 @@ public ArrayList<Student> getStudentsByCourse(String courseCode) {
            return null;
         }
         return null;
+    }
+
+    public void deleteCourse(int courseId) {
+        String courseSql = "DELETE FROM courses WHERE courseid = ?";
+        try (Connection conn = getConnection(); PreparedStatement ps = conn.prepareStatement(courseSql)) {
+            ps.setInt(1, courseId);
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            System.out.println("Failed to delete course");
+            e.printStackTrace();
+            return;
+        }
     }
 
 

@@ -36,6 +36,13 @@ public class Course {
         this.courseDescription = courseDescription;
         this.year = year;
     }
+
+    public Course(String courseName, String courseDescription, String year) {
+        this.courseName = courseName;
+        this.courseDescription = courseDescription;
+        this.year = year;
+    }
+
     public int getCourseId() {
         return courseId;
     }

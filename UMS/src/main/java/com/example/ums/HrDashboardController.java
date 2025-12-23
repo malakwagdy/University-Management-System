@@ -96,7 +96,7 @@ public class HrDashboardController implements Initializable {
         if (salaryCol != null) {
             salaryCol.setCellValueFactory(cellData -> {
                 User user = cellData.getValue();
-                String salary = "";
+                String salary = "N/A";
                 if (user instanceof Instructor) {
                     salary = ((Instructor) user).getSalary() != null ? ((Instructor) user).getSalary() : "N/A";
                 } else if (user instanceof HR) {

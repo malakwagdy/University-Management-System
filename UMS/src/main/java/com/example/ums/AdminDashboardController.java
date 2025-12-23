@@ -76,6 +76,9 @@ public class AdminDashboardController implements Initializable {
     @FXML
     private ScrollPane hallManagementView;
     
+    @FXML
+    private ScrollPane courseManagementView;
+    
     // Student Records Table
     @FXML
     private TableView<Student> studentRecordsTable;
@@ -125,6 +128,28 @@ public class AdminDashboardController implements Initializable {
     
     @FXML
     private Label hallsPlaceholder;
+    
+    // Course Management Table
+    @FXML
+    private TableView<Course> courseManagementTable;
+    
+    @FXML
+    private TableColumn<Course, Integer> courseIdCol;
+    
+    @FXML
+    private TableColumn<Course, String> courseNameCol;
+    
+    @FXML
+    private TableColumn<Course, String> courseDescriptionCol;
+    
+    @FXML
+    private TableColumn<Course, String> courseActionsCol;
+    
+    @FXML
+    private TextField searchByCourseIdField;
+    
+    @FXML
+    private Label coursePlaceholder;
     
     private ObservableList<Admission> allAdmissions;
     private ObservableList<User> allUsers;
@@ -416,6 +441,12 @@ public class AdminDashboardController implements Initializable {
         showView(hallManagementView);
         loadHallsData();
     }
+
+    @FXML
+    private void handleCourseManagementButton(ActionEvent event) {
+        showView(courseManagementView);
+        loadCoursesData();
+    }
     
     @FXML
     private void handleSearchByIdField(ActionEvent event) {
@@ -438,6 +469,29 @@ public class AdminDashboardController implements Initializable {
         }
     }
     
+    @FXML
+    private void handleSearchByCourseIdField(ActionEvent event) {
+        String searchId = searchByCourseIdField.getText().trim();
+        if (searchId.isEmpty()) {
+            loadCoursesData();
+            return;
+        }
+        
+        try {
+            int courseId = Integer.parseInt(searchId);
+            Course course = dm.getCourse(courseId);
+            if (course != null) {
+                ObservableList<Course> filteredList = FXCollections.observableArrayList(course);
+                courseManagementTable.setItems(filteredList);
+            } else {
+                courseManagementTable.setItems(FXCollections.observableArrayList());
+            }
+        } catch (NumberFormatException e) {
+            courseManagementTable.setItems(FXCollections.observableArrayList());
+            e.printStackTrace();
+        }
+    }
+    
     private void showView(ScrollPane viewToShow) {
         homePageView.setVisible(false);
         homePageView.setManaged(false);
@@ -445,6 +499,8 @@ public class AdminDashboardController implements Initializable {
         studentRecordsView.setManaged(false);
         hallManagementView.setVisible(false);
         hallManagementView.setManaged(false);
+        courseManagementView.setVisible(false);
+        courseManagementView.setManaged(false);
         
         viewToShow.setVisible(true);
         viewToShow.setManaged(true);
@@ -560,6 +616,84 @@ public class AdminDashboardController implements Initializable {
         new Thread(task).start();
     }
     
+    private void loadCoursesData() {
+        courseIdCol.setCellValueFactory(new PropertyValueFactory<>("courseId"));
+        courseNameCol.setCellValueFactory(new PropertyValueFactory<>("courseName"));
+        courseDescriptionCol.setCellValueFactory(new PropertyValueFactory<>("courseDescription"));
+        
+        courseActionsCol.setCellFactory(new Callback<TableColumn<Course, String>, TableCell<Course, String>>() {
+            @Override
+            public TableCell<Course, String> call(TableColumn<Course, String> param) {
+                return new TableCell<Course, String>() {
+                    private final Button editBtn = new Button("Edit");
+                    private final Button deleteBtn = new Button("Delete");
+                    private final HBox buttonBox = new HBox(5, editBtn, deleteBtn);
+                    
+                    {
+                        editBtn.setOnAction(event -> {
+                            Course course = getTableView().getItems().get(getIndex());
+                            handleEditCourse(course);
+                        });
+                        
+                        deleteBtn.setOnAction(event -> {
+                            Course course = getTableView().getItems().get(getIndex());
+                            handleDeleteCourse(course);
+                        });
+                    }
+                    
+                    @Override
+                    protected void updateItem(String item, boolean empty) {
+                        super.updateItem(item, empty);
+                        if (empty) {
+                            setGraphic(null);
+                        } else {
+                            setGraphic(buttonBox);
+                        }
+                    }
+                };
+            }
+        });
+        
+        coursePlaceholder.setText("Loading Data...");
+        
+        Task<ObservableList<Course>> task = new Task<>() {
+            @Override
+            protected ObservableList<Course> call() throws Exception {
+                ArrayList<Course> courses = dm.getAllCourses();
+                return FXCollections.observableArrayList(courses);
+            }
+        };
+        
+        task.setOnSucceeded(e -> {
+            courseManagementTable.setItems(task.getValue());
+            coursePlaceholder.setText("No Records Found");
+        });
+        task.setOnFailed(e -> {
+            coursePlaceholder.setText("No Records Found");
+            task.getException().printStackTrace();
+        });
+        
+        new Thread(task).start();
+    }
+    
+    private void handleEditCourse(Course course) {
+        EditCourseController.show(course, admin, () -> loadCoursesData());
+    }
+    
+    private void handleDeleteCourse(Course course) {
+        Alert confirm = new Alert(Alert.AlertType.CONFIRMATION);
+        confirm.setTitle("Delete Course");
+        confirm.setHeaderText("Are you sure you want to delete this course?");
+        confirm.setContentText("Course: " + course.getCourseName());
+        
+        confirm.showAndWait().ifPresent(response -> {
+            if (response == ButtonType.OK) {
+                admin.deleteCourse(course.getCourseId());
+                loadCoursesData();
+            }
+        });
+    }
+    
     private void handleBookClassroom(Classroom classroom) {
         if (!classroom.isAvailability()) {
             showAlert("Booking Error", "This classroom is already booked.");
@@ -586,6 +720,15 @@ public class AdminDashboardController implements Initializable {
     private void handleAddClassroomButton(ActionEvent event) {
         try {
             SceneController.switchScene(event, "AddClassroom.fxml", "Add new Classroom");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @FXML
+    public void handleAddCourseButton(ActionEvent event) {
+        try {
+            SceneController.switchScene(event, "AddCourse.fxml", "Add new Course");
         } catch (IOException e) {
             e.printStackTrace();
         }

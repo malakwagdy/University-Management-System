@@ -511,6 +511,16 @@ public class Admin extends User {
         }
         return  courses;
     }
+
+    public void addCourse(String courseName, String courseDescription, String year) {
+        Course course = new Course(courseName, courseDescription, year);
+        dm.addCourse(course);
+    }
+
+    public void deleteCourse(int courseId) {
+        dm.deleteCourse(courseId);
+    }
+
     public void editCourseDetails(int courseId, String courseName, String courseDescription, String year) {
         Course course = null;
         course = dm.getCourse(courseId);

@@ -8,7 +8,7 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.ums.AddCourseController">
+<VBox alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.ums.AddCourseController">
    <children>
       <HBox fx:id="courseNameHBox" alignment="CENTER" prefHeight="41.0" prefWidth="600.0">
          <children>
@@ -17,7 +17,7 @@
                   <Insets right="35.0" />
                </padding>
             </Label>
-            <TextField fx:id="courseNameTestField">
+            <TextField fx:id="courseNameField">
                <opaqueInsets>
                   <Insets />
                </opaqueInsets>
@@ -27,7 +27,7 @@
             </TextField>
          </children>
       </HBox>
-      <HBox fx:id="bulawHBox" alignment="CENTER" layoutX="10.0" layoutY="179.0" prefHeight="41.0" prefWidth="600.0">
+      <HBox fx:id="bulawHBox" alignment="CENTER" layoutX="10.0" layoutY="179.0" prefHeight="43.0" prefWidth="600.0">
          <children>
             <Label alignment="CENTER" text="Bylaw: ">
                <padding>
@@ -37,7 +37,7 @@
                   <Insets right="15.0" />
                </HBox.margin>
             </Label>
-            <TextField fx:id="bylawTextField">
+            <TextField fx:id="bylawField">
                <opaqueInsets>
                   <Insets />
                </opaqueInsets>
@@ -58,7 +58,7 @@
                   <Insets left="65.0" />
                </HBox.margin>
             </Label>
-            <TextArea fx:id="courseDescriptiontextArea" prefHeight="200.0" prefWidth="200.0">
+            <TextArea fx:id="courseDescriptionTextArea" prefHeight="200.0" prefWidth="200.0">
                <HBox.margin>
                   <Insets left="10.0" right="25.0" />
                </HBox.margin>
@@ -67,13 +67,16 @@
       </HBox>
       <HBox alignment="CENTER" prefHeight="45.0" prefWidth="600.0" spacing="10.0">
          <children>
-            <Button fx:id="cancelButton" mnemonicParsing="false" onAction="#handleCancelButton" text="Cancel">
+            <Button fx:id="cancelBtn" mnemonicParsing="false" onAction="#handleCancelButton" text="Cancel">
                <HBox.margin>
                   <Insets left="10.0" />
                </HBox.margin>
             </Button>
-            <Button fx:id="addUserButton" mnemonicParsing="false" onAction="#handleAddUserButton" text="Add  Course" />
+            <Button fx:id="addUserBtn" mnemonicParsing="false" onAction="#handleAddCourseButton" text="Add  Course" />
          </children>
+         <VBox.margin>
+            <Insets top="10.0" />
+         </VBox.margin>
       </HBox>
    </children>
 </VBox>

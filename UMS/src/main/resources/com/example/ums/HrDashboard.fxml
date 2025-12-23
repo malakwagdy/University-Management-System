@@ -120,7 +120,7 @@
                   <columns>
                      <TableColumn fx:id="payrollEmployeeCol" prefWidth="180.0" text="Employee" />
                      <TableColumn fx:id="payrollRoleCol" prefWidth="150.0" text="Role" />
-                     <TableColumn fx:id="salaryCol" prefWidth="120.0" text="Salary" />
+                     <TableColumn fx:id="payrollSalaryCol" prefWidth="120.0" text="Salary" />
                      <TableColumn fx:id="benefitsCostCol" prefWidth="120.0" text="Benefits" />
                      <TableColumn fx:id="payrollStatusCol" prefWidth="120.0" text="Status" />
                      <TableColumn fx:id="payrollUpdatedCol" prefWidth="150.0" text="Last Updated" />

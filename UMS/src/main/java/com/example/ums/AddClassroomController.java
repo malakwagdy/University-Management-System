@@ -69,10 +69,8 @@ public class AddClassroomController {
 
 
         Classroom classroom = new Classroom(
-
                 hallCapacity,
                 hallType
-
         );
 
         try {
