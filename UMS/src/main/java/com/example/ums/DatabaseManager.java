@@ -272,6 +272,23 @@ public class DatabaseManager {
         return null;
     }
 
+    
+    public ArrayList<User> getAllUsersLite() {
+        ArrayList<User> users = new ArrayList<>();
+        String sql = "SELECT userid, usertype, username, email, userpassword, phonenumber, dateofbirth FROM users";
+        try (Connection conn = getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                users.add(mapUser(rs));
+            }
+        } catch (SQLException e) {
+            System.out.println("Failed to fetch users (lite)");
+            e.printStackTrace();
+        }
+        return users;
+    }
+
     public ArrayList<Classroom> getAllClassrooms() throws SQLException {
         String sql = "SELECT hallid, hallcapacity, halltype, hallmaintenance, availability FROM halls;";
         ArrayList<Classroom> classrooms = new ArrayList<>();
@@ -479,7 +496,7 @@ public ArrayList<Student> getStudentsByCourse(String courseCode) {
     /**
      * Get current courses for a student
      */
-    private ArrayList<String> getCurrentCourses(String userId) throws SQLException {
+    public ArrayList<String> getCurrentCourses(String userId) throws SQLException {
         ArrayList<String> courses = new ArrayList<>();
         String sql = "SELECT courseid FROM currentcourses WHERE userid = ?";
         try (Connection conn = getConnection();
@@ -492,6 +509,24 @@ public ArrayList<Student> getStudentsByCourse(String courseCode) {
             }
         }
         return courses;
+    }
+    public void addCurrentCourse(String userId, String courseId) throws SQLException {
+        String sql = "INSERT INTO currentcourses (userid, courseid) VALUES (?, ?)";
+        try (Connection conn = getConnection();
+                PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, userId);
+            ps.setInt(2, Integer.parseInt(courseId));
+            ps.executeUpdate();
+        }
+    }
+    public void removeCurrentCourse(String userId, String courseId) throws SQLException {
+        String sql = "DELETE FROM currentcourses WHERE userid = ? AND courseid = ?";
+        try (Connection conn = getConnection();
+                PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, userId);
+            ps.setInt(2, Integer.parseInt(courseId));
+            ps.executeUpdate();
+        }
     }
     
     /**

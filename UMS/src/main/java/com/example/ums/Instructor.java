@@ -1,5 +1,6 @@
 package com.example.ums;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 
 public class Instructor extends User{
@@ -157,5 +158,40 @@ public class Instructor extends User{
         dm.addAssignment(courseId, assignment);
         
     }
+    public ArrayList<String> displayInstructorCourses(String userId) {
+        ArrayList<String> list = new ArrayList<>();
+        try {
+            list = dm.getCurrentCourses(userId);
+        } catch (Exception e) {
+            e.printStackTrace();
     
+        }
+        return list;
+    }
+    public void updateCourses(String userId, ArrayList<String> newCourses,ArrayList<String> oldCourses) {
+        ArrayList<String> updatedList = newCourses != null ? new ArrayList<String>(newCourses) : new ArrayList<String>();
+        ArrayList<String> existingList = oldCourses != null ? new ArrayList<String>(oldCourses) : new ArrayList<String>();
+
+        ArrayList<String> toAdd = new ArrayList<String>(updatedList);
+        toAdd.removeAll(existingList);
+
+        ArrayList<String> toRemove = new ArrayList<String>(existingList);
+        toRemove.removeAll(updatedList);
+
+
+        for (String Responsibility : toAdd) {
+            try {
+                dm.addCurrentCourse(userId, Responsibility);
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+        }
+        for (String Responsibility : toRemove) {
+            try {
+                dm.removeCurrentCourse(userId, Responsibility);
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+        }
+    }
 }
