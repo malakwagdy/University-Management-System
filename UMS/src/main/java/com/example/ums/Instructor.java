@@ -126,4 +126,36 @@ public class Instructor extends User{
             dm.deleteResponsibility(userId, Responsibility);
         }
     }
+    public ArrayList<String> displayResponsibilities(String userId) {
+        ArrayList<String> list = new ArrayList<>();
+        try {
+            list = dm.getResponsibilities(userId);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return list;
+    }
+    public ArrayList<Assignment> displayAssignments(String courseId) {
+        ArrayList<Assignment> list = new ArrayList<>();
+        try {
+            list = dm.getAssignments(courseId);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return list;
+    }
+    public Assignment displayAssignmentDetails(String assignmentId) {
+        Assignment assignment = null;
+        try {
+            assignment = dm.getAssignmentDetails(assignmentId);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return assignment;
+    }
+    public void createAssignment(int courseId, Assignment assignment) {
+        dm.addAssignment(courseId, assignment);
+        
+    }
+    
 }

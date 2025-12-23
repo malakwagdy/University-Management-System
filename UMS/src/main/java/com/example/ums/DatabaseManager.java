@@ -1284,22 +1284,95 @@ public ArrayList<Student> getStudentsByCourse(String courseCode) {
     //     return material;
     // }
 
-    // public ArrayList<String> getAssignments(String id) throws SQLException {
-    //     String sql = "SELECT assignmen FROM assignments WHERE courseid = ?";
-    //     ArrayList<String> assignments = new ArrayList<>();
-    //     try (Connection conn = getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
-    //         ps.setString(1, id);
-    //         ResultSet rs = ps.executeQuery();
-    //         while (rs.next()) {
-    //             assignments.add(rs.getString("assignmentname"));
-    //         }
-    //     } catch (SQLException e) {
-    //         System.out.println("Failed to get assignments");
-    //         e.printStackTrace();
-    //         return null;
-    //     }
-    //     return assignments;
-    // }
+    public ArrayList<Assignment> getAssignments(String CourseID) throws SQLException {
+        ArrayList<Assignment> assignments = new ArrayList<>();
+        String sql = "SELECT * FROM assignments WHERE courseid = ?";
+        try (Connection conn = getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, CourseID);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                assignments.add(mapNewAssignment(rs));
+            }
+        } catch (SQLException e) {
+            System.out.println("Failed to get assignments");
+            e.printStackTrace();
+            throw e;
+        }
+        return assignments;
+    }
+
+    public Assignment getAssignmentDetails(String assignmentId) throws SQLException {
+        Assignment assignment = null;
+        String sql =
+                "SELECT a.assignmentid, " +
+                "       a.assignmenttype AS assignmentname, " +
+                "       a.assignmenturl, " +
+                "       a.assignmentdate, " +
+                "       a.assignmenttype, " +
+                "       ag.userid, " +
+                "       ag.grade, " +
+                "       ag.feedback " +
+                "FROM assignments a " +
+                "LEFT JOIN assignmentgrades ag ON a.assignmentid = ag.assignmentid " +
+                "WHERE a.assignmentid = ?";
+
+        try (Connection conn = getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, assignmentId);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                if (assignment == null) {
+                    assignment = new Assignment(
+                            rs.getString("assignmentid"),
+                            rs.getString("assignmentname"),
+                            rs.getString("assignmenturl"),
+                            rs.getString("assignmenttype"),
+                            rs.getString("assignmentdate"));
+                }
+                String userId = rs.getString("userid");
+                if (userId != null) {
+                    String grade = rs.getString("grade");
+                    String feedback = rs.getString("feedback");
+                    if (grade != null) {
+                        assignment.getGrades().put(userId, grade);
+                    }
+                    if (feedback != null) {
+                        assignment.getFeedback().put(userId, feedback);
+                    }
+                }
+            }
+        } catch (SQLException e) {
+            System.out.println("Failed to get assignment details");
+            e.printStackTrace();
+            throw e;
+        }
+
+        return assignment;
+    }
+        
+    private Assignment mapNewAssignment(ResultSet rs) throws SQLException {
+        Assignment assignment = new Assignment(
+                rs.getString("assignmentid"),
+                rs.getString("assignmentname"),
+                rs.getString("url"),
+                rs.getString("assignmenttype"),
+                rs.getString("assignmentdate"));
+        return assignment;
+    }
+    public void addAssignment(int courseId,Assignment assignment) {
+        String sql = "INSERT INTO assignments (courseid, assignmentid, assignmentname, url, assignmenttype, assignmentdate) VALUES (?, ?, ?, ?, ?, ?)";
+        try (Connection conn = getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, assignment.getAssignmentId());
+            ps.setString(2, assignment.getAssignmentName());
+            ps.setString(3, assignment.getUrl());
+            ps.setString(4, assignment.getAssignmentType());
+            ps.setString(5, assignment.getAssignmentDate());
+            ps.executeUpdate();
+        }catch (SQLException e) {
+            System.out.println("Failed to add assignment");
+            e.printStackTrace();
+
+        }
+    }
 
     public int getHighestIdNumber(String usertype) {
         int highest = 0;
