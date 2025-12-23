@@ -83,4 +83,13 @@ public class AddClassroomController {
             e.printStackTrace();
         }
     }
+
+    @FXML
+    private void handleBackButton(ActionEvent event) {
+        try {
+            SceneController.switchScene(event, "AdminDashboard.fxml", "Admin Dashboard");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 }

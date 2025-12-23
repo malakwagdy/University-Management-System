@@ -2,6 +2,7 @@ package com.example.ums;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -64,6 +65,66 @@ public class AdminDashboardController implements Initializable {
     
     @FXML
     private TableColumn<User, String> actionsCol;
+    
+    // Views
+    @FXML
+    private ScrollPane homePageView;
+    
+    @FXML
+    private ScrollPane studentRecordsView;
+    
+    @FXML
+    private ScrollPane hallManagementView;
+    
+    // Student Records Table
+    @FXML
+    private TableView<Student> studentRecordsTable;
+    
+    @FXML
+    private TableColumn<Student, String> studentIdCol;
+    
+    @FXML
+    private TableColumn<Student, String> studentNameCol;
+    
+    @FXML
+    private TableColumn<Student, String> studentEmailCol;
+    
+    @FXML
+    private TableColumn<Student, String> studentGPACol;
+    
+    @FXML
+    private TableColumn<Student, String> recordsActionsCol;
+    
+    @FXML
+    private TextField searchByIdField;
+    
+    @FXML
+    private Label studentPlaceholder;
+    
+    // Halls Table
+    @FXML
+    private TableView<Classroom> hallsTable;
+    
+    @FXML
+    private TableColumn<Classroom, Integer> hallIdCol;
+    
+    @FXML
+    private TableColumn<Classroom, String> capacityCol;
+    
+    @FXML
+    private TableColumn<Classroom, String> hallTypeCol;
+    
+    @FXML
+    private TableColumn<Classroom, Boolean> maintenanceCol;
+    
+    @FXML
+    private TableColumn<Classroom, Boolean> availabilityCol;
+    
+    @FXML
+    private TableColumn<Classroom, String> hallsActionsCol;
+    
+    @FXML
+    private Label hallsPlaceholder;
     
     private ObservableList<Admission> allAdmissions;
     private ObservableList<User> allUsers;
@@ -337,6 +398,204 @@ public class AdminDashboardController implements Initializable {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
 
+    @FXML
+    private void handleStudentRecordsButton(ActionEvent event) {
+        showView(studentRecordsView);
+        loadStudentRecords();
+    }
+    
+    @FXML
+    private void handleUserManagementBtn(ActionEvent event) {
+        showView(homePageView);
+    }
+    
+    @FXML
+    private void handleHallManagementButton(ActionEvent event) {
+        showView(hallManagementView);
+        loadHallsData();
+    }
+    
+    @FXML
+    private void handleSearchByIdField(ActionEvent event) {
+        String searchId = searchByIdField.getText().trim();
+        if (searchId.isEmpty()) {
+            loadStudentRecords();
+            return;
+        }
+        
+        try {
+            Student student = dm.getStudent(searchId);
+            if (student != null) {
+                ObservableList<Student> filteredList = FXCollections.observableArrayList(student);
+                studentRecordsTable.setItems(filteredList);
+            } else {
+                studentRecordsTable.setItems(FXCollections.observableArrayList());
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+    
+    private void showView(ScrollPane viewToShow) {
+        homePageView.setVisible(false);
+        homePageView.setManaged(false);
+        studentRecordsView.setVisible(false);
+        studentRecordsView.setManaged(false);
+        hallManagementView.setVisible(false);
+        hallManagementView.setManaged(false);
+        
+        viewToShow.setVisible(true);
+        viewToShow.setManaged(true);
+    }
+    
+    private void loadStudentRecords() {
+        studentIdCol.setCellValueFactory(new PropertyValueFactory<>("id"));
+        studentNameCol.setCellValueFactory(new PropertyValueFactory<>("name"));
+        studentEmailCol.setCellValueFactory(new PropertyValueFactory<>("email"));
+        studentGPACol.setCellValueFactory(new PropertyValueFactory<>("gpa"));
+        
+        recordsActionsCol.setCellFactory(new Callback<TableColumn<Student, String>, TableCell<Student, String>>() {
+            @Override
+            public TableCell<Student, String> call(TableColumn<Student, String> param) {
+                return new TableCell<Student, String>() {
+                    private final Button viewBtn = new Button("Generate Transcript");
+                    
+                    {
+                        viewBtn.setOnAction(event -> {
+                            Student student = getTableView().getItems().get(getIndex());
+                            handleViewUserButton(student);
+                        });
+                    }
+                    
+                    @Override
+                    protected void updateItem(String item, boolean empty) {
+                        super.updateItem(item, empty);
+                        if (empty) {
+                            setGraphic(null);
+                        } else {
+                            setGraphic(viewBtn);
+                        }
+                    }
+                };
+            }
+        });
+        
+        studentPlaceholder.setText("Loading Data...");
+        
+        Task<ObservableList<Student>> task = new Task<>() {
+            @Override
+            protected ObservableList<Student> call() throws Exception {
+                ArrayList<Student> students = dm.getAllStudents();
+                return FXCollections.observableArrayList(students);
+            }
+        };
+        
+        task.setOnSucceeded(e -> {
+            studentRecordsTable.setItems(task.getValue());
+            studentPlaceholder.setText("No Records Found");
+        });
+        task.setOnFailed(e -> {
+            studentPlaceholder.setText("No Records Found");
+            task.getException().printStackTrace();
+        });
+        
+        new Thread(task).start();
+    }
+    
+    private void loadHallsData() {
+        hallIdCol.setCellValueFactory(new PropertyValueFactory<>("hallId"));
+        capacityCol.setCellValueFactory(new PropertyValueFactory<>("hallCapacity"));
+        hallTypeCol.setCellValueFactory(new PropertyValueFactory<>("hallType"));
+        maintenanceCol.setCellValueFactory(new PropertyValueFactory<>("hallMaintenance"));
+        availabilityCol.setCellValueFactory(new PropertyValueFactory<>("availability"));
+        
+        hallsActionsCol.setCellFactory(new Callback<TableColumn<Classroom, String>, TableCell<Classroom, String>>() {
+            @Override
+            public TableCell<Classroom, String> call(TableColumn<Classroom, String> param) {
+                return new TableCell<Classroom, String>() {
+                    private final Button bookBtn = new Button("Book");
+                    
+                    {
+                        bookBtn.setOnAction(event -> {
+                            Classroom classroom = getTableView().getItems().get(getIndex());
+                            handleBookClassroom(classroom);
+                        });
+                    }
+                    
+                    @Override
+                    protected void updateItem(String item, boolean empty) {
+                        super.updateItem(item, empty);
+                        if (empty) {
+                            setGraphic(null);
+                        } else {
+                            setGraphic(bookBtn);
+                        }
+                    }
+                };
+            }
+        });
+        
+        hallsPlaceholder.setText("Loading Data...");
+        
+        Task<ObservableList<Classroom>> task = new Task<>() {
+            @Override
+            protected ObservableList<Classroom> call() throws Exception {
+                DatabaseManager db = new DatabaseManager();
+                ArrayList<Classroom> classrooms = db.getAllClassrooms();
+                return FXCollections.observableArrayList(classrooms);
+            }
+        };
+        
+        task.setOnSucceeded(e -> {
+            hallsTable.setItems(task.getValue());
+            hallsPlaceholder.setText("No Records Found");
+        });
+        task.setOnFailed(e -> {
+            hallsPlaceholder.setText("No Records Found");
+            task.getException().printStackTrace();
+        });
+        
+        new Thread(task).start();
+    }
+    
+    private void handleBookClassroom(Classroom classroom) {
+        if (!classroom.isAvailability()) {
+            showAlert("Booking Error", "This classroom is already booked.");
+            return;
+        }
+        
+        if (classroom.isHallMaintenance()) {
+            showAlert("Booking Error", "This classroom is under maintenance and cannot be booked.");
+            return;
+        }
+        
+        boolean success = DatabaseManager.bookClassroom(classroom.getHallId());
+        
+        if (success) {
+            classroom.setAvailability(false);
+            hallsTable.refresh();
+            showAlert("Success", "Classroom booked successfully.");
+        } else {
+            showAlert("Database Error", "Could not book classroom.");
+        }
+    }
+    
+    @FXML
+    private void handleAddClassroomButton(ActionEvent event) {
+        try {
+            SceneController.switchScene(event, "AddClassroom.fxml", "Add new Classroom");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+    
+    private void showAlert(String title, String message) {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        alert.showAndWait();
     }
 }
