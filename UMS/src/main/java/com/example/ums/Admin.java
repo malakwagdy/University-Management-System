@@ -48,6 +48,51 @@ public class Admin extends User {
         dm.deleteUser(id);
     }
 
+    public void updateStudent(Student student) {
+        try {
+            dm.updateStudent(student);
+        } catch (SQLException e) {
+            e.printStackTrace();
+            System.out.println("Failed to update student: " + student.getId());
+        }
+    }
+
+    public void updateInstructor(Instructor instructor) {
+        try {
+            dm.updateInstructor(instructor);
+        } catch (SQLException e) {
+            e.printStackTrace();
+            System.out.println("Failed to update instructor: " + instructor.getId());
+        }
+    }
+
+    public void updateHR(HR hr) {
+        try {
+            dm.updateHR(hr);
+        } catch (SQLException e) {
+            e.printStackTrace();
+            System.out.println("Failed to update HR: " + hr.getId());
+        }
+    }
+
+    public void updateParent(Parent parent) {
+        try {
+            dm.updateParent(parent);
+        } catch (SQLException e) {
+            e.printStackTrace();
+            System.out.println("Failed to update parent: " + parent.getId());
+        }
+    }
+
+    public void updateAdmin(Admin admin) {
+        try {
+            dm.updateAdmin(admin);
+        } catch (SQLException e) {
+            e.printStackTrace();
+            System.out.println("Failed to update admin: " + admin.getId());
+        }
+    }
+
     public void updateDepartmentHead(String instructorId, Boolean isDepartmentHead) {
         Instructor instructor = null;
         try {
