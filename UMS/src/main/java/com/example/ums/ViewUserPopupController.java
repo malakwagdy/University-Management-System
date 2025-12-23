@@ -1,17 +1,20 @@
 package com.example.ums;
 
+import java.io.IOException;
+import java.util.Map;
+
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
-import javafx.scene.control.*;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
+import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-
-import java.io.IOException;
-import java.util.Map;
 
 public class ViewUserPopupController {
     @FXML
@@ -45,23 +48,28 @@ public class ViewUserPopupController {
         this.onRefresh = onRefresh;
     }
     
+    private String cleanValue(String value) {
+        if (value == null) return "N/A";
+        return value.replaceAll("^\"|\"$", "");
+    }
+    
     private void populateUserDetails() {
         if (user == null) return;
         
         // Common fields for all users
-        detailsBox.getChildren().add(new Label("ID: " + (user.getId() != null ? user.getId() : "N/A")));
-        detailsBox.getChildren().add(new Label("Name: " + (user.getName() != null ? user.getName() : "N/A")));
-        detailsBox.getChildren().add(new Label("Email: " + (user.getEmail() != null ? user.getEmail() : "N/A")));
-        detailsBox.getChildren().add(new Label("Phone Number: " + (user.getPhoneNumber() != null ? user.getPhoneNumber() : "N/A")));
+        detailsBox.getChildren().add(new Label("ID: " + cleanValue(user.getId())));
+        detailsBox.getChildren().add(new Label("Name: " + cleanValue(user.getName())));
+        detailsBox.getChildren().add(new Label("Email: " + cleanValue(user.getEmail())));
+        detailsBox.getChildren().add(new Label("Phone Number: " + cleanValue(user.getPhoneNumber())));
         detailsBox.getChildren().add(new Label("User Type: " + getUserType(user)));
         
         // Add type-specific fields
         if (user instanceof Student) {
             Student student = (Student) user;
-            detailsBox.getChildren().add(new Label("Date of Birth: " + (student.getdateOfBirth() != null ? student.getdateOfBirth() : "N/A")));
-            detailsBox.getChildren().add(new Label("Major: " + (student.getMajor() != null ? student.getMajor() : "N/A")));
-            detailsBox.getChildren().add(new Label("GPA: " + (student.getGpa() != null ? student.getGpa() : "N/A")));
-            detailsBox.getChildren().add(new Label("Semester: " + (student.getSemester() != null ? student.getSemester() : "N/A")));
+            detailsBox.getChildren().add(new Label("Date of Birth: " + cleanValue(student.getdateOfBirth())));
+            detailsBox.getChildren().add(new Label("Major: " + cleanValue(student.getMajor())));
+            detailsBox.getChildren().add(new Label("GPA: " + cleanValue(student.getGpa())));
+            detailsBox.getChildren().add(new Label("Semester: " + cleanValue(student.getSemester())));
             if (student.getCurrentCourses() != null && !student.getCurrentCourses().isEmpty()) {
                 detailsBox.getChildren().add(new Label("Current Courses: " + String.join(", ", student.getCurrentCourses())));
             } else {
@@ -73,7 +81,7 @@ public class ViewUserPopupController {
                     if (takenCoursesStr.length() > 0) {
                         takenCoursesStr.append(", ");
                     }
-                    takenCoursesStr.append(entry.getKey()).append(" (").append(entry.getValue()).append(")");
+                    takenCoursesStr.append(entry.getKey()).append(" (").append(cleanValue(entry.getValue())).append(")");
                 }
                 detailsBox.getChildren().add(new Label("Taken Courses: " + takenCoursesStr.toString()));
             } else {
@@ -81,9 +89,9 @@ public class ViewUserPopupController {
             }
         } else if (user instanceof Instructor) {
             Instructor instructor = (Instructor) user;
-            detailsBox.getChildren().add(new Label("Department: " + (instructor.getDepartmentName() != null ? instructor.getDepartmentName() : "N/A")));
-            detailsBox.getChildren().add(new Label("Role: " + (instructor.getRole() != null ? instructor.getRole() : "Instructor")));
-            detailsBox.getChildren().add(new Label("Salary: " + (instructor.getSalary() != null ? instructor.getSalary() : "N/A")));
+            detailsBox.getChildren().add(new Label("Department: " + cleanValue(instructor.getDepartmentName())));
+            detailsBox.getChildren().add(new Label("Role: " + cleanValue(instructor.getRole())));
+            detailsBox.getChildren().add(new Label("Salary: " + cleanValue(instructor.getSalary())));
             if (instructor.getCourses() != null && !instructor.getCourses().isEmpty()) {
                 detailsBox.getChildren().add(new Label("Courses: " + String.join(", ", instructor.getCourses())));
             } else {
@@ -106,14 +114,14 @@ public class ViewUserPopupController {
             }
         } else if (user instanceof Admin) {
             Admin adminUser = (Admin) user;
-            detailsBox.getChildren().add(new Label("Salary: " + (adminUser.getSalary() != null ? adminUser.getSalary() : "N/A")));
+            detailsBox.getChildren().add(new Label("Salary: " + cleanValue(adminUser.getSalary())));
         } else if (user instanceof HR) {
             HR hr = (HR) user;
-            detailsBox.getChildren().add(new Label("Department: " + (hr.getDepartmentName() != null ? hr.getDepartmentName() : "N/A")));
-            detailsBox.getChildren().add(new Label("Salary: " + (hr.getSalary() != null ? hr.getSalary() : "N/A")));
+            detailsBox.getChildren().add(new Label("Department: " + cleanValue(hr.getDepartmentName())));
+            detailsBox.getChildren().add(new Label("Salary: " + cleanValue(hr.getSalary())));
         } else if (user instanceof Parent) {
             Parent parent = (Parent) user;
-            detailsBox.getChildren().add(new Label("Relation: " + (parent.getRelation() != null ? parent.getRelation() : "N/A")));
+            detailsBox.getChildren().add(new Label("Relation: " + cleanValue(parent.getRelation())));
             if (parent.getChildren() != null && !parent.getChildren().isEmpty()) {
                 detailsBox.getChildren().add(new Label("Children IDs: " + String.join(", ", parent.getChildren())));
             } else {
