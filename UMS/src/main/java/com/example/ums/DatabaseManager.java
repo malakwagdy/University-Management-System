@@ -6,16 +6,13 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import io.github.cdimascio.dotenv.Dotenv;
-import org.mindrot.jbcrypt.BCrypt;
-import java.sql.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-import io.github.cdimascio.dotenv.Dotenv;
+import org.mindrot.jbcrypt.BCrypt;
 
-import javax.persistence.StoredProcedureQuery;
+import io.github.cdimascio.dotenv.Dotenv;
 
 
 public class DatabaseManager {
@@ -1452,7 +1449,6 @@ public ArrayList<Student> getStudentsByCourse(String courseCode) {
     private static String escapeJson(String value) {
         return value
                 .replace("\\", "\\\\")
-                .replace("\"", "\\\"")
                 .replace("\n", "\\n")
                 .replace("\r", "\\r")
                 .replace("\t", "\\t");

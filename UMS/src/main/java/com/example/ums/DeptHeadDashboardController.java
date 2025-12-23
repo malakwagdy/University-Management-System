@@ -180,7 +180,7 @@ public class DeptHeadDashboardController implements Initializable {
     }
 
     private void handleViewUserButton(User user) {
-//        ViewUserPopupController.show(user, admin, () -> loadAllUsers());
+        ViewUserPopupController.show(user, deptHead, () -> loadAllUsers());
     }
 
     @FXML

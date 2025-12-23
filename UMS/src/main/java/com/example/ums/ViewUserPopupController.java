@@ -28,20 +28,22 @@ public class ViewUserPopupController {
     
     private User user;
     private Stage popupStage;
-    private Admin admin;
+    private User currentUser;
     private Runnable onRefresh;
     
     public void setUser(User user) {
         this.user = user;
-        populateUserDetails();
+        // Don't populate details here - wait until currentUser is set
     }
     
     public void setPopupStage(Stage stage) {
         this.popupStage = stage;
     }
     
-    public void setAdmin(Admin admin) {
-        this.admin = admin;
+    public void setCurrentUser(User currentUser) {
+        this.currentUser = currentUser;
+        // Now populate details after currentUser is set
+        populateUserDetails();
     }
     
     public void setOnRefresh(Runnable onRefresh) {
@@ -55,6 +57,8 @@ public class ViewUserPopupController {
     
     private void populateUserDetails() {
         if (user == null) return;
+        
+        boolean isHR = currentUser instanceof HR;
         
         // Common fields for all users
         detailsBox.getChildren().add(new Label("ID: " + cleanValue(user.getId())));
@@ -91,7 +95,7 @@ public class ViewUserPopupController {
             Instructor instructor = (Instructor) user;
             detailsBox.getChildren().add(new Label("Department: " + cleanValue(instructor.getDepartmentName())));
             detailsBox.getChildren().add(new Label("Role: " + cleanValue(instructor.getRole())));
-            detailsBox.getChildren().add(new Label("Salary: " + cleanValue(instructor.getSalary())));
+            detailsBox.getChildren().add(new Label("Salary: " + (isHR ? cleanValue(instructor.getSalary()) : "N/A")));
             if (instructor.getCourses() != null && !instructor.getCourses().isEmpty()) {
                 detailsBox.getChildren().add(new Label("Courses: " + String.join(", ", instructor.getCourses())));
             } else {
@@ -107,18 +111,18 @@ public class ViewUserPopupController {
             } else {
                 detailsBox.getChildren().add(new Label("Office Hours: N/A"));
             }
-            if (instructor.getBenefits() != null && !instructor.getBenefits().isEmpty()) {
+            if (isHR && instructor.getBenefits() != null && !instructor.getBenefits().isEmpty()) {
                 detailsBox.getChildren().add(new Label("Benefits: " + String.join(", ", instructor.getBenefits())));
             } else {
                 detailsBox.getChildren().add(new Label("Benefits: N/A"));
             }
         } else if (user instanceof Admin) {
             Admin adminUser = (Admin) user;
-            detailsBox.getChildren().add(new Label("Salary: " + cleanValue(adminUser.getSalary())));
+            detailsBox.getChildren().add(new Label("Salary: " + (isHR ? cleanValue(adminUser.getSalary()) : "N/A")));
         } else if (user instanceof HR) {
             HR hr = (HR) user;
             detailsBox.getChildren().add(new Label("Department: " + cleanValue(hr.getDepartmentName())));
-            detailsBox.getChildren().add(new Label("Salary: " + cleanValue(hr.getSalary())));
+            detailsBox.getChildren().add(new Label("Salary: " + (isHR ? cleanValue(hr.getSalary()) : "N/A")));
         } else if (user instanceof Parent) {
             Parent parent = (Parent) user;
             detailsBox.getChildren().add(new Label("Relation: " + cleanValue(parent.getRelation())));
@@ -139,11 +143,29 @@ public class ViewUserPopupController {
         return "Unknown";
     }
     
+    private void setupButtonPermissions() {
+        // Only show delete button for admin users
+        boolean isAdmin = currentUser instanceof Admin;
+        if (deleteBtn != null) {
+            deleteBtn.setVisible(isAdmin);
+            deleteBtn.setManaged(isAdmin);
+        }
+        
+        // Hide edit button if viewing own profile
+        boolean isSameUser = currentUser != null && user != null && 
+                           currentUser.getId() != null && currentUser.getId().equals(user.getId());
+        if (editBtn != null) {
+            editBtn.setVisible(!isSameUser);
+            editBtn.setManaged(!isSameUser);
+        }
+    }
+    
     @FXML
     private void handleEditButton(ActionEvent event) {
         popupStage.close();
         Platform.runLater(() -> {
-            EditUserPopupController.show(user, admin, () -> {
+            // Create admin for operations, but EditUserPopupController will use currently logged-in user for permissions
+            EditUserPopupController.show(user, currentUser, () -> {
                 if (onRefresh != null) {
                     onRefresh.run();
                 }
@@ -163,6 +185,8 @@ public class ViewUserPopupController {
             if (response == ButtonType.OK) {
                 try {
                     String userId = user.getId();
+                    // Use admin operations for deletion
+                    Admin admin = new Admin();
                     admin.deleteUser(userId);
                     
                     // Close popup
@@ -195,7 +219,7 @@ public class ViewUserPopupController {
         popupStage.close();
     }
     
-    public static void show(User user, Admin admin, Runnable onRefresh) {
+    public static void show(User user, User currentUser, Runnable onRefresh) {
         try {
             FXMLLoader loader = new FXMLLoader(ViewUserPopupController.class.getResource("/com/example/ums/ViewUserPopup.fxml"));
             VBox root = loader.load();
@@ -207,8 +231,11 @@ public class ViewUserPopupController {
             
             controller.setUser(user);
             controller.setPopupStage(popupStage);
-            controller.setAdmin(admin);
+            controller.setCurrentUser(currentUser);
             controller.setOnRefresh(onRefresh);
+            
+            // Hide delete button for non-admin users
+            controller.setupButtonPermissions();
             
             Scene scene = new Scene(root, 500, 500);
             popupStage.setScene(scene);
