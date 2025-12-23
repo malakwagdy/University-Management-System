@@ -103,4 +103,27 @@ public class Instructor extends User{
     public void setBenefits(ArrayList<String> benefits) {
         this.benefits = benefits;
     }
+    static DatabaseManager dm = new DatabaseManager();
+
+    public void updateRole(String userId, String newRole) {
+        dm.updateUserAttribute(6 ,userId, newRole);
+    }
+    public void updateResponsibilities(String userId, ArrayList<String> newResponsibilities,ArrayList<String> oldResponsibilities) {
+        ArrayList<String> updatedList = newResponsibilities != null ? new ArrayList<String>(newResponsibilities) : new ArrayList<String>();
+        ArrayList<String> existingList = oldResponsibilities != null ? new ArrayList<String>(oldResponsibilities) : new ArrayList<String>();
+
+        ArrayList<String> toAdd = new ArrayList<String>(updatedList);
+        toAdd.removeAll(existingList);
+
+        ArrayList<String> toRemove = new ArrayList<String>(existingList);
+        toRemove.removeAll(updatedList);
+
+        
+        for (String Responsibility : toAdd) {
+            dm.addResponsibility(userId, Responsibility);
+        }
+        for (String Responsibility : toRemove) {
+            dm.deleteResponsibility(userId, Responsibility);
+        }
+    }
 }

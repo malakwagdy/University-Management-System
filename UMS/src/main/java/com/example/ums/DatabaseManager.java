@@ -15,6 +15,8 @@ import java.util.Map;
 
 import io.github.cdimascio.dotenv.Dotenv;
 
+import javax.persistence.StoredProcedureQuery;
+
 
 public class DatabaseManager {
 
@@ -754,6 +756,55 @@ public ArrayList<Student> getStudentsByCourse(String courseCode) {
         return benefits;
     }
 
+    public void addBenefit(String userId, String benefit) {
+        String sql = "INSERT INTO benefits (userid, benefit) VALUES (?, ?)";
+        try (Connection conn = getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, userId);
+            ps.setString(2, benefit);
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            System.out.println("Failed to insert benefit: " + benefit);
+            e.printStackTrace();
+        }
+    }
+
+    public void deleteBenefit(String userId, String benefit) {
+        String sql = "DELETE FROM benefits WHERE userid = ? AND benefit = ?";
+        try (Connection conn = getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, userId);
+            ps.setString(2, benefit);
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            System.out.println("Failed to delete benefit: " + benefit);
+            e.printStackTrace();
+        }
+    }
+
+    public void addResponsibility(String userId, String responsibility) {
+
+        String sql = "INSERT INTO responsibilities (userid, responsibility) VALUES (?, ?)";
+        try (Connection conn = getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, userId);
+            ps.setString(2, responsibility);
+            ps.executeUpdate();
+        }catch (SQLException e) {
+            System.out.println("Failed to delete Responsibility: " + responsibility);
+            e.printStackTrace();
+    }}
+    public void deleteResponsibility(String userId, String responsibility) {
+        String sql = "DELETE FROM responsibilities WHERE userid = ? AND responsibility = ?";
+        try (Connection conn = getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, userId);
+            ps.setString(2, responsibility);
+            ps.executeUpdate();
+        }catch (SQLException e) {
+            System.out.println("Failed to delete Responsibility: " + responsibility);
+            e.printStackTrace();
+    }}
     public void addHR(HR hr) {
         String userSql = "INSERT INTO users (userid,usertype,username,email,userpassword,phoneNumber,dateofbirth) VALUES (?, ?, ?, ?, ?,?,?)";
         try (Connection conn = getConnection();
@@ -1211,6 +1262,8 @@ public ArrayList<Student> getStudentsByCourse(String courseCode) {
         }
         return null;
     }
+
+
 
 
 
@@ -1785,6 +1838,19 @@ public ArrayList<Student> getStudentsByCourse(String courseCode) {
             }
         }
     }
+    public void updateUserAttribute(int attributeId,String userID ,String Change) {
+        String sql = "UPDATE uservalues SET attributeValue = ?::jsonb WHERE userid = ? AND attributeid = ?";
+        try (Connection conn = getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, toJsonValue(Change));
+            ps.setString(2, userID);
+            ps.setInt(3, attributeId);
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            System.out.println("Failed to update user attribute");
+            e.printStackTrace();
+        }
+    }
 
     /**
      * Update an HR in the database
@@ -1973,6 +2039,7 @@ public ArrayList<Student> getStudentsByCourse(String courseCode) {
             return;
         }
     }
+
 
     /**
      * Simple connectivity test (optional).
