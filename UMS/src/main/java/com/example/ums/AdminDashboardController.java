@@ -193,51 +193,11 @@ public class AdminDashboardController implements Initializable {
     }
     
     private void loadAllUsers() {
-        ArrayList<User> usersList = new ArrayList<>();
-        
-        // Get all users from each collection
-        ArrayList<Student> students = null;
-        try {
-            students = dm.getAllStudents();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        usersList.addAll(students);
-        
-        ArrayList<Instructor> instructors = null;
-        try {
-            instructors = dm.getAllInstructors();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        usersList.addAll(instructors);
-        
-        ArrayList<Admin> admins = null;
-        try {
-            admins = dm.getAllAdmins();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        usersList.addAll(admins);
-        
-        ArrayList<HR> hrList = null;
-        try {
-            hrList = dm.getAllHR();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        usersList.addAll(hrList);
-        
-        ArrayList<Parent> parents = null;
-        try {
-            parents = dm.getAllParents();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        usersList.addAll(parents);
-        
+        ArrayList<User> usersList = new ArrayList<>(UserCache.getInstance().getUsersLiteCached());
         allUsers = FXCollections.observableArrayList(usersList);
         usersTable.setItems(allUsers);
+        // Warm detailed users in background so View opens instantly
+        UserCache.getInstance().warmUserDetailsAsync();
     }
     
     /**
@@ -255,6 +215,8 @@ public class AdminDashboardController implements Initializable {
             return "Parent";
         } else if (user instanceof HR) {
             return "HR";
+        } else if (user != null && user.getType() != null) {
+            return user.getType();
         }
         return "Unknown";
     }
@@ -318,7 +280,15 @@ public class AdminDashboardController implements Initializable {
     }
     
     private void handleViewUserButton(User user) {
-        ViewUserPopupController.show(user, admin, () -> loadAllUsers());
+        User detailed = UserCache.getInstance().getUserDetailed(user.getId(), getUserType(user));
+        if (detailed == null) {
+            detailed = user; // fallback to lite version
+        }
+        ViewUserPopupController.show(detailed, admin, () -> {
+            loadAllUsers();
+            // Keep details warm after refresh
+            UserCache.getInstance().warmUserDetailsAsync();
+        });
     }
 
     @FXML
