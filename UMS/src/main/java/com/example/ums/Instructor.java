@@ -194,4 +194,16 @@ public class Instructor extends User{
             }
         }
     }
+    public void addMaterial(int courseID,Material material) {
+        dm.addMaterial(courseID,material);
+    }
+    public ArrayList<Material> displayCourseMaterials(int courseID) {
+        ArrayList<Material> list = new ArrayList<>();
+        try {
+            list = dm.getMaterials(courseID);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return list;
+    }
 }

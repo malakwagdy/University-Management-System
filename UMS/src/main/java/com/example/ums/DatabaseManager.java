@@ -11,6 +11,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.mindrot.jbcrypt.BCrypt;
+import com.cloudinary.Cloudinary;
+import com.cloudinary.utils.ObjectUtils;
 
 import io.github.cdimascio.dotenv.Dotenv;
 
@@ -22,6 +24,15 @@ public class DatabaseManager {
     private static final String DB_USER = dotenv.get("DB_USER");
     private static final String DB_PASSWORD = dotenv.get("DB_PASSWORD");
     private static final String JDBC_URL = dotenv.get("DB_URL");
+    // Cloudinary client initialized from .env values
+    private static final Cloudinary CLOUDINARY = new Cloudinary(
+            ObjectUtils.asMap(
+                    "cloud_name", dotenv.get("cloud_name"),
+                    "api_key", dotenv.get("api_key"),
+                    "api_secret", dotenv.get("api_secret"),
+                    "secure", true
+            )
+    );
 
     /**
      * Get a new database connection using environment variables (plain JDBC).
@@ -35,6 +46,21 @@ public class DatabaseManager {
 
     public boolean checkPassword(String password, String hashedPassword) {
         return BCrypt.checkpw(password, hashedPassword);
+    }
+    public static Cloudinary getCloudinary() {
+        return CLOUDINARY;
+    }
+    public String upload(String filePath) throws Exception {
+        Map<String, Object> uploadResult = CLOUDINARY.uploader()
+                .upload(filePath, ObjectUtils.asMap(
+                        "resource_type", "auto",
+                        "folder", "UMS"
+                ));
+        Object secureUrl = uploadResult.getOrDefault("secure_url", uploadResult.get("url"));
+        if (secureUrl == null) {
+            throw new IllegalStateException("Upload succeeded but no URL returned: " + uploadResult);
+        }
+        return secureUrl.toString();
     }
     public static boolean bookClassroom(int hallId) {
 
@@ -51,6 +77,7 @@ public class DatabaseManager {
                 return false;
             }
         }
+        
 
     public static void AddClassroom(Classroom classroom) throws SQLException {
         String sql =
@@ -532,6 +559,29 @@ public ArrayList<Student> getStudentsByCourse(String courseCode) {
         }
     }
     
+    public ArrayList<Instructor> getCourseInstructors(String courseId) throws SQLException {
+        String sql = "SELECT userid FROM currentcourses WHERE courseid = ?";
+        ArrayList<Instructor> instructors = new ArrayList<>();
+        try (Connection conn = getConnection();
+            PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, Integer.parseInt(courseId));
+            ResultSet rs = ps.executeQuery();
+            String userid;
+            while (rs.next()) {
+                userid = rs.getString("userid");
+                if (userid.charAt(2) == 'I') {
+                    Instructor instructor = getInstructor(userid);
+                    if (instructor != null) {
+                        instructors.add(instructor);
+                    }
+                }
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException("Failed to load instructors by course", e);
+        }
+        return instructors;
+    }
+
     /**
      * Get taken courses with grades for a student
      */
@@ -1416,7 +1466,7 @@ public ArrayList<Student> getStudentsByCourse(String courseCode) {
         try (Connection conn = getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setString(1, assignment.getAssignmentId());
             ps.setString(2, assignment.getAssignmentName());
-            ps.setString(3, assignment.getUrl());
+            ps.setString(3, upload(assignment.getUrl()));
             ps.setString(4, assignment.getAssignmentType());
             ps.setString(5, assignment.getAssignmentDate());
             ps.executeUpdate();
@@ -1424,7 +1474,44 @@ public ArrayList<Student> getStudentsByCourse(String courseCode) {
             System.out.println("Failed to add assignment");
             e.printStackTrace();
 
+        } catch (Exception e) {
+            throw new RuntimeException(e);
         }
+    }
+
+    public void addMaterial(int courseId, Material material) {
+        String sql = "INSERT INTO materials (materialid, materialname, courseid, materialurl) VALUES (?, ?, ?, ?)";
+        try (Connection conn = getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, material.getMaterialId());
+            ps.setString(2, material.getMaterialName());
+            ps.setInt(3, courseId);
+            ps.setString(4, upload(material.geturl()));
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            System.out.println("Failed to add material");
+            e.printStackTrace();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+    public ArrayList<Material> getMaterials(int CourseID) throws SQLException {
+        ArrayList<Material> materials = new ArrayList<>();
+        String sql = "SELECT * FROM materials WHERE courseid = ?";
+        try (Connection conn = getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, CourseID);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                materials.add(new Material(
+                        rs.getString("materialid"),
+                        rs.getString("materialname"),
+                        rs.getString("materialurl")));
+            }
+        } catch (SQLException e) {
+            System.out.println("Failed to get materials");
+            e.printStackTrace();
+            throw e;
+        }
+        return materials;
     }
 
     public int getHighestIdNumber(String usertype) {
