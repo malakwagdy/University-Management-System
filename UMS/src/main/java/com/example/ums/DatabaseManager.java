@@ -526,6 +526,29 @@ public ArrayList<Student> getStudentsByCourse(String courseCode) {
         }
     }
     
+    public ArrayList<Instructor> getCourseInstructors(String courseId) throws SQLException {
+        String sql = "SELECT userid FROM currentcourses WHERE courseid = ?";
+        ArrayList<Instructor> instructors = new ArrayList<>();
+        try (Connection conn = getConnection();
+            PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, Integer.parseInt(courseId));
+            ResultSet rs = ps.executeQuery();
+            String userid;
+            while (rs.next()) {
+                userid = rs.getString("userid");
+                if (userid.charAt(2) == 'I') {
+                    Instructor instructor = getInstructor(userid);
+                    if (instructor != null) {
+                        instructors.add(instructor);
+                    }
+                }
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException("Failed to load instructors by course", e);
+        }
+        return instructors;
+    }
+
     /**
      * Get taken courses with grades for a student
      */

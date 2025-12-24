@@ -2,6 +2,7 @@ package com.example.ums;
 
 import java.util.ArrayList;
 import java.util.Map;
+import java.sql.SQLException;
 
 public class Student extends User {
     private ArrayList<String> currentCourses;
@@ -61,5 +62,25 @@ public class Student extends User {
     }
     public void setMajor(String major) {
         this.major = major;
+    }
+    
+    public static Student getCurrentStudent() {
+        try {
+            DatabaseManager dm = new DatabaseManager();
+            return dm.getStudent(GlobalData.getCurrentlyLoggedIN());
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+    
+    public static ArrayList<String> getCurrentCoursesForStudent(String userId) {
+        try {
+            DatabaseManager dm = new DatabaseManager();
+            return dm.getCurrentCourses(userId);
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return new ArrayList<>();
+        }
     }
 }

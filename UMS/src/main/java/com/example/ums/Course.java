@@ -4,6 +4,7 @@ import com.google.firebase.database.PropertyName;
 
 import java.util.ArrayList;
 import java.util.Map;
+import java.sql.SQLException;
 
 public class Course {
     private int courseId;
@@ -113,6 +114,26 @@ public class Course {
 
     public void setFinals(Map<String, String> finals) {
         this.finals = finals;
+    }
+    
+    public static ArrayList<Instructor> getCourseInstructors(String courseId) {
+        try {
+            DatabaseManager dm = new DatabaseManager();
+            return dm.getCourseInstructors(courseId);
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return new ArrayList<>();
+        }
+    }
+    
+    public static Course getCourseById(int courseId) {
+        try {
+            DatabaseManager dm = new DatabaseManager();
+            return dm.getCourse(courseId);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 
 }
