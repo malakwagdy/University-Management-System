@@ -23,19 +23,18 @@ public class EditCourseController {
     private TextArea courseDescriptionArea;
     
     private Course course;
-    private Admin admin;
+    private User currentUser;
     private Runnable onSaveCallback;
     private Stage stage;
-    private DatabaseManager dm = new DatabaseManager();
-    
-    public static void show(Course course, Admin admin, Runnable onSaveCallback) {
+
+    public static void show(Course course, User currentUser, Runnable onSaveCallback) {
         try {
             FXMLLoader loader = new FXMLLoader(EditCourseController.class.getResource("EditCourse.fxml"));
             Scene scene = new Scene(loader.load());
             
             EditCourseController controller = loader.getController();
             controller.course = course;
-            controller.admin = admin;
+            controller.currentUser = currentUser;
             controller.onSaveCallback = onSaveCallback;
             controller.populateFields();
             
@@ -68,7 +67,11 @@ public class EditCourseController {
             return;
         }
         
-        admin.editCourseDetails(course.getCourseId(), courseName, description, bylaw);
+        if (currentUser instanceof Admin) {
+            ((Admin) currentUser).editCourseDetails(course.getCourseId(), courseName, description, bylaw);
+        } else if (currentUser instanceof Instructor) {
+            ((Instructor) currentUser).editCourseDetails(course.getCourseId(), courseName, description, bylaw);
+        }
         
         if (onSaveCallback != null) {
             onSaveCallback.run();

@@ -114,7 +114,7 @@ public class ViewUserPopupController {
                 detailsBox.getChildren().add(new Label("Responsibilities: N/A"));
             }
             if (instructor.getOfficeHours() != null && !instructor.getOfficeHours().isEmpty()) {
-                detailsBox.getChildren().add(new Label("Office Hours: " + String.join(", ", instructor.getOfficeHours())));
+                detailsBox.getChildren().add(new Label("Office Hours: " + String.join(", ", instructor.getOfficeHours().values())));
             } else {
                 detailsBox.getChildren().add(new Label("Office Hours: N/A"));
             }

@@ -8,6 +8,7 @@
 <?import javafx.scene.control.Separator?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Region?>
@@ -104,17 +105,19 @@
             <!-- Department Courses -->
             <VBox spacing="10">
                <HBox alignment="CENTER_LEFT" spacing="10">
-                  <Label text="Department Courses" />
+                  <Label text="My Courses" />
                   <Region HBox.hgrow="ALWAYS" />
-                  <Button fx:id="addCourseBtn" text="+ Add Course" />
+                  <TextField fx:id="searchByCourseIdField" onAction="#handleSearchByCourseIdField" promptText="Search" />
+                  <Button fx:id="addCourseBtn" onAction="#handleAddCourseButton" text="+ Add Course" />
                </HBox>
                <TableView fx:id="coursesTable" prefHeight="200.0">
                   <columns>
-                     <TableColumn fx:id="courseIdCol" prefWidth="120.0" text="Course ID" />
-                     <TableColumn fx:id="courseNameCol" prefWidth="250.0" text="Course Name" />
-                     <TableColumn fx:id="instructorCol" prefWidth="150.0" text="Instructor" />
-                     <TableColumn fx:id="studentsCountCol" prefWidth="100.0" text="Students" />
-                     <TableColumn fx:id="yearCol" prefWidth="100.0" text="Year" />
+                     <TableColumn fx:id="courseIdCol" prefWidth="83.0" text="Course ID" />
+                     <TableColumn fx:id="courseNameCol" prefWidth="182.0" text="Course Name" />
+                     <TableColumn fx:id="courseDescriptionCol" prefWidth="249.0" text="Course Description" />
+                     <TableColumn fx:id="courseInstructorsCol" prefWidth="227.0" text="Course Instructors" />
+                     <TableColumn fx:id="bylawCol" prefWidth="141.0" text="Bylaw" />
+                     <TableColumn fx:id="courseActionsCol" prefWidth="184.0" text="Actions" />
                   </columns>
                </TableView>
             </VBox>

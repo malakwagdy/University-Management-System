@@ -1301,9 +1301,34 @@ public ArrayList<Student> getStudentsByCourse(String courseCode) {
         } catch (SQLException e) {
             System.out.println("Failed to add course");
             e.printStackTrace();
-            return;
         }
     }
+
+    public ArrayList<Course> getInstructorCourses(String instructorId) throws SQLException {
+        ArrayList<Course> courses = new ArrayList<>();
+        String sql = "SELECT c.courseid, c.coursename, c.coursedescription, c.courseyear " +
+                "FROM courses c " +
+                "JOIN currentcourses cc ON c.courseid = cc.courseid " +
+                "WHERE cc.userid = ?";
+        try (Connection conn = getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, instructorId);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                int courseId = rs.getInt("courseid");
+                String courseName = rs.getString("coursename");
+                String courseDescription = rs.getString("coursedescription");
+                String year = rs.getString("courseyear");
+                Course course = new Course(courseId, courseName, courseDescription, year);
+                courses.add(course);
+            }
+        } catch (SQLException e) {
+            System.out.println("Failed to get instructor courses");
+            e.printStackTrace();
+            throw e;
+        }
+        return courses;
+    }
+
     public ArrayList<Course> getAllCourses() throws SQLException {
         ArrayList<Course> courses = new ArrayList<>();
         String sql = "SELECT * FROM courses";
@@ -1486,12 +1511,11 @@ public ArrayList<Student> getStudentsByCourse(String courseCode) {
     }
 
     public void addMaterial(int courseId, Material material) {
-        String sql = "INSERT INTO materials (materialid, materialname, courseid, materialurl) VALUES (?, ?, ?, ?)";
+        String sql = "INSERT INTO materials (materialname, courseid, materialurl) VALUES (?, ?, ?)";
         try (Connection conn = getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
-            ps.setString(1, material.getMaterialId());
-            ps.setString(2, material.getMaterialName());
-            ps.setInt(3, courseId);
-            ps.setString(4, upload(material.geturl()));
+            ps.setString(1, material.getMaterialName());
+            ps.setInt(2, courseId);
+            ps.setString(3, upload(material.geturl()));
             ps.executeUpdate();
         } catch (SQLException e) {
             System.out.println("Failed to add material");
@@ -1508,7 +1532,6 @@ public ArrayList<Student> getStudentsByCourse(String courseCode) {
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 materials.add(new Material(
-                        rs.getString("materialid"),
                         rs.getString("materialname"),
                         rs.getString("materialurl")));
             }

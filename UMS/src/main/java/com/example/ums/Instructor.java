@@ -129,6 +129,40 @@ public class Instructor extends User{
             dm.deleteResponsibility(userId, Responsibility);
         }
     }
+
+    public void addCourse(String courseName, String courseDescription, String year) {
+        Course course = new Course(courseName, courseDescription, year);
+        dm.addCourse(course);
+    }
+
+    public void deleteCourse(int courseId) {
+        dm.deleteCourse(courseId);
+    }
+
+    public void editCourseDetails(int courseId, String courseName, String courseDescription, String year) {
+        Course course = null;
+        course = dm.getCourse(courseId);
+        if (course == null) {
+            throw new IllegalArgumentException("Course not found with ID: " + courseId);
+        }
+        if (courseName != null && !courseName.trim().isEmpty()) {
+            course.setCourseName(courseName);
+        }
+        if (courseDescription != null && !courseDescription.trim().isEmpty()) {
+            course.setCourseDescription(courseDescription);
+        }
+        if (year != null && !year.trim().isEmpty()) {
+            course.setYear(year);
+        }
+        dm.updateCourse(course);
+    }
+
+    public void addCourseMaterial(int courseid, ArrayList<Material> materials){
+        for (Material material: materials){
+            dm.addMaterial(courseid, material);
+        }
+    }
+
     public ArrayList<String> displayResponsibilities(String userId) {
         ArrayList<String> list = new ArrayList<>();
         try {

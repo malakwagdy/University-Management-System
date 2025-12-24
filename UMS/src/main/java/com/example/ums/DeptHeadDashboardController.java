@@ -2,11 +2,13 @@ package com.example.ums;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.event.ActionEvent;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.layout.HBox;
 import javafx.util.Callback;
 
 import java.io.IOException;
@@ -46,6 +48,33 @@ public class DeptHeadDashboardController implements Initializable {
     @FXML
     private TableColumn<User, String> actionsCol;
 
+    @FXML
+    private TableView<Course> coursesTable;
+
+    @FXML
+    private TableColumn<Course, Integer> courseIdCol;
+
+    @FXML
+    private TableColumn<Course, String> courseNameCol;
+
+    @FXML
+    private TableColumn<Course, String> courseDescriptionCol;
+
+    @FXML
+    private TableColumn<Course, String> courseActionsCol;
+
+    @FXML
+    private TableColumn<Course, String> courseInstructorsCol;
+
+    @FXML
+    private TableColumn<Course, String> bylawCol;
+
+    @FXML
+    private TextField searchByCourseIdField;
+
+    @FXML
+    private Label coursePlaceholder;
+
     private ObservableList<User> allUsers;
 
     static DatabaseManager dm = new DatabaseManager();
@@ -69,9 +98,8 @@ public class DeptHeadDashboardController implements Initializable {
                 "Teaching Assistant"
         );
         instructorRoleFilter.setItems(instructorRoleOptions);
-        instructorRoleFilter.setValue("All"); // Set default to "All"
+        instructorRoleFilter.setValue("All");
 
-        // Set up user table columns
         instructorIdCol.setCellValueFactory(new PropertyValueFactory<>("id"));
         instructorNameCol.setCellValueFactory(new PropertyValueFactory<>("name"));
         instructorEmailCol.setCellValueFactory(new PropertyValueFactory<>("email"));
@@ -109,10 +137,11 @@ public class DeptHeadDashboardController implements Initializable {
         });
 
         // Load all users initially
-        loadAllUsers();
+        loadAllInstructors();
+        loadCoursesData();
     }
 
-    private void loadAllUsers() {
+    private void loadAllInstructors() {
         ArrayList<User> InstructorList = new ArrayList<>();
 
         ArrayList<Instructor> instructors = null;
@@ -142,6 +171,29 @@ public class DeptHeadDashboardController implements Initializable {
         }
     }
 
+    @FXML
+    private void handleSearchByCourseIdField(ActionEvent event) {
+        String searchId = searchByCourseIdField.getText().trim();
+        if (searchId.isEmpty()) {
+            loadCoursesData();
+            return;
+        }
+
+        try {
+            int courseId = Integer.parseInt(searchId);
+            Course course = dm.getCourse(courseId);
+            if (course != null) {
+                ObservableList<Course> filteredList = FXCollections.observableArrayList(course);
+                coursesTable.setItems(filteredList);
+            } else {
+                coursesTable.setItems(FXCollections.observableArrayList());
+            }
+        } catch (NumberFormatException e) {
+            coursesTable.setItems(FXCollections.observableArrayList());
+            e.printStackTrace();
+        }
+    }
+
     /**
      * Helper method to determine the user type from the User object
      */
@@ -161,11 +213,11 @@ public class DeptHeadDashboardController implements Initializable {
 
         if (selectedType == null || "All".equals(selectedType)) {
             // Show all users
-            loadAllUsers();
+            loadAllInstructors();
         } else {
             // Ensure allUsers is loaded
             if (allUsers == null) {
-                loadAllUsers();
+                loadAllInstructors();
             }
             // Filter by selected type
             ObservableList<User> filteredList = FXCollections.observableArrayList();
@@ -179,8 +231,116 @@ public class DeptHeadDashboardController implements Initializable {
         }
     }
 
+    private void loadCoursesData() {
+        courseIdCol.setCellValueFactory(new PropertyValueFactory<>("courseId"));
+        courseNameCol.setCellValueFactory(new PropertyValueFactory<>("courseName"));
+        courseDescriptionCol.setCellValueFactory(new PropertyValueFactory<>("courseDescription"));
+        courseInstructorsCol.setCellValueFactory(cellData -> {
+            Course course = cellData.getValue();
+            ArrayList<Instructor> instructors = Course.getCourseInstructors(String.valueOf(course.getCourseId()));
+            String instructorNames = instructors.isEmpty() ? "N/A" :
+                String.join(", ", instructors.stream().map(Instructor::getName).toArray(String[]::new));
+            return new javafx.beans.property.SimpleStringProperty(instructorNames);
+        });
+        bylawCol.setCellValueFactory(new PropertyValueFactory<>("year"));
+
+
+        courseActionsCol.setCellFactory(new Callback<TableColumn<Course, String>, TableCell<Course, String>>() {
+            @Override
+            public TableCell<Course, String> call(TableColumn<Course, String> param) {
+                return new TableCell<Course, String>() {
+                    private final Button editBtn = new Button("Edit");
+                    private final Button deleteBtn = new Button("Delete");
+                    private final Button addMaterialBtn = new Button("Add Material");
+                    private final HBox buttonBox = new HBox(5, editBtn, deleteBtn, addMaterialBtn);
+
+                    {
+                        editBtn.setOnAction(event -> {
+                            Course course = getTableView().getItems().get(getIndex());
+                            handleEditCourse(course);
+                        });
+
+                        deleteBtn.setOnAction(event -> {
+                            Course course = getTableView().getItems().get(getIndex());
+                            handleDeleteCourse(course);
+                        });
+                        
+                        addMaterialBtn.setOnAction(event -> {
+                            Course course = getTableView().getItems().get(getIndex());
+                            AddMaterialController.show(course.getCourseId(), deptHead, () -> loadCoursesData());
+                        });
+                    }
+
+                    @Override
+                    protected void updateItem(String item, boolean empty) {
+                        super.updateItem(item, empty);
+                        if (empty) {
+                            setGraphic(null);
+                        } else {
+                            setGraphic(buttonBox);
+                        }
+                    }
+                };
+            }
+        });
+
+        if (coursePlaceholder != null) {
+            coursePlaceholder.setText("Loading Data...");
+        }
+
+        Task<ObservableList<Course>> task = new Task<>() {
+            @Override
+            protected ObservableList<Course> call() throws Exception {
+                ArrayList<Course> courses = dm.getAllCourses();
+                return FXCollections.observableArrayList(courses);
+            }
+        };
+
+        task.setOnSucceeded(e -> {
+            coursesTable.setItems(task.getValue());
+            if (coursePlaceholder != null) {
+                coursePlaceholder.setText("No Records Found");
+            }
+        });
+        task.setOnFailed(e -> {
+            if (coursePlaceholder != null) {
+                coursePlaceholder.setText("No Records Found");
+            }
+            task.getException().printStackTrace();
+        });
+
+        new Thread(task).start();
+    }
+
+    @FXML
+    private void handleAddCourseButton(ActionEvent event) {
+        try {
+            SceneController.switchScene(event, "AddCourse.fxml", "Add new Course");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void handleEditCourse(Course course) {
+        EditCourseController.show(course, deptHead, () -> loadCoursesData());
+    }
+
+    private void handleDeleteCourse(Course course) {
+        Alert confirm = new Alert(Alert.AlertType.CONFIRMATION);
+        confirm.setTitle("Delete Course");
+        confirm.setHeaderText("Are you sure you want to delete this course?");
+        confirm.setContentText("Course: " + course.getCourseName());
+
+        confirm.showAndWait().ifPresent(response -> {
+            if (response == ButtonType.OK) {
+                deptHead.deleteCourse(course.getCourseId());
+                loadCoursesData();
+            }
+        });
+    }
+
     private void handleViewUserButton(User user) {
-        ViewUserPopupController.show(user, deptHead, () -> loadAllUsers());
+        ViewUserPopupController.show(user, deptHead, () -> loadAllInstructors());
     }
 
     @FXML

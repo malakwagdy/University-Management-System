@@ -1,6 +1,7 @@
 package com.example.ums;
 
 import javafx.fxml.FXML;
+import javafx.scene.control.Alert;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TextArea;
 
@@ -25,8 +26,7 @@ public class AddCourseController {
 
         // Validate input
         if (courseName.isEmpty() || bylaw.isEmpty() || courseDescription.isEmpty()) {
-            // Handle empty fields
-            return;
+            Alert.AlertType.valueOf("All fields must be filled out.");
         }
 
         Admin admin = new Admin();
@@ -38,7 +38,6 @@ public class AddCourseController {
             e.printStackTrace();
         }
 
-        // Add course to the database
         admin.addCourse(courseName, courseDescription, bylaw);
 
         try {

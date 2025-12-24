@@ -63,6 +63,7 @@ public class LoginController {
             } catch (IOException ex) {
                 errorMessage.setStyle("-fx-text-fill: red;");
                 errorMessage.setText("Failed to load dashboard");
+                ex.printStackTrace();
             }
         });
 
@@ -70,6 +71,7 @@ public class LoginController {
             errorMessage.setStyle("-fx-text-fill: red;");
             Throwable exception = loginTask.getException();
             errorMessage.setText(exception.getMessage());
+            exception.printStackTrace();
         });
 
         new Thread(loginTask).start();

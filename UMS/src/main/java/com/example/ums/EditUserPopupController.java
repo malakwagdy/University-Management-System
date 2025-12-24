@@ -512,7 +512,7 @@ public class EditUserPopupController {
         }
         officeHoursValue.setText(
             instructor.getOfficeHours() != null && !instructor.getOfficeHours().isEmpty() 
-                ? String.join(", ", instructor.getOfficeHours()) 
+                ? String.join(", ", instructor.getOfficeHours().values()) 
                 : "N/A"
         );
         
