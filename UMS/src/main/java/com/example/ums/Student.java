@@ -83,4 +83,10 @@ public class Student extends User {
             return new ArrayList<>();
         }
     }
+    public  ArrayList<Announcment> getStudentAnnouncments(String studentId) {
+        DatabaseManager dm = new DatabaseManager();
+        ArrayList<Announcment> list = dm.getStudentAnnouncements(studentId);
+        list.addAll(dm.getGeneralAnnouncements());
+        return list;
+    }
 }
