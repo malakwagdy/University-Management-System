@@ -521,7 +521,7 @@ public class AdminDashboardController implements Initializable {
                     {
                         viewBtn.setOnAction(event -> {
                             Student student = getTableView().getItems().get(getIndex());
-                            handleViewUserButton(student);
+                            ViewTranscriptPopupController.show(student);
                         });
                     }
                     

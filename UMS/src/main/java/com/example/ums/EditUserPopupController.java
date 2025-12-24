@@ -683,7 +683,9 @@ public class EditUserPopupController {
                     }
                     student.setTakenCourses(takenCourses);
                 }
-
+                if (currentUser instanceof Admin){
+                    ((Admin) currentUser).updateStudent(student);
+                }
             } else if (user instanceof Instructor) {
                 Instructor instructor = (Instructor) user;
                 
@@ -711,6 +713,9 @@ public class EditUserPopupController {
                             }
                         }
                         instructor.setCourses(coursesList);
+                    }
+                    if (currentUser instanceof Admin){
+                        ((Admin) currentUser).updateInstructor(instructor);
                     }
                 } else if (isDeptHead) {
                     // Department Head can edit roles, responsibilities, and courses using instructor methods
@@ -803,7 +808,9 @@ public class EditUserPopupController {
                 if (isHR && salaryField != null && salaryField.isVisible() && !salaryField.getText().trim().isEmpty()) {
                     hr.setSalary(salaryField.getText().trim());
                 }
-                
+                if (currentUser instanceof Admin){
+                    ((Admin) currentUser).updateHR(hr);
+                }
             } else if (user instanceof Parent) {
                 Parent parent = (Parent) user;
                 if (relationChoiceBox.getValue() != null) {
@@ -819,6 +826,9 @@ public class EditUserPopupController {
                         }
                     }
                     parent.setChildren(children);
+                }
+                if (currentUser instanceof Admin){
+                    ((Admin) currentUser).updateParent(parent);
                 }
             }
             
