@@ -2,6 +2,8 @@ package com.example.ums;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 public class Instructor extends User{
     private ArrayList<String> courses;
@@ -10,7 +12,7 @@ public class Instructor extends User{
     private boolean departmentHead;
     private String departmentName;
     private ArrayList<String> responsibilities = new ArrayList<>();
-    private ArrayList<String> officeHours;
+    private Map<String,String> officeHours;
     private ArrayList<String> benefits;
 
 
@@ -18,7 +20,7 @@ public class Instructor extends User{
         super();
     }
 
-    public Instructor(String id , String phoneNumber, String email, String password, String dateOfBirth, String name, String salary, ArrayList<String> courses, String role, boolean departmentHead, String departmentName, ArrayList<String> responsibilities, ArrayList<String> officeHours, ArrayList<String> benefits) {
+    public Instructor(String id , String phoneNumber, String email, String password, String dateOfBirth, String name, String salary, ArrayList<String> courses, String role, boolean departmentHead, String departmentName, ArrayList<String> responsibilities, Map<String,String> officeHours, ArrayList<String> benefits) {
         super( id, "Instructor", phoneNumber, email, password, name, dateOfBirth);
         this.salary = salary;
         this.courses = courses;
@@ -37,7 +39,7 @@ public class Instructor extends User{
         this.departmentHead = departmentHead;
         this.departmentName = department;
         this.responsibilities = new ArrayList<String>();
-        this.officeHours = new ArrayList<String>();
+        this.officeHours = new HashMap<>();
         this.benefits = new ArrayList<String>();
     }
 
@@ -89,11 +91,11 @@ public class Instructor extends User{
         this.responsibilities = responsibilities;
     }
 
-    public ArrayList<String> getOfficeHours() {
+    public Map<String,String> getOfficeHours() {
         return officeHours;
     }
 
-    public void setOfficeHours(ArrayList<String> officeHours) {
+    public void setOfficeHours(Map<String,String> officeHours) {
         this.officeHours = officeHours;
     }
 
@@ -192,6 +194,35 @@ public class Instructor extends User{
             } catch (SQLException e) {
                 throw new RuntimeException(e);
             }
+        }
+    }
+
+    public void updateOfficeHours(String userId, Map<String, String> newHours, Map<String, String> oldHours) {
+        Map<String, String> updated = newHours != null ? new HashMap<>(newHours) : new HashMap<>();
+        Map<String, String> existing = oldHours != null ? new HashMap<>(oldHours) : new HashMap<>();
+
+        // Remove entries that disappeared or changed
+        for (Map.Entry<String, String> entry : existing.entrySet()) {
+            String day = entry.getKey();
+            String oldHour = entry.getValue();
+            String newHour = updated.get(day);
+            if (newHour == null || !newHour.equals(oldHour)) {
+                dm.deleteOfficeHours(userId, day, oldHour);
+            }
+        }
+
+        // Add new or changed entries
+        Map<String, String> toAdd = new HashMap<>();
+        for (Map.Entry<String, String> entry : updated.entrySet()) {
+            String day = entry.getKey();
+            String newHour = entry.getValue();
+            String oldHour = existing.get(day);
+            if (newHour != null && !newHour.equals(oldHour)) {
+                toAdd.put(day, newHour);
+            }
+        }
+        if (!toAdd.isEmpty()) {
+            dm.addOfficeHours(userId, toAdd);
         }
     }
     public void addMaterial(int courseID,Material material) {
