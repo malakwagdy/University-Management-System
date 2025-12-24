@@ -10,6 +10,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.zaxxer.hikari.HikariConfig;
+import com.zaxxer.hikari.HikariDataSource;
 import org.mindrot.jbcrypt.BCrypt;
 import com.cloudinary.Cloudinary;
 import com.cloudinary.utils.ObjectUtils;
@@ -24,6 +26,22 @@ public class DatabaseManager {
     private static final String DB_USER = dotenv.get("DB_USER");
     private static final String DB_PASSWORD = dotenv.get("DB_PASSWORD");
     private static final String JDBC_URL = dotenv.get("DB_URL");
+    
+    private static HikariDataSource dataSource;
+    
+    static {
+        HikariConfig config = new HikariConfig();
+        config.setJdbcUrl(JDBC_URL);
+        config.setUsername(DB_USER);
+        config.setPassword(DB_PASSWORD);
+        config.setMaximumPoolSize(10);
+        config.setMinimumIdle(2);
+        config.setConnectionTimeout(3000);
+        config.setIdleTimeout(600000);
+        config.setMaxLifetime(1800000);
+        dataSource = new HikariDataSource(config);
+    }
+    
     // Cloudinary client initialized from .env values
     private static final Cloudinary CLOUDINARY = new Cloudinary(
             ObjectUtils.asMap(
@@ -35,10 +53,10 @@ public class DatabaseManager {
     );
 
     /**
-     * Get a new database connection using environment variables (plain JDBC).
+     * Get a connection from the pool.
      */
     public static Connection getConnection() throws SQLException {
-        return DriverManager.getConnection(JDBC_URL, DB_USER, DB_PASSWORD);
+        return dataSource.getConnection();
     }
     public String hashPassword(String password) {
         return BCrypt.hashpw(password, BCrypt.gensalt(12));

@@ -1,12 +1,11 @@
 package com.example.ums;
 
-import javafx.animation.PauseTransition;
+import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
-import javafx.util.Duration;
 
 import java.io.IOException;
 
@@ -33,73 +32,47 @@ public class LoginController {
         String email = emailField.getText();
         String password = passwordField.getText();
 
-        try {
-            user.Login(email, password);
-            userID = GlobalData.getCurrentlyLoggedIN();
-            errorMessage.setStyle("-fx-text-fill: green;");
-            errorMessage.setText("Login Successful!");
-            // Create a PauseTransition with a delay of 2 seconds
-            PauseTransition delay = new PauseTransition(Duration.seconds(2));
-            if(isInstructor){
-                delay.setOnFinished(e -> {
-                    try {
-                        SceneController.switchScene(event, "InstructorDashboard.fxml", "Instructor Dashboard");
-                    } catch (IOException ex) {
-                        ex.printStackTrace();
-                    }
+        errorMessage.setText("Logging in...");
+        errorMessage.setStyle("-fx-text-fill: blue;");
+
+        Task<String> loginTask = new Task<String>() {
+            @Override
+            protected String call() throws Exception {
+                user.Login(email, password);
+                userID = GlobalData.getCurrentlyLoggedIN();
+                
+                javafx.application.Platform.runLater(() -> {
+                    errorMessage.setStyle("-fx-text-fill: green;");
+                    errorMessage.setText("Login Successful!");
                 });
+                
+                if(isInstructor) return "InstructorDashboard.fxml";
+                else if(isStudent) return "StudentDashboard.fxml";
+                else if(isHr) return "HrDashboard.fxml";
+                else if(isDepartmentHead) return "DeptHeadDashboard.fxml";
+                else if(isParent) return "ParentDashboard.fxml";
+                else return "AdminDashboard.fxml";
             }
-            else if(isStudent){
-                delay.setOnFinished(e -> {
-                    try {
-                        SceneController.switchScene(event, "StudentDashboard.fxml", "Student Dashboard");
-                    } catch (IOException ex) {
-                        ex.printStackTrace();
-                    }
-                });
+        };
+
+        loginTask.setOnSucceeded(e -> {
+            try {
+                String fxml = loginTask.getValue();
+                String title = fxml.replace(".fxml", "").replace("Dashboard", " Dashboard");
+                SceneController.switchScene(event, fxml, title);
+            } catch (IOException ex) {
+                errorMessage.setStyle("-fx-text-fill: red;");
+                errorMessage.setText("Failed to load dashboard");
             }
-            else if(isHr){
-                delay.setOnFinished(e -> {
-                    try {
-                        SceneController.switchScene(event, "HrDashboard.fxml", "Hr Dashboard");
-                    } catch (IOException ex) {
-                        ex.printStackTrace();
-                    }
-                });
-            }
-            else if(isDepartmentHead){
-                delay.setOnFinished(e -> {
-                    try {
-                        SceneController.switchScene(event, "DeptHeadDashboard.fxml", "Department Head Dashboard");
-                    } catch (IOException ex) {
-                        ex.printStackTrace();
-                    }
-                });
-            }
-            else if(isParent) {
-                delay.setOnFinished(e -> {
-                    try {
-                        SceneController.switchScene(event, "ParentDashboard.fxml", "Parent Dashboard");
-                    } catch (IOException ex) {
-                        ex.printStackTrace();
-                    }
-                });
-            }
-            else {
-                delay.setOnFinished(e -> {
-                    try {
-                        SceneController.switchScene(event, "AdminDashboard.fxml", "Admin Dashboard");
-                    } catch (IOException ex) {
-                        ex.printStackTrace();
-                    }
-                });
-            }
-            delay.play();
-        } catch (LoginException e) {
-            // Show error dialog
+        });
+
+        loginTask.setOnFailed(e -> {
             errorMessage.setStyle("-fx-text-fill: red;");
-            errorMessage.setText(e.getMessage());
-        }
+            Throwable exception = loginTask.getException();
+            errorMessage.setText(exception.getMessage());
+        });
+
+        new Thread(loginTask).start();
     }
 
     @FXML
