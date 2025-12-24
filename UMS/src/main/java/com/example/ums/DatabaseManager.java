@@ -771,7 +771,7 @@ public ArrayList<Student> getStudentsByCourse(String courseCode) {
                 instructor.setCourses(courses);
                 ArrayList<String> responsibilities = getResponsibilities(userId);
                 instructor.setResponsibilities(responsibilities);
-                ArrayList<String> officeHours = getOfficeHours(userId);
+                Map<String,String> officeHours = getOfficeHours(userId);
                 instructor.setOfficeHours(officeHours);
                 ArrayList<String> benefits = getBenefits(userId);
                 instructor.setBenefits(benefits);
@@ -820,19 +820,7 @@ public ArrayList<Student> getStudentsByCourse(String courseCode) {
         return responsibilities;
     }
 
-    public ArrayList<String> getOfficeHours(String userId) throws SQLException {
-        ArrayList<String> officeHours = new ArrayList<>();
-        String sql = "SELECT officehour, officehourday FROM officehours WHERE userid = ?";
-        try (Connection conn = getConnection();
-                PreparedStatement ps = conn.prepareStatement(sql)) {
-            ps.setString(1, userId);
-            ResultSet rs = ps.executeQuery();
-            while (rs.next()) {
-                officeHours.add(rs.getString("officehour") + " , " + rs.getString("officehourday"));
-            }
-        }
-        return officeHours;
-    }
+
 
     public ArrayList<String> getBenefits(String userId) throws SQLException {
         ArrayList<String> benefits = new ArrayList<>();
@@ -1513,7 +1501,16 @@ public ArrayList<Student> getStudentsByCourse(String courseCode) {
         }
         return materials;
     }
-
+    public void deleteMaterial(String materialId) {
+        String sql = "DELETE FROM materials WHERE materialid = ?";
+        try (Connection conn = getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, materialId);
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            System.out.println("Failed to delete material");
+            e.printStackTrace();
+        }
+    }
     public int getHighestIdNumber(String usertype) {
         int highest = 0;
 
@@ -2008,19 +2005,18 @@ public ArrayList<Student> getStudentsByCourse(String courseCode) {
 
         if (instructor.getOfficeHours() != null && !instructor.getOfficeHours().isEmpty()) {
             String insertOfficeHoursSql = "INSERT INTO officehours (userid, officehour, officehourday) VALUES (?, ?, ?)";
-            for (String officeHour : instructor.getOfficeHours()) {
+            for (Map.Entry<String, String> entry : instructor.getOfficeHours().entrySet()) {
+                if (entry.getKey() == null || entry.getValue() == null) {
+                    continue;
+                }
                 try (Connection conn = getConnection();
                         PreparedStatement ps = conn.prepareStatement(insertOfficeHoursSql)) {
-                    // Parse office hour format: "time , day"
-                    String[] parts = officeHour.split(" , ");
-                    if (parts.length == 2) {
-                        ps.setString(1, instructor.getId());
-                        ps.setString(2, parts[0].trim());
-                        ps.setString(3, parts[1].trim());
-                        ps.executeUpdate();
-                    }
+                    ps.setString(1, instructor.getId());
+                    ps.setString(2, entry.getValue().trim()); // hour
+                    ps.setString(3, entry.getKey().trim());   // day
+                    ps.executeUpdate();
                 } catch (SQLException e) {
-                    System.out.println("Failed to insert office hour: " + officeHour);
+                    System.out.println("Failed to insert office hour: day=" + entry.getKey() + ", hour=" + entry.getValue());
                     e.printStackTrace();
                 }
             }
@@ -2251,6 +2247,59 @@ public ArrayList<Student> getStudentsByCourse(String courseCode) {
             System.out.println("Failed to change password");
             e.printStackTrace();
             return;
+        }
+    }
+    public void addOfficeHours(String userId, Map<String, String> officeHours) {
+        if (officeHours == null || officeHours.isEmpty()) {
+            return;
+        }
+        String sql = "INSERT INTO officehours (userid, officehour, officehourday) VALUES (?, ?, ?)";
+        try (Connection conn = getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            for (Map.Entry<String, String> entry : officeHours.entrySet()) {
+                if (entry.getKey() == null || entry.getValue() == null) {
+                    continue;
+                }
+                ps.setString(1, userId);
+                ps.setString(2, entry.getValue());
+                ps.setString(3, entry.getKey());
+                ps.addBatch();
+            }
+            ps.executeBatch();
+        } catch (SQLException e) {
+            System.out.println("Failed to add office hours");
+            e.printStackTrace();
+        }
+    }
+    public Map<String, String> getOfficeHours(String userId) throws SQLException {
+        Map<String, String> officeHours = new HashMap<>();
+        String sql = "SELECT officehour, officehourday FROM officehours WHERE userid = ?";
+        try (Connection conn = getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, userId);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                officeHours.put(rs.getString("officehourday"), rs.getString("officehour"));
+            }
+        } catch (SQLException e) {
+            System.out.println("Failed to get office hours");
+            e.printStackTrace();
+            throw e;
+        }
+        return officeHours;
+    }
+    public void deleteOfficeHours(String userId, String day, String hour) {
+        if (userId == null || day == null || hour == null) {
+            return;
+        }
+        String sql = "DELETE FROM officehours WHERE userid = ? AND officehourday = ? AND officehour = ?";
+        try (Connection conn = getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, userId);
+            ps.setString(2, day);
+            ps.setString(3, hour);
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            System.out.println("Failed to delete office hour");
+            e.printStackTrace();
         }
     }
 
