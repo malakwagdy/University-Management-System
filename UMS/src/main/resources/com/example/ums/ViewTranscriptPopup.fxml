@@ -44,12 +44,14 @@
                   <TableColumn fx:id="courseIdCol" prefWidth="100.0" text="Course ID" />
                   <TableColumn fx:id="courseNameCol" prefWidth="200.0" text="Course Name" />
                   <TableColumn fx:id="gradeCol" prefWidth="100.0" text="Grade" />
+                  <TableColumn fx:id="semesterCol" prefWidth="100.0" text="Semester" />
                </columns>
             </TableView>
          </content>
       </ScrollPane>
-      <HBox alignment="CENTER" prefHeight="42.0" prefWidth="404.0">
+      <HBox alignment="CENTER" prefHeight="42.0" prefWidth="404.0" spacing="10.0">
          <children>
+            <Button mnemonicParsing="false" onAction="#handleCancelButton" text="Cancel" />
             <Button fx:id="downloadBtn" contentDisplay="CENTER" mnemonicParsing="false" onAction="#handleDownloadButton" text="Download" />
          </children>
       </HBox>

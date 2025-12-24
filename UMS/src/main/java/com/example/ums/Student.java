@@ -5,7 +5,7 @@ import java.util.Map;
 
 public class Student extends User {
     private ArrayList<String> currentCourses;
-    private Map<Integer,String> takenCourses;
+    private Map<Integer,Map<String,String>> takenCourses;
     private String gpa;
     private String semester;
     private String major;
@@ -15,7 +15,7 @@ public class Student extends User {
         super();
     }
 
-    public Student( String studentId, String phoneNumber, String email, String password, String name, String dateOfBirth, ArrayList<String> currentCourses, Map<Integer,String> takenCourses, String GPA, String semester, String major) {
+    public Student( String studentId, String phoneNumber, String email, String password, String name, String dateOfBirth, ArrayList<String> currentCourses, Map<Integer,Map<String,String>> takenCourses, String GPA, String semester, String major) {
         super(studentId , "Student", phoneNumber, email, password, name, dateOfBirth);
         this.currentCourses = currentCourses;
         this.takenCourses = takenCourses;
@@ -38,10 +38,10 @@ public class Student extends User {
     public void setCurrentCourses(ArrayList<String> currentCourses) {
         this.currentCourses = currentCourses;
     }
-    public Map<Integer,String> getTakenCourses() {
+    public Map<Integer,Map<String,String>> getTakenCourses() {
         return takenCourses;
     }
-    public void setTakenCourses(Map<Integer,String> takenCourses) {
+    public void setTakenCourses(Map<Integer,Map<String,String>> takenCourses) {
         this.takenCourses = takenCourses;
     }
     public String getGpa() {

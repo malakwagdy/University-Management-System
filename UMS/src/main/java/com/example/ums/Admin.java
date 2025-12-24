@@ -528,7 +528,7 @@ public class Admin extends User {
         return year + letter + number;
     }
 
-    public Map<Course,String>generateTranscript(String studentId) {
+    public Map<Course,Map<String,String>>generateTranscript(String studentId) {
         Student student = null;
         try {
             student = dm.getStudent(studentId);
@@ -538,7 +538,7 @@ public class Admin extends User {
         if (student == null) {
             throw new IllegalArgumentException("Student not found with ID: " + studentId);
         }
-        Map<Course, String> transcript = null;
+        Map<Course, Map<String,String>> transcript = null;
         try {
             transcript = dm.getTakenCoursesForTranscript(studentId);
         } catch (SQLException e) {

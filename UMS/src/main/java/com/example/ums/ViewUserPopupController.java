@@ -81,11 +81,18 @@ public class ViewUserPopupController {
             }
             if (student.getTakenCourses() != null && !student.getTakenCourses().isEmpty()) {
                 StringBuilder takenCoursesStr = new StringBuilder();
-                for (Map.Entry<Integer, String> entry : student.getTakenCourses().entrySet()) {
+                for (Map.Entry<Integer, Map<String,String>> entry : student.getTakenCourses().entrySet()) {
                     if (takenCoursesStr.length() > 0) {
                         takenCoursesStr.append(", ");
                     }
-                    takenCoursesStr.append(entry.getKey()).append(" (").append(cleanValue(entry.getValue())).append(")");
+                    Map<String, String> courseData = entry.getValue();
+                    String grade = courseData.get("grade");
+                    String semester = courseData.get("semester");
+                    takenCoursesStr.append(entry.getKey()).append(" (").append(cleanValue(grade));
+                    if (semester != null && !semester.isEmpty()) {
+                        takenCoursesStr.append(" - ").append(cleanValue(semester));
+                    }
+                    takenCoursesStr.append(")");
                 }
                 detailsBox.getChildren().add(new Label("Taken Courses: " + takenCoursesStr.toString()));
             } else {

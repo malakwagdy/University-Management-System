@@ -306,9 +306,9 @@ public class DatabaseManager {
         }
         return classrooms;
     }
-    private Map<Integer, String> getTakenCourses(String userId) throws SQLException {
-        HashMap<Integer, String> courses = new HashMap<>();
-        String sql = "SELECT courseid, grade FROM takencourses WHERE userid = ?";
+    private Map<Integer, Map<String,String>> getTakenCourses(String userId) throws SQLException {
+        HashMap<Integer, Map<String,String>> courses = new HashMap<>();
+        String sql = "SELECT courseid, grade, semester FROM takencourses WHERE userid = ?";
         try (Connection conn = getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setString(1, userId);
@@ -316,7 +316,13 @@ public class DatabaseManager {
             while (rs.next()) {
                 Integer courseId = rs.getInt("courseid");
                 String grade = rs.getString("grade");
-                courses.put(courseId, grade != null ? grade : "");
+                String semester = rs.getString("semester");
+                
+                Map<String, String> courseData = new HashMap<>();
+                courseData.put("grade", grade != null ? grade : "");
+                courseData.put("semester", semester != null ? semester : "");
+                
+                courses.put(courseId, courseData);
             }
         }
         return courses;
@@ -456,7 +462,7 @@ public ArrayList<Student> getStudentsByCourse(String courseCode) {
                 student.setCurrentCourses(currentCourses);
                 
                 // Fetch taken courses
-                Map<Integer, String> takenCourses = getTakenCourses(userId);
+                Map<Integer, Map<String,String>> takenCourses = getTakenCourses(userId);
                 student.setTakenCourses(takenCourses);
                 
                 return student;
@@ -529,9 +535,9 @@ public ArrayList<Student> getStudentsByCourse(String courseCode) {
     /**
      * Get taken courses with grades for a student
      */
-    public Map<Course, String> getTakenCoursesForTranscript(String userId) throws SQLException {
-        Map<Course, String> courses = new HashMap<>();
-        String sql = "SELECT c.courseid, c.coursename, c.coursedescription, c.courseyear, tc.grade " +
+    public Map<Course, Map<String,String>> getTakenCoursesForTranscript(String userId) throws SQLException {
+        Map<Course, Map<String,String>> courses = new HashMap<>();
+        String sql = "SELECT c.courseid, c.coursename, c.coursedescription, c.courseyear, tc.semester, tc.grade " +
                 "FROM takencourses tc " +
                 "JOIN courses c ON tc.courseid = c.courseid " +
                 "WHERE tc.userid = ?";
@@ -544,6 +550,7 @@ public ArrayList<Student> getStudentsByCourse(String courseCode) {
                 String courseName = rs.getString("coursename");
                 String courseDescription = rs.getString("coursedescription");
                 String courseYear = rs.getString("courseyear");
+                String semester = rs.getString("semester");
                 String grade = rs.getString("grade");
 
                 Course course = new Course(
@@ -552,7 +559,10 @@ public ArrayList<Student> getStudentsByCourse(String courseCode) {
                         courseDescription,
                         courseYear
                 );
-                courses.put(course, grade != null ? grade : "");
+                Map<String,String> courseRecord = new HashMap<>();
+                courseRecord.put("grade", grade);
+                courseRecord.put("semester", semester);
+                courses.put(course, courseRecord);
             }
         }
         return courses;
@@ -1582,50 +1592,50 @@ public ArrayList<Student> getStudentsByCourse(String courseCode) {
     //     return courses;
     // }
 
-    private Map<String, String> fetchTakenCourses(Connection conn, String userId) throws SQLException {
-        Map<String, String> taken = new HashMap<>();
-        String sql = "SELECT coursecode, grade FROM takencourses WHERE userid = ?";
-        try (PreparedStatement ps = conn.prepareStatement(sql)) {
-            ps.setString(1, userId);
-            ResultSet rs = ps.executeQuery();
-            while (rs.next()) {
-                taken.put(rs.getString("coursecode"), rs.getString("grade"));
-            }
-        }
-        return taken;
-    }
-
-    private void hydrateUserAttributeValues(Connection conn, String userId, Student student) throws SQLException {
-        String sql = "SELECT ua.attributename, uv.attributevalue " +
-                "FROM uservalues uv " +
-                "JOIN userattributes ua ON uv.attributeid = ua.attributeid " +
-                "WHERE uv.userid = ?";
-        try (PreparedStatement ps = conn.prepareStatement(sql)) {
-            ps.setString(1, userId);
-            ResultSet rs = ps.executeQuery();
-            while (rs.next()) {
-                String name = rs.getString("attributename");
-                String raw = rs.getString("attributevalue");
-                String value = extractScalarValue(raw);
-                if (name == null) {
-                    continue;
-                }
-                switch (name) {
-                    case "gpa":
-                        student.setGpa(value);
-                        break;
-                    case "major":
-                        student.setMajor(value);
-                        break;
-                    case "semester":
-                        student.setSemester(value);
-                        break;
-                    default:
-                        break;
-                }
-            }
-        }
-    }
+//    private Map<String, String> fetchTakenCourses(Connection conn, String userId) throws SQLException {
+//        Map<String, String> taken = new HashMap<>();
+//        String sql = "SELECT coursecode, grade FROM takencourses WHERE userid = ?";
+//        try (PreparedStatement ps = conn.prepareStatement(sql)) {
+//            ps.setString(1, userId);
+//            ResultSet rs = ps.executeQuery();
+//            while (rs.next()) {
+//                taken.put(rs.getString("coursecode"), rs.getString("grade"));
+//            }
+//        }
+//        return taken;
+//    }
+//
+//    private void hydrateUserAttributeValues(Connection conn, String userId, Student student) throws SQLException {
+//        String sql = "SELECT ua.attributename, uv.attributevalue " +
+//                "FROM uservalues uv " +
+//                "JOIN userattributes ua ON uv.attributeid = ua.attributeid " +
+//                "WHERE uv.userid = ?";
+//        try (PreparedStatement ps = conn.prepareStatement(sql)) {
+//            ps.setString(1, userId);
+//            ResultSet rs = ps.executeQuery();
+//            while (rs.next()) {
+//                String name = rs.getString("attributename");
+//                String raw = rs.getString("attributevalue");
+//                String value = extractScalarValue(raw);
+//                if (name == null) {
+//                    continue;
+//                }
+//                switch (name) {
+//                    case "gpa":
+//                        student.setGpa(value);
+//                        break;
+//                    case "major":
+//                        student.setMajor(value);
+//                        break;
+//                    case "semester":
+//                        student.setSemester(value);
+//                        break;
+//                    default:
+//                        break;
+//                }
+//            }
+//        }
+//    }
 
     private String extractScalarValue(String json) {
         if (json == null) {
@@ -1762,13 +1772,15 @@ public ArrayList<Student> getStudentsByCourse(String courseCode) {
         }
 
         if (student.getTakenCourses() != null && !student.getTakenCourses().isEmpty()) {
-            String insertTakenCoursesSql = "INSERT INTO takencourses (userid, courseid, grade) VALUES (?, ?, ?)";
-            for (Map.Entry<Integer, String> entry : student.getTakenCourses().entrySet()) {
+            String insertTakenCoursesSql = "INSERT INTO takencourses (userid, courseid, grade, semester) VALUES (?, ?, ?, ?)";
+            for (Map.Entry<Integer, Map<String,String>> entry : student.getTakenCourses().entrySet()) {
                 try (Connection conn = getConnection();
                         PreparedStatement ps = conn.prepareStatement(insertTakenCoursesSql)) {
                     ps.setString(1, student.getId());
                     ps.setInt(2, entry.getKey());
-                    ps.setString(3, entry.getValue() != null ? entry.getValue() : "");
+                    Map<String, String> courseData = entry.getValue();
+                    ps.setString(3, courseData != null ? courseData.get("grade") : "");
+                    ps.setString(4, courseData != null ? courseData.get("semester") : "");
                     ps.executeUpdate();
                 } catch (SQLException e) {
                     System.out.println("Failed to insert taken course: " + entry.getKey());

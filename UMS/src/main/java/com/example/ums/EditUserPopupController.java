@@ -359,11 +359,14 @@ public class EditUserPopupController {
         }
         if (student.getTakenCourses() != null && !student.getTakenCourses().isEmpty()) {
             StringBuilder takenCoursesStr = new StringBuilder();
-            for (Map.Entry<Integer, String> entry : student.getTakenCourses().entrySet()) {
+            for (Map.Entry<Integer, Map<String,String>> entry : student.getTakenCourses().entrySet()) {
                 if (takenCoursesStr.length() > 0) {
                     takenCoursesStr.append(", ");
                 }
-                takenCoursesStr.append(entry.getKey()).append(":").append(entry.getValue());
+                Map<String, String> courseData = entry.getValue();
+                String grade = courseData.get("grade");
+                String semester = courseData.get("semester");
+                takenCoursesStr.append(entry.getKey()).append(":").append(grade).append(":").append(semester);
             }
             takenCoursesField.setText(takenCoursesStr.toString());
         }
@@ -667,14 +670,18 @@ public class EditUserPopupController {
                 }
                 if (!takenCoursesField.getText().trim().isEmpty()) {
                     String[] entries = takenCoursesField.getText().split(",");
-                    Map<Integer, String> takenCourses = new HashMap<>();
+                    Map<Integer, Map<String,String>> takenCourses = new HashMap<>();
                     for (String entry : entries) {
                         String trimmed = entry.trim();
                         if (!trimmed.isEmpty() && trimmed.contains(":")) {
-                            String[] parts = trimmed.split(":", 2);
-                            if (parts.length == 2) {
+                            String[] parts = trimmed.split(":", 3);
+                            if (parts.length == 3) {
                                 try {
-                                    takenCourses.put(Integer.parseInt(parts[0].trim()), parts[1].trim());
+                                    int courseId = Integer.parseInt(parts[0].trim());
+                                    Map<String, String> courseData = new HashMap<>();
+                                    courseData.put("grade", parts[1].trim());
+                                    courseData.put("semester", parts[2].trim());
+                                    takenCourses.put(courseId, courseData);
                                 } catch (NumberFormatException e) {
                                     // Skip invalid course ID
                                 }

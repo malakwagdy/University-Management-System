@@ -19,6 +19,7 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.Comparator;
 import java.util.Map;
 
 public class ViewTranscriptPopupController {
@@ -42,6 +43,9 @@ public class ViewTranscriptPopupController {
     
     @FXML
     private TableColumn<CourseRecord, String> gradeCol;
+
+    @FXML
+    private TableColumn<CourseRecord, String> semesterCol;
     
     private DatabaseManager dm = new DatabaseManager();
     private Student currentStudent;
@@ -75,32 +79,23 @@ public class ViewTranscriptPopupController {
         courseIdCol.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getCourseId()));
         courseNameCol.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getCourseName()));
         gradeCol.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getGrade()));
+        semesterCol.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getSemester()));
         
         ObservableList<CourseRecord> records = FXCollections.observableArrayList();
         
         // Add taken courses with grades
         if (student.getTakenCourses() != null) {
-            for (Map.Entry<Integer, String> entry : student.getTakenCourses().entrySet()) {
+            for (Map.Entry<Integer, Map<String,String>> entry : student.getTakenCourses().entrySet()) {
                     Course course = dm.getCourse(entry.getKey());
                     String courseName = course != null ? course.getCourseName() : "Unknown";
-                    records.add(new CourseRecord(String.valueOf(entry.getKey()), courseName, entry.getValue()));
+                    Map<String, String> courseData = entry.getValue();
+                    String grade = courseData.getOrDefault("grade", "N/A");
+                    String semester = courseData.getOrDefault("semester", "N/A");
+                    records.add(new CourseRecord(String.valueOf(entry.getKey()), courseName, grade, semester));
             }
         }
         
-        // Add current courses as "In Progress"
-        if (student.getCurrentCourses() != null) {
-            for (String courseIdStr : student.getCurrentCourses()) {
-                try {
-                    int courseId = Integer.parseInt(courseIdStr);
-                    Course course = dm.getCourse(courseId);
-                    String courseName = course != null ? course.getCourseName() : "Unknown";
-                    records.add(new CourseRecord(courseIdStr, courseName, "In Progress"));
-                } catch (NumberFormatException e) {
-                    records.add(new CourseRecord(courseIdStr, "Unknown", "In Progress"));
-                }
-            }
-        }
-        
+        records.sort(Comparator.comparing(CourseRecord::getSemester));
         coursesTable.setItems(records);
     }
     
@@ -123,10 +118,11 @@ public class ViewTranscriptPopupController {
                 writer.write("-------\n");
                 
                 for (CourseRecord record : coursesTable.getItems()) {
-                    writer.write(String.format("%-15s %-30s %s\n", 
+                    writer.write(String.format("%-15s %-30s %-10s %s\n",
                         record.getCourseId(), 
                         record.getCourseName(), 
-                        record.getGrade()));
+                        record.getGrade(),
+                        record.getSemester()));
                 }
                 
                 Alert alert = new Alert(Alert.AlertType.INFORMATION);
@@ -151,15 +147,18 @@ public class ViewTranscriptPopupController {
         private final String courseId;
         private final String courseName;
         private final String grade;
+        private final String semester;
         
-        public CourseRecord(String courseId, String courseName, String grade) {
+        public CourseRecord(String courseId, String courseName, String grade, String semester) {
             this.courseId = courseId;
             this.courseName = courseName;
             this.grade = grade;
+            this.semester = semester;
         }
         
         public String getCourseId() { return courseId; }
         public String getCourseName() { return courseName; }
         public String getGrade() { return grade; }
+        public String getSemester() { return semester; }
     }
 }
