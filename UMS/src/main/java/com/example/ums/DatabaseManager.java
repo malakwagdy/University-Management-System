@@ -2344,6 +2344,80 @@ public ArrayList<Student> getStudentsByCourse(String courseCode) {
         }
     }
 
+    public void addAnnouncment(Announcment announcment) {
+        String sql = "INSERT INTO announcements (announcementid, announcementtitle, announcementcontent, announcementdate, courseid) VALUES (?, ?, ?, ?, ?)";
+        try (Connection conn = getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, announcment.getId());
+            ps.setString(2, announcment.getTitle());
+            ps.setString(3, announcment.getContent());
+            ps.setString(4, announcment.getDate());
+            ps.setInt(5, announcment.getCourseid());
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            System.out.println("Failed to add announcement");
+            e.printStackTrace();
+        }
+    }
+
+    public ArrayList<Announcment> getGeneralAnnouncements() {
+        String sql= "SELECT * FROM announcements WHERE courseid IS NULL ORDER BY announcementdate DESC";
+        ArrayList<Announcment> announcements = new ArrayList<>();
+        try (Connection conn = getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                Announcment announcment = new Announcment(rs.getString("announcementtitle"),
+                        rs.getString("announcementcontent"),
+                        rs.getString("announcementdate"));
+                announcment.setId(rs.getInt("announcementid"));
+                announcment.setCourseid(rs.getInt("courseid"));
+                announcements.add(announcment);
+            }} catch (SQLException e) {
+            System.out.println("Failed to get general announcements");
+            e.printStackTrace();
+        }return announcements;
+    }
+
+    public ArrayList<Announcment> getCourseAnnouncements(int courseId) {
+        String sql= "SELECT * FROM announcements WHERE courseid = ? ORDER BY announcementdate DESC";
+        ArrayList<Announcment> announcements = new ArrayList<>();
+        try (Connection conn = getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, courseId);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                Announcment announcment = new Announcment(rs.getString("announcementtitle"),
+                        rs.getString("announcementcontent"),
+                        rs.getString("announcementdate"));
+                announcment.setId(rs.getInt("announcementid"));
+                announcment.setCourseid(rs.getInt("courseid"));
+                announcements.add(announcment);
+            }} catch (SQLException e) {
+            System.out.println("Failed to get course announcements");
+            e.printStackTrace();
+        }return announcements;
+    }
+
+    public ArrayList<Announcment> getStudentAnnouncements(String userId) {
+        String sql = "SELECT * FROM announcements WHERE courseid IN (SELECT courseid FROM currentcourses WHERE userid = ?) ORDER BY announcementdate DESC";
+        ArrayList<Announcment> announcements = new ArrayList<>();
+        try (Connection conn = getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, userId);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                Announcment announcment = new Announcment(rs.getString("announcementtitle"),
+                        rs.getString("announcementcontent"),
+                        rs.getString("announcementdate"));
+                announcment.setId(rs.getInt("announcementid"));
+                announcment.setCourseid(rs.getInt("courseid"));
+                announcements.add(announcment);
+            }
+        } catch (SQLException e) {
+            System.out.println("Failed to get student announcements");
+            e.printStackTrace();
+        }
+        return announcements;
+    }
+
+
 
     /**
      * Simple connectivity test (optional).

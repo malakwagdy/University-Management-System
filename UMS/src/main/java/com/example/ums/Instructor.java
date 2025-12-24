@@ -271,4 +271,13 @@ public class Instructor extends User{
         }
         return list;
     }
+    public  ArrayList<Announcment> getInstructorAnnouncments(String studentId) {
+        DatabaseManager dm = new DatabaseManager();
+        ArrayList<Announcment> list = dm.getStudentAnnouncements(studentId);
+        list.addAll(dm.getGeneralAnnouncements());
+        return list;
+    }
+    public void createAnnouncement(Announcment announcment) {
+        dm.addAnnouncment(announcment);
+    }
 }
