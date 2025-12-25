@@ -74,6 +74,23 @@ public class DeptHeadDashboardController implements Initializable {
 
     @FXML
     private Label coursePlaceholder;
+    
+    @FXML
+    private ScrollPane homepageView;
+    @FXML
+    private ScrollPane myCoursesView;
+    @FXML
+    private TableView<Course> myCoursesTable;
+    @FXML
+    private TableColumn<Course, Integer> myCourseIdCol;
+    @FXML
+    private TableColumn<Course, String> myCourseNameCol;
+    @FXML
+    private TableColumn<Course, String> myCourseDescriptionCol;
+    @FXML
+    private TableColumn<Course, String> myCourseBylawCol;
+    @FXML
+    private TableColumn<Course, String> myCourseActionsCol;
 
     private ObservableList<User> allUsers;
 
@@ -139,6 +156,63 @@ public class DeptHeadDashboardController implements Initializable {
         // Load all users initially
         loadAllInstructors();
         loadCoursesData();
+    }
+    
+    private void showView(ScrollPane viewToShow) {
+        homepageView.setVisible(false);
+        homepageView.setManaged(false);
+        myCoursesView.setVisible(false);
+        myCoursesView.setManaged(false);
+        
+        viewToShow.setVisible(true);
+        viewToShow.setManaged(true);
+    }
+    
+    @FXML
+    private void handleHomepageButton() {
+        showView(homepageView);
+    }
+    
+    @FXML
+    private void hamdleMyCoursesButton() {
+        showView(myCoursesView);
+        loadMyCoursesData();
+    }
+    
+    private void loadMyCoursesData() {
+        myCourseIdCol.setCellValueFactory(new PropertyValueFactory<>("courseId"));
+        myCourseNameCol.setCellValueFactory(new PropertyValueFactory<>("courseName"));
+        myCourseDescriptionCol.setCellValueFactory(new PropertyValueFactory<>("courseDescription"));
+        myCourseBylawCol.setCellValueFactory(new PropertyValueFactory<>("year"));
+        
+        myCourseActionsCol.setCellFactory(new Callback<TableColumn<Course, String>, TableCell<Course, String>>() {
+            @Override
+            public TableCell<Course, String> call(TableColumn<Course, String> param) {
+                return new TableCell<Course, String>() {
+                    private final Button addMaterialBtn = new Button("Add Material");
+                    
+                    {
+                        addMaterialBtn.setOnAction(event -> {
+                            Course course = getTableView().getItems().get(getIndex());
+                            AddMaterialController.show(course.getCourseId(), deptHead, () -> loadMyCoursesData());
+                        });
+                    }
+                    
+                    @Override
+                    protected void updateItem(String item, boolean empty) {
+                        super.updateItem(item, empty);
+                        if (empty) {
+                            setGraphic(null);
+                        } else {
+                            setGraphic(addMaterialBtn);
+                        }
+                    }
+                };
+            }
+        });
+        
+        ArrayList<Course> courses = deptHead.getInstructorCourses(deptHead.getId());
+        myCoursesTable.setItems(FXCollections.observableArrayList(courses));
     }
 
     private void loadAllInstructors() {

@@ -157,10 +157,14 @@ public class Instructor extends User{
         dm.updateCourse(course);
     }
 
-    public void addCourseMaterial(int courseid, ArrayList<Material> materials){
-        for (Material material: materials){
-            dm.addMaterial(courseid, material);
+    public ArrayList<Course> getInstructorCourses(String userId) {
+        ArrayList<Course> courses = new ArrayList<>();
+        try {
+            courses = dm.getInstructorCourses(userId);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
+        return courses;
     }
 
     public ArrayList<String> displayResponsibilities(String userId) {
