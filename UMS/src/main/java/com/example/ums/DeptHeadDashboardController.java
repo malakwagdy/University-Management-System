@@ -78,7 +78,12 @@ public class DeptHeadDashboardController implements Initializable {
     @FXML
     private ScrollPane homepageView;
     @FXML
+    private ScrollPane departmentCoursesView;
+    @FXML
     private ScrollPane myCoursesView;
+    @FXML
+    private ScrollPane departmentStudentsView;
+    
     @FXML
     private TableView<Course> myCoursesTable;
     @FXML
@@ -91,6 +96,19 @@ public class DeptHeadDashboardController implements Initializable {
     private TableColumn<Course, String> myCourseBylawCol;
     @FXML
     private TableColumn<Course, String> myCourseActionsCol;
+    
+    @FXML
+    private TableView<Student> studentsTable;
+    @FXML
+    private TableColumn<Student, String> studentIdCol;
+    @FXML
+    private TableColumn<Student, String> studentNameCol;
+    @FXML
+    private TableColumn<Student, String> studentEmailCol;
+    @FXML
+    private TableColumn<Student, String> studentGPACol;
+    @FXML
+    private TableColumn<Student, String> studentSemesterCol;
 
     private ObservableList<User> allUsers;
 
@@ -161,22 +179,60 @@ public class DeptHeadDashboardController implements Initializable {
     private void showView(ScrollPane viewToShow) {
         homepageView.setVisible(false);
         homepageView.setManaged(false);
+        departmentCoursesView.setVisible(false);
+        departmentCoursesView.setManaged(false);
         myCoursesView.setVisible(false);
         myCoursesView.setManaged(false);
+        departmentStudentsView.setVisible(false);
+        departmentStudentsView.setManaged(false);
         
         viewToShow.setVisible(true);
         viewToShow.setManaged(true);
     }
     
     @FXML
-    private void handleHomepageButton() {
+    private void handleDepartmentInstructorsButton() {
         showView(homepageView);
+        loadAllInstructors();
+    }
+    
+    @FXML
+    private void handleDepartmentCoursesButton() {
+        showView(departmentCoursesView);
+        loadCoursesData();
+    }
+    
+    @FXML
+    private void handleDepartmentStudentsButton() {
+        showView(departmentStudentsView);
+        loadDepartmentStudents();
     }
     
     @FXML
     private void hamdleMyCoursesButton() {
         showView(myCoursesView);
         loadMyCoursesData();
+    }
+    
+    private void loadDepartmentStudents() {
+        studentIdCol.setCellValueFactory(new PropertyValueFactory<>("id"));
+        studentNameCol.setCellValueFactory(new PropertyValueFactory<>("name"));
+        studentEmailCol.setCellValueFactory(new PropertyValueFactory<>("email"));
+        studentGPACol.setCellValueFactory(new PropertyValueFactory<>("gpa"));
+        studentSemesterCol.setCellValueFactory(new PropertyValueFactory<>("semester"));
+        
+        Task<ObservableList<Student>> task = new Task<>() {
+            @Override
+            protected ObservableList<Student> call() throws Exception {
+                ArrayList<Student> deptStudents = deptHead.getStudentsByMajor(deptHead.getDepartmentName());
+                return FXCollections.observableArrayList(deptStudents);
+            }
+        };
+        
+        task.setOnSucceeded(e -> studentsTable.setItems(task.getValue()));
+        task.setOnFailed(e -> task.getException().printStackTrace());
+        
+        new Thread(task).start();
     }
     
     private void loadMyCoursesData() {
@@ -365,7 +421,7 @@ public class DeptHeadDashboardController implements Initializable {
         Task<ObservableList<Course>> task = new Task<>() {
             @Override
             protected ObservableList<Course> call() throws Exception {
-                ArrayList<Course> courses = dm.getAllCourses();
+                ArrayList<Course> courses = deptHead.getDepartmentCourses(deptHead.getDepartmentName());
                 return FXCollections.observableArrayList(courses);
             }
         };

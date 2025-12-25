@@ -168,6 +168,26 @@ public class Instructor extends User{
         return courses;
     }
 
+    public ArrayList<Course> getDepartmentCourses(String department) {
+        ArrayList<Course> courses = new ArrayList<>();
+        try {
+            courses = dm.getDepartmentCourses(department);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return courses;
+    }
+
+    public ArrayList<Student> getStudentsByMajor(String major) {
+        ArrayList<Student> students = new ArrayList<>();
+        try {
+            students = dm.getStudentsByMajor(major);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return students;
+    }
+
     public ArrayList<String> displayResponsibilities(String userId) {
         ArrayList<String> list = new ArrayList<>();
         try {

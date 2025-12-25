@@ -37,9 +37,9 @@
             <Insets bottom="15.0" left="15.0" right="15.0" top="15.0" />
          </padding>
          <Label text="Department Management" />
-         <Button fx:id="instructorsBtn" maxWidth="1.7976931348623157E308" onAction="#handleHomepageButton" text="Instructors" />
-         <Button fx:id="coursesBtn" maxWidth="1.7976931348623157E308" text="Department Courses" />
-         <Button fx:id="studentsBtn" maxWidth="1.7976931348623157E308" text="Department Students" />
+         <Button fx:id="departmentInstructorsBtn" maxWidth="1.7976931348623157E308" onAction="#handleDepartmentInstructorsButton" text="Department Instructors" />
+         <Button fx:id="coursesBtn" maxWidth="1.7976931348623157E308" onAction="#handleDepartmentCoursesButton" text="Department Courses" />
+         <Button fx:id="departmentStudentsBtn" maxWidth="1.7976931348623157E308" onAction="#handleDepartmentStudentsButton" text="Department Students" />
          <Separator />
          <Button fx:id="myCoursesBtn" maxWidth="1.7976931348623157E308" onAction="#hamdleMyCoursesButton" text="My Courses" />
          <Region VBox.vgrow="ALWAYS" />
@@ -93,7 +93,7 @@
                         <Region HBox.hgrow="ALWAYS" />
                         <ComboBox fx:id="instructorRoleFilter" onAction="#handleInstructorRoleFilter" promptText="Filter by Role" />
                      </HBox>
-                     <TableView fx:id="instructorsTable" prefHeight="250.0">
+                     <TableView fx:id="instructorsTable" prefHeight="492.0" prefWidth="1064.0">
                         <columns>
                            <TableColumn fx:id="instructorIdCol" prefWidth="133.0" text="Instructor ID" />
                            <TableColumn fx:id="instructorNameCol" prefWidth="174.0" text="Name" />
@@ -103,27 +103,80 @@
                         </columns>
                      </TableView>
                   </VBox>
-                  
-                  <!-- Department Courses -->
-                  <VBox spacing="10">
-                     <HBox alignment="CENTER_LEFT" spacing="10">
-                        <Label text="Department Courses" />
-                        <Region HBox.hgrow="ALWAYS" />
-                        <TextField fx:id="searchByCourseIdField" onAction="#handleSearchByCourseIdField" promptText="Search" />
-                        <Button fx:id="addCourseBtn" onAction="#handleAddCourseButton" text="+ Add Course" />
-                     </HBox>
-                     <TableView fx:id="coursesTable" prefHeight="200.0">
-                        <columns>
-                           <TableColumn fx:id="courseIdCol" prefWidth="83.0" text="Course ID" />
-                           <TableColumn fx:id="courseNameCol" prefWidth="182.0" text="Course Name" />
-                           <TableColumn fx:id="courseDescriptionCol" prefWidth="249.0" text="Course Description" />
-                           <TableColumn fx:id="courseInstructorsCol" prefWidth="227.0" text="Course Instructors" />
-                           <TableColumn fx:id="bylawCol" prefWidth="92.848388671875" text="Bylaw" />
-                           <TableColumn fx:id="courseActionsCol" prefWidth="232.151611328125" text="Actions" />
-                        </columns>
-                     </TableView>
-                  </VBox>
                </VBox>
+            </ScrollPane>
+            <ScrollPane fx:id="departmentCoursesView" fitToWidth="true" layoutX="10.0" layoutY="10.0" prefHeight="355.0" prefWidth="479.0" visible="false">
+               <content>
+                  <VBox spacing="20">
+                     <padding>
+                        <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+                     </padding>
+                     <children>
+                        <HBox spacing="20">
+                           <children>
+                              <VBox alignment="CENTER" spacing="5" HBox.hgrow="ALWAYS">
+                                 <padding>
+                                    <Insets bottom="15.0" left="15.0" right="15.0" top="15.0" />
+                                 </padding>
+                                 <children>
+                                    <Label text="Department Instructors" />
+                                    <Label fx:id="instructorsCountLabel2" text="25" />
+                                 </children>
+                              </VBox>
+                              <VBox alignment="CENTER" spacing="5" HBox.hgrow="ALWAYS">
+                                 <padding>
+                                    <Insets bottom="15.0" left="15.0" right="15.0" top="15.0" />
+                                 </padding>
+                                 <children>
+                                    <Label text="Department Courses" />
+                                    <Label fx:id="coursesCountLabel2" text="45" />
+                                 </children>
+                              </VBox>
+                              <VBox alignment="CENTER" spacing="5" HBox.hgrow="ALWAYS">
+                                 <padding>
+                                    <Insets bottom="15.0" left="15.0" right="15.0" top="15.0" />
+                                 </padding>
+                                 <children>
+                                    <Label text="Department Students" />
+                                    <Label fx:id="studentsCountLabel2" text="350" />
+                                 </children>
+                              </VBox>
+                              <VBox alignment="CENTER" spacing="5" HBox.hgrow="ALWAYS">
+                                 <padding>
+                                    <Insets bottom="15.0" left="15.0" right="15.0" top="15.0" />
+                                 </padding>
+                                 <children>
+                                    <Label text="Pending Requests" />
+                                    <Label fx:id="pendingRequestsLabel2" text="8" />
+                                 </children>
+                              </VBox>
+                           </children>
+                        </HBox>
+                        <VBox prefHeight="533.0" prefWidth="1064.0" spacing="10">
+                           <children>
+                              <HBox alignment="CENTER_LEFT" spacing="10">
+                                 <children>
+                                    <Label text="Department Courses" />
+                                    <Region HBox.hgrow="ALWAYS" />
+                                    <TextField fx:id="searchByCourseIdField" onAction="#handleSearchByCourseIdField" promptText="Search" />
+                                    <Button fx:id="addCourseBtn" onAction="#handleAddCourseButton" text="+ Add Course" />
+                                 </children>
+                              </HBox>
+                              <TableView fx:id="coursesTable" prefHeight="490.0" prefWidth="1064.0">
+                                 <columns>
+                                    <TableColumn fx:id="courseIdCol" prefWidth="83.0" text="Course ID" />
+                                    <TableColumn fx:id="courseNameCol" prefWidth="182.0" text="Course Name" />
+                                    <TableColumn fx:id="courseDescriptionCol" prefWidth="249.0" text="Course Description" />
+                                    <TableColumn fx:id="courseInstructorsCol" prefWidth="227.0" text="Course Instructors" />
+                                    <TableColumn fx:id="bylawCol" prefWidth="92.848388671875" text="Bylaw" />
+                                    <TableColumn fx:id="courseActionsCol" prefWidth="232.151611328125" text="Actions" />
+                                 </columns>
+                              </TableView>
+                           </children>
+                        </VBox>
+                     </children>
+                  </VBox>
+               </content>
             </ScrollPane>
             <ScrollPane fx:id="myCoursesView" fitToWidth="true" layoutX="10.0" layoutY="10.0" prefHeight="355.0" prefWidth="479.0" visible="false">
                <content>
@@ -179,16 +232,86 @@
                                     <Label text="My Courses" />
                                     <Region HBox.hgrow="ALWAYS" />
                                     <TextField fx:id="searchByCourseIdField1" onAction="#handleSearchByCourseIdField" promptText="Search" />
-                                    <Button fx:id="addCourseBtn1" onAction="#handleAddCourseButton" text="+ Add Course" />
                                  </children>
                               </HBox>
-                              <TableView fx:id="myCoursesTable" prefHeight="200.0">
+                              <TableView fx:id="myCoursesTable" prefHeight="478.0" prefWidth="1064.0">
                                  <columns>
                                     <TableColumn fx:id="myCourseIdCol" prefWidth="83.0" text="Course ID" />
                                     <TableColumn fx:id="myCourseNameCol" prefWidth="182.0" text="Course Name" />
                                     <TableColumn fx:id="myCourseDescriptionCol" prefWidth="249.0" text="Course Description" />
                                     <TableColumn fx:id="myCourseBylawCol" prefWidth="141.0" text="Bylaw" />
                                     <TableColumn fx:id="myCourseActionsCol" prefWidth="184.0" text="Actions" />
+                                 </columns>
+                              </TableView>
+                           </children>
+                        </VBox>
+                     </children>
+                  </VBox>
+               </content>
+            </ScrollPane>
+            <ScrollPane fx:id="departmentStudentsView" fitToWidth="true" layoutX="10.0" layoutY="10.0" prefHeight="355.0" prefWidth="479.0" visible="false">
+               <content>
+                  <VBox spacing="20">
+                     <padding>
+                        <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+                     </padding>
+                     <children>
+                        <HBox spacing="20">
+                           <children>
+                              <VBox alignment="CENTER" spacing="5" HBox.hgrow="ALWAYS">
+                                 <padding>
+                                    <Insets bottom="15.0" left="15.0" right="15.0" top="15.0" />
+                                 </padding>
+                                 <children>
+                                    <Label text="Department Instructors" />
+                                    <Label fx:id="instructorsCountLabel11" text="25" />
+                                 </children>
+                              </VBox>
+                              <VBox alignment="CENTER" spacing="5" HBox.hgrow="ALWAYS">
+                                 <padding>
+                                    <Insets bottom="15.0" left="15.0" right="15.0" top="15.0" />
+                                 </padding>
+                                 <children>
+                                    <Label text="Department Courses" />
+                                    <Label fx:id="coursesCountLabel11" text="45" />
+                                 </children>
+                              </VBox>
+                              <VBox alignment="CENTER" spacing="5" HBox.hgrow="ALWAYS">
+                                 <padding>
+                                    <Insets bottom="15.0" left="15.0" right="15.0" top="15.0" />
+                                 </padding>
+                                 <children>
+                                    <Label text="Department Students" />
+                                    <Label fx:id="studentsCountLabel11" text="350" />
+                                 </children>
+                              </VBox>
+                              <VBox alignment="CENTER" spacing="5" HBox.hgrow="ALWAYS">
+                                 <padding>
+                                    <Insets bottom="15.0" left="15.0" right="15.0" top="15.0" />
+                                 </padding>
+                                 <children>
+                                    <Label text="Pending Requests" />
+                                    <Label fx:id="pendingRequestsLabel11" text="8" />
+                                 </children>
+                              </VBox>
+                           </children>
+                        </HBox>
+                        <VBox spacing="10">
+                           <children>
+                              <HBox alignment="CENTER_LEFT" spacing="10">
+                                 <children>
+                                    <Label text="Department Students" />
+                                    <Region HBox.hgrow="ALWAYS" />
+                                    <TextField fx:id="searchByCourseIdField11" onAction="#handleSearchByCourseIdField" promptText="Search" />
+                                 </children>
+                              </HBox>
+                              <TableView fx:id="studentsTable" prefHeight="496.0" prefWidth="1064.0">
+                                 <columns>
+                                    <TableColumn fx:id="studentIdCol" prefWidth="83.0" text="Student ID" />
+                                    <TableColumn fx:id="studentEmailCol" prefWidth="299.5074157714844" text="Student Email" />
+                                    <TableColumn fx:id="studentNameCol" prefWidth="299.5074157714844" text="Student Name" />
+                                    <TableColumn fx:id="studentGPACol" prefWidth="131.49267578125" text="GPA" />
+                                    <TableColumn fx:id="studentSemesterCol" prefWidth="141.0" text="Semester" />
                                  </columns>
                               </TableView>
                            </children>

@@ -32,6 +32,11 @@ public class Course {
 
     }
 
+    public Course(int courseId, String courseName, String courseDescription, String year, String courseDepartment) {
+        this(courseId, courseName, courseDescription, year);
+        this.courseDepartment = courseDepartment;
+    }
+
     public Course(int courseId, String courseName, String courseDescription, String year) {
         this.courseId = courseId;
         this.courseName = courseName;

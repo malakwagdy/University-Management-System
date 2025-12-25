@@ -411,6 +411,26 @@ public class DatabaseManager {
     //     return students;
     // }
 
+    public ArrayList<Student> getStudentsByMajor(String major) {
+        String sql = "SELECT userid FROM users WHERE usertype = 'Student' AND userid IN (SELECT userid FROM uservalues WHERE attributeid = 2 AND attributeValue->>'value' = ?)";
+        ArrayList<Student> students = new ArrayList<>();
+        try (Connection conn = getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, major);
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    Student student = getStudent(rs.getString("userid"));
+                    if (student != null) {
+                        students.add(student);
+                    }
+                }
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException("Failed to load students by major", e);
+        }
+        return students;
+    }
+    
 public ArrayList<Student> getStudentsByCourse(String courseCode) {
     String sql = "SELECT userid FROM currentcourses WHERE courseid = ?";
     ArrayList<Student> students = new ArrayList<>();
@@ -1305,6 +1325,29 @@ public ArrayList<Student> getStudentsByCourse(String courseCode) {
         }
     }
 
+    public ArrayList<Course> getDepartmentCourses(String department) throws SQLException {
+        ArrayList<Course> courses = new ArrayList<>();
+        String sql = "SELECT * FROM courses WHERE coursedepartment = ?";
+        try (Connection conn = getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, department);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                int courseId = rs.getInt("courseid");
+                String courseName = rs.getString("coursename");
+                String courseDescription = rs.getString("coursedescription");
+                String year = rs.getString("courseyear");
+                String dept = rs.getString("coursedepartment");
+                Course course = new Course(courseId, courseName, courseDescription, year, dept);
+                courses.add(course);
+            }
+        } catch (SQLException e) {
+            System.out.println("Failed to get department courses");
+            e.printStackTrace();
+            throw e;
+        }
+        return courses;
+    }
+
     public ArrayList<Course> getInstructorCourses(String instructorId) throws SQLException {
         ArrayList<Course> courses = new ArrayList<>();
         String sql = "SELECT c.courseid, c.coursename, c.coursedescription, c.courseyear, c.coursedepartment " +
@@ -1618,32 +1661,40 @@ public ArrayList<Student> getStudentsByCourse(String courseCode) {
             return null;
         }
 
-        // Remove whitespace
         jsonValue = jsonValue.trim();
 
-        // Check for null value
         if (jsonValue.equals("{\"value\":null}")) {
             return null;
         }
 
-        // Extract value from {"value":"..."} format
-        if (jsonValue.startsWith("{\"value\":\"")) {
-            // String value
-            int start = 11; // Length of {"value":"
-            int end = jsonValue.length() - 2; // Remove "}
+        // Find the colon position
+        int colonPos = jsonValue.indexOf(':');
+        if (colonPos == -1) {
+            return null;
+        }
+        
+        // Start after colon, skip whitespace
+        int start = colonPos + 1;
+        while (start < jsonValue.length() && Character.isWhitespace(jsonValue.charAt(start))) {
+            start++;
+        }
+        
+        // Find end (before closing })
+        int end = jsonValue.lastIndexOf('}');
+        if (end == -1) {
+            return null;
+        }
+        
+        // If value starts with quote, extract between quotes
+        if (start < jsonValue.length() && jsonValue.charAt(start) == '"') {
+            start++;
+            end = jsonValue.indexOf('"', start);
             if (end > start) {
-                String value = jsonValue.substring(start, end);
-                // Unescape JSON string
-                return unescapeJson(value);
+                return jsonValue.substring(start, end);
             }
-        } else if (jsonValue.startsWith("{\"value\":")) {
-            // Boolean or number value (e.g., {"value":true} or {"value": false})
-            int start = 9; // Length of {"value":
-            int end = jsonValue.length() - 1; // Remove }
-            if (end > start) {
-                String value = jsonValue.substring(start, end).trim();
-                return value;
-            }
+        } else {
+            // Boolean or null value
+            return jsonValue.substring(start, end).trim();
         }
 
         return null;
