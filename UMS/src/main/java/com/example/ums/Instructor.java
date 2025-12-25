@@ -136,6 +136,7 @@ public class Instructor extends User{
     }
 
     public void deleteCourse(int courseId) {
+
         dm.deleteCourse(courseId);
     }
 
@@ -234,6 +235,32 @@ public class Instructor extends User{
             }
         }
     }
+    public void updateCourseMaterials(String userId, ArrayList<String> newMaterial,ArrayList<String> oldMaterial) {
+        ArrayList<String> updatedList = newMaterial != null ? new ArrayList<String>(newMaterial) : new ArrayList<String>();
+        ArrayList<String> existingList = oldMaterial != null ? new ArrayList<String>(oldMaterial) : new ArrayList<String>();
+
+        ArrayList<String> toAdd = new ArrayList<String>(updatedList);
+        toAdd.removeAll(existingList);
+
+        ArrayList<String> toRemove = new ArrayList<String>(existingList);
+        toRemove.removeAll(updatedList);
+
+
+        for (String materialId : toAdd) {
+            try {
+                dm.addCurrentCourse(userId, materialId);
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+        }
+        for (String materialId : toRemove) {
+            try {
+                dm.removeCurrentCourse(userId, materialId);
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+        }
+    }
 
     public void updateOfficeHours(String userId, Map<String, String> newHours, Map<String, String> oldHours) {
         Map<String, String> updated = newHours != null ? new HashMap<>(newHours) : new HashMap<>();
@@ -263,6 +290,7 @@ public class Instructor extends User{
             dm.addOfficeHours(userId, toAdd);
         }
     }
+
     public void addMaterial(int courseID,Material material) {
         dm.addMaterial(courseID,material);
     }
