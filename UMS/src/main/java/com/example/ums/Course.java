@@ -16,6 +16,7 @@ public class Course {
     private ArrayList<String> quizzes;
     private Map<String, String> midterm;
     private Map<String, String> finals;
+    private String courseDepartment;
 
 
     public Course(int courseId, String courseName, String courseDescription, String year, ArrayList<String> material, ArrayList<String> assignments, ArrayList<String> quizzes, Map<String, String> midterm, Map<String, String> finals, ArrayList<String> students) {
@@ -42,6 +43,14 @@ public class Course {
         this.courseName = courseName;
         this.courseDescription = courseDescription;
         this.year = year;
+    }
+
+    public String getCourseDepartment() {
+        return courseDepartment;
+    }
+
+    public void setCourseDepartment(String courseDepartment) {
+        this.courseDepartment = courseDepartment;
     }
 
     public int getCourseId() {

@@ -1292,11 +1292,12 @@ public ArrayList<Student> getStudentsByCourse(String courseCode) {
     }
 
     public void addCourse(Course course) {
-        String courseSql = "INSERT INTO courses (coursename, coursedescription, courseyear) VALUES (?, ?, ?)";
+        String courseSql = "INSERT INTO courses (coursename, coursedescription, courseyear, coursedepartment) VALUES (?, ?, ?, ?)";
         try (Connection conn = getConnection(); PreparedStatement ps = conn.prepareStatement(courseSql)) {
             ps.setString(1, course.getCourseName());
             ps.setString(2, course.getCourseDescription());
             ps.setString(3, course.getYear());
+            ps.setString(4, course.getCourseDepartment());
             ps.executeUpdate();
         } catch (SQLException e) {
             System.out.println("Failed to add course");
@@ -1306,7 +1307,7 @@ public ArrayList<Student> getStudentsByCourse(String courseCode) {
 
     public ArrayList<Course> getInstructorCourses(String instructorId) throws SQLException {
         ArrayList<Course> courses = new ArrayList<>();
-        String sql = "SELECT c.courseid, c.coursename, c.coursedescription, c.courseyear " +
+        String sql = "SELECT c.courseid, c.coursename, c.coursedescription, c.courseyear, c.coursedepartment " +
                 "FROM courses c " +
                 "JOIN currentcourses cc ON c.courseid = cc.courseid " +
                 "WHERE cc.userid = ?";
@@ -1318,7 +1319,9 @@ public ArrayList<Student> getStudentsByCourse(String courseCode) {
                 String courseName = rs.getString("coursename");
                 String courseDescription = rs.getString("coursedescription");
                 String year = rs.getString("courseyear");
+                String dept = rs.getString("coursedepartment");
                 Course course = new Course(courseId, courseName, courseDescription, year);
+                course.setCourseDepartment(dept);
                 courses.add(course);
             }
         } catch (SQLException e) {
@@ -1340,7 +1343,9 @@ public ArrayList<Student> getStudentsByCourse(String courseCode) {
                 String courseName = rs.getString("coursename");
                 String courseDescription = rs.getString("coursedescription");
                 String year = rs.getString("courseyear");
+                String dept = rs.getString("coursedepartment");
                 Course course = new Course(courseId, courseName, courseDescription, year);
+                course.setCourseDepartment(dept);
                 courses.add(course);
             }
         } catch (SQLException e) {
@@ -1352,12 +1357,13 @@ public ArrayList<Student> getStudentsByCourse(String courseCode) {
     }
 
     public void updateCourse(Course course) {
-        String courseSql = "UPDATE courses SET coursename = ?, coursedescription = ?, courseyear = ? WHERE courseid = ?";
+        String courseSql = "UPDATE courses SET coursename = ?, coursedescription = ?, courseyear = ?, coursedepartment = ? WHERE courseid = ?";
         try (Connection conn = getConnection(); PreparedStatement ps = conn.prepareStatement(courseSql)) {
             ps.setString(1, course.getCourseName());
             ps.setString(2, course.getCourseDescription());
             ps.setString(3, course.getYear());
-            ps.setInt(4, course.getCourseId());
+            ps.setString(4, course.getCourseDepartment());
+            ps.setInt(5, course.getCourseId());
             ps.executeUpdate();
         } catch (SQLException e) {
             System.out.println("Failed to update course");
@@ -1374,7 +1380,9 @@ public ArrayList<Student> getStudentsByCourse(String courseCode) {
                 String courseName = rs.getString("coursename");
                 String courseDescription = rs.getString("coursedescription");
                 String year = rs.getString("courseyear");
+                String dept = rs.getString("coursedepartment");
                 Course course = new Course(courseId, courseName, courseDescription, year);
+                course.setCourseDepartment(dept);
                 return course;
             }
         } catch (SQLException e) {
