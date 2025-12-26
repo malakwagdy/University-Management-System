@@ -1,7 +1,6 @@
 package com.example.ums;
 
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -1489,10 +1488,9 @@ public ArrayList<Student> getStudentsByCourse(int courseCode) {
         Assignment assignment = null;
         String sql =
                 "SELECT a.assignmentid, " +
-                "       a.assignmenttype AS assignmentname, " +
+                "       a.assignmentname, " +
                 "       a.assignmenturl, " +
                 "       a.assignmentdate, " +
-                "       a.assignmenttype, " +
                 "       ag.userid, " +
                 "       ag.grade, " +
                 "       ag.feedback " +
@@ -1509,7 +1507,6 @@ public ArrayList<Student> getStudentsByCourse(int courseCode) {
                             rs.getString("assignmentid"),
                             rs.getString("assignmentname"),
                             rs.getString("assignmenturl"),
-                            rs.getString("assignmenttype"),
                             rs.getString("assignmentdate"));
                 }
                 String userId = rs.getString("userid");
@@ -1538,17 +1535,16 @@ public ArrayList<Student> getStudentsByCourse(int courseCode) {
                 rs.getString("assignmentid"),
                 rs.getString("assignmentname"),
                 rs.getString("assignmenturl"),
-                rs.getString("assignmenttype"),
                 rs.getString("assignmentdate"));
         return assignment;
     }
     public void addAssignment(int courseId,Assignment assignment) {
-        String sql = "INSERT INTO assignments (courseid, assignmentid, assignmentname, url, assignmenttype, assignmentdate) VALUES (?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO assignments (courseid, assignmentid, assignmentname, assignmenturl, assignmentdate) VALUES (?, ?, ?, ?, ?)";
         try (Connection conn = getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
-            ps.setString(1, assignment.getAssignmentId());
-            ps.setString(2, assignment.getAssignmentName());
-            ps.setString(3, upload(assignment.getUrl()));
-            ps.setString(4, assignment.getAssignmentType());
+            ps.setInt(1, courseId);
+            ps.setString(2, assignment.getAssignmentId());
+            ps.setString(3, assignment.getAssignmentName());
+            ps.setString(4, upload(assignment.getUrl()));
             ps.setString(5, assignment.getAssignmentDate());
             ps.executeUpdate();
         }catch (SQLException e) {
@@ -2476,7 +2472,203 @@ public ArrayList<Student> getStudentsByCourse(int courseCode) {
         return announcements;
     }
 
+    public void addQuiz(Exam exam) {
+        addExam(exam, Exam.ExamType.QUIZ);
+    }
 
+    public void addMidterm(Exam midterm) {
+        addExam(midterm, Exam.ExamType.MIDTERM);
+    }
+
+    public void addFinal(Exam finalExam) {
+        addExam(finalExam, Exam.ExamType.FINAL);
+    }
+
+    /**
+     * Insert an exam row into exams table. examid is auto-incremented by Postgres.
+     */
+    public void addExam(Exam exam, Exam.ExamType defaultType) {
+        if (exam == null || exam.getCourseId() == null) {
+            return;
+        }
+        Exam.ExamType type = exam.getExamType() != null ? exam.getExamType() : defaultType;
+        if (type == null) {
+            return;
+        }
+
+        String sql = "INSERT INTO exams (examdate, examtype, courseid) VALUES (?, ?, ?)";
+        try (Connection conn = getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            String examDate = exam.getExamDate() != null ? exam.getExamDate().trim() : null;
+            ps.setString(1, examDate);
+            ps.setString(2, type.toDbValue());
+            ps.setInt(3, exam.getCourseId());
+            ps.executeUpdate();
+
+        } catch (SQLException e) {
+            System.out.println("Failed to add exam");
+            e.printStackTrace();
+        }
+    }
+
+    public Exam getExam(int examId) {
+        String sql = "SELECT * FROM exams WHERE examid = ?";
+        try (Connection conn = getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, examId);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                return mapExam(rs);
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return null;
+    }
+
+
+    private Exam mapExam(ResultSet rs) throws SQLException {
+        Integer examId = rs.getInt("examid");
+        if (rs.wasNull()) {
+            examId = null;
+        }
+        int courseId = rs.getInt("courseid");
+        String examDate = rs.getString("examdate");
+        Exam.ExamType type = Exam.ExamType.fromDbValue(rs.getString("examtype"));
+        return new Exam(examId, courseId, examDate, type);
+    }
+
+    private ArrayList<Exam> getCourseExams(int courseId, Exam.ExamType type) {
+        String sql = (type == null)
+                ? "SELECT * FROM exams WHERE courseid = ?"
+                : "SELECT * FROM exams WHERE courseid = ? AND examtype = ?";
+        ArrayList<Exam> exams = new ArrayList<>();
+        try (Connection conn = getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, courseId);
+            if (type != null) {
+                ps.setString(2, type.toDbValue());
+            }
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                exams.add(mapExam(rs));
+            }
+        } catch (SQLException e) {
+            System.out.println("Failed to get course exams");
+            e.printStackTrace();
+        }
+        return exams;
+    }
+
+    // ---- Course exams (separated + all) ----
+    public ArrayList<Exam> getCourseAllExams(int courseId) {
+        return getCourseExams(courseId, null);
+    }
+
+    public ArrayList<Exam> getCourseQuizzes(int courseId) {
+        return getCourseExams(courseId, Exam.ExamType.QUIZ);
+    }
+
+    public ArrayList<Exam> getCourseMidterms(int courseId) {
+        return getCourseExams(courseId, Exam.ExamType.MIDTERM);
+    }
+
+    public ArrayList<Exam> getCourseFinals(int courseId) {
+        return getCourseExams(courseId, Exam.ExamType.FINAL);
+    }
+
+    public ArrayList<Exam> getStudentQuizzes(String userId) {
+        return getStudentExams(userId, Exam.ExamType.QUIZ);
+    }
+
+    public ArrayList<Exam> getStudentMidterms(String userId) {
+        return getStudentExams(userId, Exam.ExamType.MIDTERM);
+    }
+
+    public ArrayList<Exam> getStudentFinals(String userId) {
+        return getStudentExams(userId, Exam.ExamType.FINAL);
+    }
+
+    public ArrayList<Exam> getStudentAllExams(String userId) {
+        return getStudentExams(userId, null);
+    }
+
+    public ArrayList<Exam> getStudentExams(String userId, Exam.ExamType type) {
+        String sql = (type == null)
+                ? "SELECT * FROM exams WHERE courseid IN (SELECT courseid FROM currentcourses WHERE userid = ?) ORDER BY examdate DESC"
+                : "SELECT * FROM exams WHERE examtype = ? AND courseid IN (SELECT courseid FROM currentcourses WHERE userid = ?) ORDER BY examdate DESC";
+        ArrayList<Exam> exams = new ArrayList<>();
+        try (Connection conn = getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
+            if (type == null) {
+                ps.setString(1, userId);
+            } else {
+                ps.setString(1, type.toDbValue());
+                ps.setString(2, userId);
+            }
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                exams.add(mapExam(rs));
+            }
+        } catch (SQLException e) {
+            System.out.println("Failed to get student exams");
+            e.printStackTrace();
+        }
+        return exams;
+    }
+
+    public void addAssignmentGrade(int assignmentId, String userId, String grade) {
+        String sql = "INSERT INTO assignmentgrades (assignmentid, userid, grade) VALUES (?, ?, ?) " +
+                "ON CONFLICT (assignmentid, userid) DO UPDATE SET grade = EXCLUDED.grade";
+        try (Connection conn = getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, assignmentId);
+            ps.setString(2, userId);
+            ps.setString(3, grade);
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            System.out.println("Failed to add/update assignment grade");
+            e.printStackTrace();
+        }
+    }
+
+    public void addExamGrade(int examId, String userId, String grade) {
+        String sql = "INSERT INTO examgrades (examid, userid, grade) VALUES (?, ?, ?) " +
+                "ON CONFLICT (examid, userid) DO UPDATE SET grade = EXCLUDED.grade";
+        try (Connection conn = getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, examId);
+            ps.setString(2, userId);
+            ps.setString(3, grade);
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            System.out.println("Failed to add/update exam grade");
+            e.printStackTrace();
+        }
+    }
+
+    public void addAssignmentFeedback(int assignmentId, String userId, String feedback) {
+        String sql = "INSERT INTO assignmentgrades (assignmentid, userid, grade, feedback) VALUES (?, ?, NULL, ?) " +
+                "ON CONFLICT (assignmentid, userid) DO UPDATE SET feedback = EXCLUDED.feedback";
+        try (Connection conn = getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, assignmentId);
+            ps.setString(2, userId);
+            ps.setString(3, feedback);
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            System.out.println("Failed to add/update assignment feedback");
+            e.printStackTrace();
+        }
+    }
+
+    public void addExamFeedback(int examId, String userId, String feedback) {
+        String sql = "INSERT INTO examgrades (examid, userid, grade, feedback) VALUES (?, ?, NULL, ?) " +
+                "ON CONFLICT (examid, userid) DO UPDATE SET feedback = EXCLUDED.feedback";
+        try (Connection conn = getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, examId);
+            ps.setString(2, userId);
+            ps.setString(3, feedback);
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            System.out.println("Failed to add/update exam feedback");
+            e.printStackTrace();
+        }
+    }
 
     /**
      * Simple connectivity test (optional).

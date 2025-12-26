@@ -219,6 +219,22 @@ public class Instructor extends User{
         dm.addAssignment(courseId, assignment);
         
     }
+
+    public void addAssignmentGrade(int assignmentId, String userId, String grade) {
+        dm.addAssignmentGrade(assignmentId, userId, grade);
+    }
+
+    public void addAssignmentFeedback(int assignmentId, String userId, String feedback) {
+        dm.addAssignmentFeedback(assignmentId, userId, feedback);
+    }
+
+    public void addExamGrade(int examId, String userId, String grade) {
+        dm.addExamGrade(examId, userId, grade);
+    }
+
+    public void addExamFeedback(int examId, String userId, String feedback) {
+        dm.addExamFeedback(examId, userId, feedback);
+    }
     public ArrayList<Integer> displayInstructorCourses(String userId) {
         ArrayList<Integer> list = new ArrayList<>();
         try {
@@ -369,5 +385,52 @@ public class Instructor extends User{
             e.printStackTrace();
             return new ArrayList<>();
         }
+    }
+
+    // ---- Exams (Course) ----
+    public ArrayList<Exam> getCourseAllExams(int courseId) {
+        return dm.getCourseAllExams(courseId);
+    }
+
+    // ---- Exams (Create) ----
+    public void addQuiz(Exam exam) {
+        dm.addQuiz(exam);
+    }
+
+    public void addMidterm(Exam midterm) {
+        dm.addMidterm(midterm);
+    }
+
+    public void addFinal(Exam finalExam) {
+        dm.addFinal(finalExam);
+    }
+
+    public ArrayList<Exam> getCourseQuizzes(int courseId) {
+        return dm.getCourseQuizzes(courseId);
+    }
+
+    public ArrayList<Exam> getCourseMidterms(int courseId) {
+        return dm.getCourseMidterms(courseId);
+    }
+
+    public ArrayList<Exam> getCourseFinals(int courseId) {
+        return dm.getCourseFinals(courseId);
+    }
+
+    // ---- Exams (Student) ----
+    public ArrayList<Exam> getStudentAllExams(String userId) {
+        return dm.getStudentAllExams(userId);
+    }
+
+    public ArrayList<Exam> getStudentQuizzes(String userId) {
+        return dm.getStudentQuizzes(userId);
+    }
+
+    public ArrayList<Exam> getStudentMidterms(String userId) {
+        return dm.getStudentMidterms(userId);
+    }
+
+    public ArrayList<Exam> getStudentFinals(String userId) {
+        return dm.getStudentFinals(userId);
     }
 }
