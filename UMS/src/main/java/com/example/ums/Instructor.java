@@ -332,4 +332,51 @@ public class Instructor extends User{
     public void createAnnouncement(Announcment announcment) {
         dm.addAnnouncment(announcment);
     }
+
+    // ---- Exams (Course) ----
+    public ArrayList<Exam> getCourseAllExams(int courseId) {
+        return dm.getCourseAllExams(courseId);
+    }
+
+    // ---- Exams (Create) ----
+    public void addQuiz(Exam exam) {
+        dm.addQuiz(exam);
+    }
+
+    public void addMidterm(Exam midterm) {
+        dm.addMidterm(midterm);
+    }
+
+    public void addFinal(Exam finalExam) {
+        dm.addFinal(finalExam);
+    }
+
+    public ArrayList<Exam> getCourseQuizzes(int courseId) {
+        return dm.getCourseQuizzes(courseId);
+    }
+
+    public ArrayList<Exam> getCourseMidterms(int courseId) {
+        return dm.getCourseMidterms(courseId);
+    }
+
+    public ArrayList<Exam> getCourseFinals(int courseId) {
+        return dm.getCourseFinals(courseId);
+    }
+
+    // ---- Exams (Student) ----
+    public ArrayList<Exam> getStudentAllExams(String userId) {
+        return dm.getStudentAllExams(userId);
+    }
+
+    public ArrayList<Exam> getStudentQuizzes(String userId) {
+        return dm.getStudentQuizzes(userId);
+    }
+
+    public ArrayList<Exam> getStudentMidterms(String userId) {
+        return dm.getStudentMidterms(userId);
+    }
+
+    public ArrayList<Exam> getStudentFinals(String userId) {
+        return dm.getStudentFinals(userId);
+    }
 }

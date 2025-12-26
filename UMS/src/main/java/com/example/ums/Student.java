@@ -89,4 +89,20 @@ public class Student extends User {
         list.addAll(dm.getGeneralAnnouncements());
         return list;
     }
+
+    public ArrayList<Exam> getStudentAllExams(String userId) {
+        return dm.getStudentAllExams(userId);
+    }
+
+    public ArrayList<Exam> getStudentQuizzes(String userId) {
+        return dm.getStudentQuizzes(userId);
+    }
+
+    public ArrayList<Exam> getStudentMidterms(String userId) {
+        return dm.getStudentMidterms(userId);
+    }
+
+    public ArrayList<Exam> getStudentFinals(String userId) {
+        return dm.getStudentFinals(userId);
+    }
 }
