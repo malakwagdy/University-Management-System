@@ -367,7 +367,7 @@ public class DeptHeadDashboardController implements Initializable {
         courseDescriptionCol.setCellValueFactory(new PropertyValueFactory<>("courseDescription"));
         courseInstructorsCol.setCellValueFactory(cellData -> {
             Course course = cellData.getValue();
-            ArrayList<Instructor> instructors = Course.getCourseInstructors(String.valueOf(course.getCourseId()));
+            ArrayList<Instructor> instructors = Course.getCourseInstructors(course.getCourseId());
             String instructorNames = instructors.isEmpty() ? "N/A" :
                 String.join(", ", instructors.stream().map(Instructor::getName).toArray(String[]::new));
             return new javafx.beans.property.SimpleStringProperty(instructorNames);

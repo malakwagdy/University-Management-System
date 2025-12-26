@@ -8,12 +8,14 @@
 <?import javafx.scene.control.Separator?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 
-<BorderPane xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.ums.InstructorDashboardController">
+<BorderPane xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.ums.InstructorDashboardController">
    <top>
       <VBox spacing="10">
          <padding>
@@ -35,85 +37,376 @@
             <Insets bottom="15.0" left="15.0" right="15.0" top="15.0" />
          </padding>
          <Label text="Navigation" />
-         <Button fx:id="myCoursesBtn" maxWidth="1.7976931348623157E308" text="My Courses" />
-         <Button fx:id="studentsBtn" maxWidth="1.7976931348623157E308" text="My Students" />
-         <Button fx:id="assignmentsBtn" maxWidth="1.7976931348623157E308" text="Assignments" />
-         <Button fx:id="quizzesBtn" maxWidth="1.7976931348623157E308" text="Quizzes" />
-         <Button fx:id="officeHoursBtn" maxWidth="1.7976931348623157E308" text="Office Hours" />
-         <Button fx:id="gradesBtn" maxWidth="1.7976931348623157E308" text="Grade Management" />
-         <Button fx:id="classroom_btn" mnemonicParsing="false" onAction="#ViewClassroom" prefHeight="26.0" prefWidth="172.0" text="Classrooms" />
+         <Button fx:id="myCoursesBtn" maxWidth="1.7976931348623157E308" onAction="#handleMyCoursesButton" text="My Courses" />
+         <Button fx:id="studentsBtn" maxWidth="1.7976931348623157E308" onAction="#handleMyStudentsButton" text="My Students" />
+         <Button fx:id="assignmentsBtn" maxWidth="1.7976931348623157E308" onAction="#handleAssignmentsButton" text="Assignments" />
+         <Button fx:id="examsBtn" maxWidth="1.7976931348623157E308" onAction="#handleExamsButton" text="Exams" />
+         <Button fx:id="officeHoursBtn" maxWidth="1.7976931348623157E308" onAction="#handleOfficeHoursButton" text="Office Hours" />
+         <Button fx:id="gradesBtn" maxWidth="1.7976931348623157E308" onAction="#handleGradesButton" text="Grade Management" />
+         <Button fx:id="classroom_btn" mnemonicParsing="false" onAction="#handleHallsButton" prefHeight="26.0" prefWidth="172.0" text="Halls" />
          <Region VBox.vgrow="ALWAYS" />
          <Separator />
          <Button fx:id="leaveRequestBtn" maxWidth="1.7976931348623157E308" text="Leave Requests" />
       </VBox>
    </left>
-   
    <center>
-      <ScrollPane fitToWidth="true">
-         <VBox spacing="20">
-            <padding>
-               <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
-            </padding>
-            
-            <!-- Quick Stats -->
-            <HBox spacing="20">
-               <VBox alignment="CENTER" spacing="5" HBox.hgrow="ALWAYS">
+      <StackPane BorderPane.alignment="CENTER">
+         <children>
+            <ScrollPane fx:id="myCoursesView" fitToWidth="true">
+               <VBox spacing="20">
                   <padding>
-                     <Insets bottom="15.0" left="15.0" right="15.0" top="15.0" />
+                     <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
                   </padding>
-                  <Label text="Total Courses" />
-                  <Label fx:id="totalCoursesLabel" text="4" />
+                  
+                        <!-- Quick Stats -->
+                  <HBox spacing="20">
+                     <VBox alignment="CENTER" spacing="5" HBox.hgrow="ALWAYS">
+                        <padding>
+                           <Insets bottom="15.0" left="15.0" right="15.0" top="15.0" />
+                        </padding>
+                        <Label text="Total Courses" />
+                        <Label fx:id="totalCoursesLabel" text="4" />
+                     </VBox>
+                     <VBox alignment="CENTER" spacing="5" HBox.hgrow="ALWAYS">
+                        <padding>
+                           <Insets bottom="15.0" left="15.0" right="15.0" top="15.0" />
+                        </padding>
+                        <Label text="Total Students" />
+                        <Label fx:id="totalStudentsLabel" text="120" />
+                     </VBox>
+                     <VBox alignment="CENTER" spacing="5" HBox.hgrow="ALWAYS">
+                        <padding>
+                           <Insets bottom="15.0" left="15.0" right="15.0" top="15.0" />
+                        </padding>
+                        <Label text="Pending Grading" />
+                        <Label fx:id="pendingGradingLabel" text="15" />
+                     </VBox>
+                  </HBox>
+                  
+                        <!-- My Courses Section -->
+                  <VBox spacing="10">
+                     <HBox alignment="CENTER_LEFT" spacing="10">
+                        <Label text="My Courses" />
+                        <Region HBox.hgrow="ALWAYS" />
+                        <TextField fx:id="searchByCourseId" onAction="#handleSearchByCourseId" text="Search" />
+                     </HBox>
+                     <TableView fx:id="coursesTable" prefHeight="376.0" prefWidth="942.0">
+                        <columns>
+                           <TableColumn fx:id="courseIdCol" prefWidth="120.0" text="Course ID" />
+                           <TableColumn fx:id="courseNameCol" prefWidth="200.0" text="Course Name" />
+                           <TableColumn fx:id="courseDescriptionCol" prefWidth="200.0" text="Course Description" />
+                           <TableColumn fx:id="studentsCountCol" prefWidth="100.0" text="Students" />
+                           <TableColumn fx:id="bylawCol" prefWidth="120.0" text="Bylaw" />
+                           <TableColumn fx:id="actionsCol" prefWidth="200.0" text="Actions" />
+                        </columns>
+                     </TableView>
+                  </VBox>
                </VBox>
-               <VBox alignment="CENTER" spacing="5" HBox.hgrow="ALWAYS">
-                  <padding>
-                     <Insets bottom="15.0" left="15.0" right="15.0" top="15.0" />
-                  </padding>
-                  <Label text="Total Students" />
-                  <Label fx:id="totalStudentsLabel" text="120" />
-               </VBox>
-               <VBox alignment="CENTER" spacing="5" HBox.hgrow="ALWAYS">
-                  <padding>
-                     <Insets bottom="15.0" left="15.0" right="15.0" top="15.0" />
-                  </padding>
-                  <Label text="Pending Grading" />
-                  <Label fx:id="pendingGradingLabel" text="15" />
-               </VBox>
-            </HBox>
-            
-            <!-- My Courses Section -->
-            <VBox spacing="10">
-               <HBox alignment="CENTER_LEFT" spacing="10">
-                  <Label text="My Courses" />
-                  <Region HBox.hgrow="ALWAYS" />
-                  <Button fx:id="addCourseBtn" text="+ Add Course" />
-               </HBox>
-               <TableView fx:id="coursesTable" prefHeight="250.0">
-                  <columns>
-                     <TableColumn fx:id="courseIdCol" prefWidth="120.0" text="Course ID" />
-                     <TableColumn fx:id="courseNameCol" prefWidth="200.0" text="Course Name" />
-                     <TableColumn fx:id="studentsCountCol" prefWidth="100.0" text="Students" />
-                     <TableColumn fx:id="assignmentsCountCol" prefWidth="120.0" text="Assignments" />
-                     <TableColumn fx:id="actionsCol" prefWidth="200.0" text="Actions" />
-                  </columns>
-               </TableView>
-            </VBox>
-            
-            <!-- Recent Activity -->
-            <VBox spacing="10">
-               <Label text="Recent Activity" />
-               <ListView fx:id="activityList" prefHeight="150.0" />
-            </VBox>
-            
-            <!-- Office Hours -->
-            <VBox spacing="10">
-               <HBox alignment="CENTER_LEFT" spacing="10">
-                  <Label text="Office Hours" />
-                  <Region HBox.hgrow="ALWAYS" />
-                  <Button fx:id="editOfficeHoursBtn" text="Edit Hours" />
-               </HBox>
-               <ListView fx:id="officeHoursList" prefHeight="100.0" />
-            </VBox>
-         </VBox>
-      </ScrollPane>
+            </ScrollPane>
+            <ScrollPane fx:id="officeHoursView" fitToWidth="true" layoutX="10.0" layoutY="10.0" visible="false">
+               <content>
+                  <VBox spacing="20">
+                     <padding>
+                        <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+                     </padding>
+                     <children>
+                        <HBox spacing="20">
+                           <children>
+                              <VBox alignment="CENTER" spacing="5" HBox.hgrow="ALWAYS">
+                                 <padding>
+                                    <Insets bottom="15.0" left="15.0" right="15.0" top="15.0" />
+                                 </padding>
+                                 <children>
+                                    <Label text="Total Courses" />
+                                    <Label fx:id="totalCoursesLabel1" text="4" />
+                                 </children>
+                              </VBox>
+                              <VBox alignment="CENTER" spacing="5" HBox.hgrow="ALWAYS">
+                                 <padding>
+                                    <Insets bottom="15.0" left="15.0" right="15.0" top="15.0" />
+                                 </padding>
+                                 <children>
+                                    <Label text="Total Students" />
+                                    <Label fx:id="totalStudentsLabel1" text="120" />
+                                 </children>
+                              </VBox>
+                              <VBox alignment="CENTER" spacing="5" HBox.hgrow="ALWAYS">
+                                 <padding>
+                                    <Insets bottom="15.0" left="15.0" right="15.0" top="15.0" />
+                                 </padding>
+                                 <children>
+                                    <Label text="Pending Grading" />
+                                    <Label fx:id="pendingGradingLabel1" text="15" />
+                                 </children>
+                              </VBox>
+                           </children>
+                        </HBox>
+                        <VBox spacing="10">
+                           <children>
+                              <HBox alignment="CENTER_LEFT" spacing="10">
+                                 <children>
+                                    <Label text="Office Hours" />
+                                    <Region HBox.hgrow="ALWAYS" />
+                                    <Button fx:id="editOfficeHoursBtn" text="Edit Hours" />
+                                 </children>
+                              </HBox>
+                              <ListView fx:id="officeHoursList" prefHeight="223.0" prefWidth="942.0" />
+                           </children>
+                        </VBox>
+                     </children>
+                  </VBox>
+               </content>
+            </ScrollPane>
+            <ScrollPane fx:id="myStudentsView" fitToWidth="true" layoutX="10.0" layoutY="10.0" visible="false">
+               <content>
+                  <VBox spacing="20">
+                     <padding>
+                        <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+                     </padding>
+                     <children>
+                        <HBox spacing="20">
+                           <children>
+                              <VBox alignment="CENTER" spacing="5" HBox.hgrow="ALWAYS">
+                                 <padding>
+                                    <Insets bottom="15.0" left="15.0" right="15.0" top="15.0" />
+                                 </padding>
+                                 <children>
+                                    <Label text="Total Courses" />
+                                    <Label fx:id="totalCoursesLabel2" text="4" />
+                                 </children>
+                              </VBox>
+                              <VBox alignment="CENTER" spacing="5" HBox.hgrow="ALWAYS">
+                                 <padding>
+                                    <Insets bottom="15.0" left="15.0" right="15.0" top="15.0" />
+                                 </padding>
+                                 <children>
+                                    <Label text="Total Students" />
+                                    <Label fx:id="totalStudentsLabel2" text="120" />
+                                 </children>
+                              </VBox>
+                              <VBox alignment="CENTER" spacing="5" HBox.hgrow="ALWAYS">
+                                 <padding>
+                                    <Insets bottom="15.0" left="15.0" right="15.0" top="15.0" />
+                                 </padding>
+                                 <children>
+                                    <Label text="Pending Grading" />
+                                    <Label fx:id="pendingGradingLabel2" text="15" />
+                                 </children>
+                              </VBox>
+                           </children>
+                        </HBox>
+                        <VBox spacing="10">
+                           <children>
+                              <HBox alignment="CENTER_LEFT" spacing="10">
+                                 <children>
+                                    <Label text="My Students" />
+                                    <Region HBox.hgrow="ALWAYS" />
+                                    <TextField fx:id="searchByStudentIdField" onAction="#handleSearchByStudentIdField" text="Search" />
+                                 </children>
+                              </HBox>
+                              <TableView fx:id="studentsTable" prefHeight="376.0" prefWidth="942.0">
+                                 <columns>
+                                    <TableColumn fx:id="studentIdCol" prefWidth="120.0" text="Student ID" />
+                                    <TableColumn fx:id="studentNameCol" prefWidth="200.0" text="Student Name" />
+                                    <TableColumn fx:id="studentEmailCol" prefWidth="200.0" text="Student Email" />
+                                    <TableColumn fx:id="studentGPACol" prefWidth="100.0" text="GPA" />
+                                    <TableColumn fx:id="studentCoursesCol" prefWidth="120.0" text="Courses" />
+                                    <TableColumn fx:id="studentActionsCol" prefWidth="200.0" text="Actions" />
+                                 </columns>
+                              </TableView>
+                           </children>
+                        </VBox>
+                     </children>
+                  </VBox>
+               </content>
+            </ScrollPane>
+            <ScrollPane fx:id="assignmentsView" fitToWidth="true" layoutX="10.0" layoutY="10.0" visible="false">
+               <content>
+                  <VBox spacing="20">
+                     <padding>
+                        <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+                     </padding>
+                     <children>
+                        <HBox spacing="20">
+                           <children>
+                              <VBox alignment="CENTER" spacing="5" HBox.hgrow="ALWAYS">
+                                 <padding>
+                                    <Insets bottom="15.0" left="15.0" right="15.0" top="15.0" />
+                                 </padding>
+                                 <children>
+                                    <Label text="Total Courses" />
+                                    <Label fx:id="totalCoursesLabel21" text="4" />
+                                 </children>
+                              </VBox>
+                              <VBox alignment="CENTER" spacing="5" HBox.hgrow="ALWAYS">
+                                 <padding>
+                                    <Insets bottom="15.0" left="15.0" right="15.0" top="15.0" />
+                                 </padding>
+                                 <children>
+                                    <Label text="Total Students" />
+                                    <Label fx:id="totalStudentsLabel21" text="120" />
+                                 </children>
+                              </VBox>
+                              <VBox alignment="CENTER" spacing="5" HBox.hgrow="ALWAYS">
+                                 <padding>
+                                    <Insets bottom="15.0" left="15.0" right="15.0" top="15.0" />
+                                 </padding>
+                                 <children>
+                                    <Label text="Pending Grading" />
+                                    <Label fx:id="pendingGradingLabel21" text="15" />
+                                 </children>
+                              </VBox>
+                           </children>
+                        </HBox>
+                        <VBox spacing="10">
+                           <children>
+                              <HBox alignment="CENTER_LEFT" spacing="10">
+                                 <children>
+                                    <Label text="Assignments" />
+                                    <Region HBox.hgrow="ALWAYS" />
+                                    <TextField fx:id="searchByCourseNameField" onAction="#handleSearchByCourseNameField" text="Search" />
+                                 </children>
+                              </HBox>
+                              <TableView fx:id="assignmentsTable" prefHeight="376.0" prefWidth="942.0">
+                                 <columns>
+                                    <TableColumn fx:id="assignmentIdCol" prefWidth="120.0" text="Assignment ID" />
+                                    <TableColumn fx:id="assignmentDeadlineCol" prefWidth="200.0" text="Assignment Deadline" />
+                                    <TableColumn fx:id="assignmentNameCol" prefWidth="200.0" text="Assignment Name" />
+                                    <TableColumn fx:id="assignmentCourseCol" prefWidth="120.0" text="Course Name" />
+                                    <TableColumn fx:id="assignmentActionsCol" prefWidth="200.0" text="Actions" />
+                                 </columns>
+                              </TableView>
+                           </children>
+                        </VBox>
+                     </children>
+                  </VBox>
+               </content>
+            </ScrollPane>
+            <ScrollPane fx:id="examsView" fitToWidth="true" layoutX="10.0" layoutY="10.0" visible="false">
+               <content>
+                  <VBox spacing="20">
+                     <padding>
+                        <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+                     </padding>
+                     <children>
+                        <HBox spacing="20">
+                           <children>
+                              <VBox alignment="CENTER" spacing="5" HBox.hgrow="ALWAYS">
+                                 <padding>
+                                    <Insets bottom="15.0" left="15.0" right="15.0" top="15.0" />
+                                 </padding>
+                                 <children>
+                                    <Label text="Total Courses" />
+                                    <Label fx:id="totalCoursesLabel211" text="4" />
+                                 </children>
+                              </VBox>
+                              <VBox alignment="CENTER" spacing="5" HBox.hgrow="ALWAYS">
+                                 <padding>
+                                    <Insets bottom="15.0" left="15.0" right="15.0" top="15.0" />
+                                 </padding>
+                                 <children>
+                                    <Label text="Total Students" />
+                                    <Label fx:id="totalStudentsLabel211" text="120" />
+                                 </children>
+                              </VBox>
+                              <VBox alignment="CENTER" spacing="5" HBox.hgrow="ALWAYS">
+                                 <padding>
+                                    <Insets bottom="15.0" left="15.0" right="15.0" top="15.0" />
+                                 </padding>
+                                 <children>
+                                    <Label text="Pending Grading" />
+                                    <Label fx:id="pendingGradingLabel211" text="15" />
+                                 </children>
+                              </VBox>
+                           </children>
+                        </HBox>
+                        <VBox spacing="10">
+                           <children>
+                              <HBox alignment="CENTER_LEFT" spacing="10">
+                                 <children>
+                                    <Label text="Assignments" />
+                                    <Region HBox.hgrow="ALWAYS" />
+                                    <TextField fx:id="searchByCourseNameField1" onAction="#handleSearchByCourseNameField" text="Search" />
+                                 </children>
+                              </HBox>
+                              <TableView fx:id="examsTable" prefHeight="376.0" prefWidth="942.0">
+                                 <columns>
+                                    <TableColumn fx:id="examIdCol" prefWidth="120.0" text="Exam ID" />
+                                    <TableColumn fx:id="examDateCol" prefWidth="200.0" text="Exam Date" />
+                                    <TableColumn fx:id="examTypeCol" prefWidth="200.0" text="Exam Type" />
+                                    <TableColumn fx:id="examCourseCol" prefWidth="120.0" text="Course Name" />
+                                    <TableColumn fx:id="examActionsCol" prefWidth="200.0" text="Actions" />
+                                 </columns>
+                              </TableView>
+                           </children>
+                        </VBox>
+                     </children>
+                  </VBox>
+               </content>
+            </ScrollPane>
+            <ScrollPane fx:id="hallsView" fitToWidth="true" layoutX="10.0" layoutY="10.0" visible="false">
+               <content>
+                  <VBox spacing="20">
+                     <padding>
+                        <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+                     </padding>
+                     <children>
+                        <HBox spacing="20">
+                           <children>
+                              <VBox alignment="CENTER" spacing="5" HBox.hgrow="ALWAYS">
+                                 <padding>
+                                    <Insets bottom="15.0" left="15.0" right="15.0" top="15.0" />
+                                 </padding>
+                                 <children>
+                                    <Label text="Total Courses" />
+                                    <Label fx:id="totalCoursesLabel2111" text="4" />
+                                 </children>
+                              </VBox>
+                              <VBox alignment="CENTER" spacing="5" HBox.hgrow="ALWAYS">
+                                 <padding>
+                                    <Insets bottom="15.0" left="15.0" right="15.0" top="15.0" />
+                                 </padding>
+                                 <children>
+                                    <Label text="Total Students" />
+                                    <Label fx:id="totalStudentsLabel2111" text="120" />
+                                 </children>
+                              </VBox>
+                              <VBox alignment="CENTER" spacing="5" HBox.hgrow="ALWAYS">
+                                 <padding>
+                                    <Insets bottom="15.0" left="15.0" right="15.0" top="15.0" />
+                                 </padding>
+                                 <children>
+                                    <Label text="Pending Grading" />
+                                    <Label fx:id="pendingGradingLabel2111" text="15" />
+                                 </children>
+                              </VBox>
+                           </children>
+                        </HBox>
+                        <VBox spacing="10">
+                           <children>
+                              <HBox alignment="CENTER_LEFT" spacing="10">
+                                 <children>
+                                    <Label text="Halls" />
+                                    <Region HBox.hgrow="ALWAYS" />
+                                    <TextField fx:id="searchByHallIdField" onAction="#handleSearchByHallIdField" text="Search" />
+                                 </children>
+                              </HBox>
+                              <TableView fx:id="hallsTable" prefHeight="376.0" prefWidth="942.0">
+                                 <columns>
+                                    <TableColumn fx:id="hallIdCol" prefWidth="120.0" text="Hall ID" />
+                                    <TableColumn fx:id="hallCapacityCol" prefWidth="200.0" text="Hall Capacity" />
+                                    <TableColumn fx:id="hallTypeCol" prefWidth="200.0" text="Hall Type" />
+                                    <TableColumn fx:id="hallMaintenanceCol" prefWidth="120.0" text="Hall Maintenance" />
+                                    <TableColumn fx:id="hallActionsCol" prefWidth="200.0" text="Actions" />
+                                 </columns>
+                              </TableView>
+                           </children>
+                        </VBox>
+                     </children>
+                  </VBox>
+               </content>
+            </ScrollPane>
+         </children>
+      </StackPane>
    </center>
 </BorderPane>

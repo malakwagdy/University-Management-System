@@ -431,12 +431,12 @@ public class DatabaseManager {
         return students;
     }
     
-public ArrayList<Student> getStudentsByCourse(String courseCode) {
+public ArrayList<Student> getStudentsByCourse(int courseCode) {
     String sql = "SELECT userid FROM currentcourses WHERE courseid = ?";
     ArrayList<Student> students = new ArrayList<>();
     try (Connection conn = getConnection();
          PreparedStatement ps = conn.prepareStatement(sql)) {
-        ps.setString(1, courseCode);
+        ps.setInt(1, courseCode);
         try (ResultSet rs = ps.executeQuery()) {
             while (rs.next()) {
                 Student student = getStudent(rs.getString("userid"));
@@ -523,7 +523,7 @@ public ArrayList<Student> getStudentsByCourse(String courseCode) {
                     student.setSemester(semester);
                 
                 // Fetch current courses
-                ArrayList<String> currentCourses = getCurrentCourses(userId);
+                ArrayList<Integer> currentCourses = getCurrentCourses(userId);
                 student.setCurrentCourses(currentCourses);
                 
                 // Fetch taken courses
@@ -564,45 +564,44 @@ public ArrayList<Student> getStudentsByCourse(String courseCode) {
     /**
      * Get current courses for a student
      */
-    public ArrayList<String> getCurrentCourses(String userId) throws SQLException {
-        ArrayList<String> courses = new ArrayList<>();
+    public ArrayList<Integer> getCurrentCourses(String userId) throws SQLException {
+        ArrayList<Integer> courses = new ArrayList<>();
         String sql = "SELECT courseid FROM currentcourses WHERE userid = ?";
         try (Connection conn = getConnection();
                 PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setString(1, userId);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
-                // Convert CourseID (INT) to String
-                courses.add(String.valueOf(rs.getInt("courseid")));
+                courses.add(rs.getInt("courseid"));
             }
         }
         return courses;
     }
-    public void addCurrentCourse(String userId, String courseId) throws SQLException {
+    public void addCurrentCourse(String userId, int courseId) throws SQLException {
         String sql = "INSERT INTO currentcourses (userid, courseid) VALUES (?, ?)";
         try (Connection conn = getConnection();
                 PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setString(1, userId);
-            ps.setInt(2, Integer.parseInt(courseId));
+            ps.setInt(2, courseId);
             ps.executeUpdate();
         }
     }
-    public void removeCurrentCourse(String userId, String courseId) throws SQLException {
+    public void removeCurrentCourse(String userId, int courseId) throws SQLException {
         String sql = "DELETE FROM currentcourses WHERE userid = ? AND courseid = ?";
         try (Connection conn = getConnection();
                 PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setString(1, userId);
-            ps.setInt(2, Integer.parseInt(courseId));
+            ps.setInt(2, courseId);
             ps.executeUpdate();
         }
     }
     
-    public ArrayList<Instructor> getCourseInstructors(String courseId) throws SQLException {
+    public ArrayList<Instructor> getCourseInstructors(int courseId) throws SQLException {
         String sql = "SELECT userid FROM currentcourses WHERE courseid = ?";
         ArrayList<Instructor> instructors = new ArrayList<>();
         try (Connection conn = getConnection();
             PreparedStatement ps = conn.prepareStatement(sql)) {
-            ps.setInt(1, Integer.parseInt(courseId));
+            ps.setInt(1, courseId);
             ResultSet rs = ps.executeQuery();
             String userid;
             while (rs.next()) {
@@ -805,7 +804,7 @@ public ArrayList<Student> getStudentsByCourse(String courseCode) {
                         departmentName != null ? departmentName : "", isDepartmentHead != null ? isDepartmentHead : false, role != null ? role : "");
                 if (salary != null)
                     instructor.setSalary(salary);
-                ArrayList<String> courses = getCurrentCourses(userId);
+                ArrayList<Integer> courses = getCurrentCourses(userId);
                 instructor.setCourses(courses);
                 ArrayList<String> responsibilities = getResponsibilities(userId);
                 instructor.setResponsibilities(responsibilities);
@@ -1469,11 +1468,11 @@ public ArrayList<Student> getStudentsByCourse(String courseCode) {
     //     return material;
     // }
 
-    public ArrayList<Assignment> getAssignments(String CourseID) throws SQLException {
+    public ArrayList<Assignment> getAssignments(int CourseID) throws SQLException {
         ArrayList<Assignment> assignments = new ArrayList<>();
         String sql = "SELECT * FROM assignments WHERE courseid = ?";
         try (Connection conn = getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
-            ps.setString(1, CourseID);
+            ps.setInt(1, CourseID);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 assignments.add(mapNewAssignment(rs));
@@ -1538,7 +1537,7 @@ public ArrayList<Student> getStudentsByCourse(String courseCode) {
         Assignment assignment = new Assignment(
                 rs.getString("assignmentid"),
                 rs.getString("assignmentname"),
-                rs.getString("url"),
+                rs.getString("assignmenturl"),
                 rs.getString("assignmenttype"),
                 rs.getString("assignmentdate"));
         return assignment;
@@ -1593,16 +1592,17 @@ public ArrayList<Student> getStudentsByCourse(String courseCode) {
         }
         return materials;
     }
-    public void deleteMaterial(String materialId) {
+    public void deleteMaterial(int materialId) {
         String sql = "DELETE FROM materials WHERE materialid = ?";
         try (Connection conn = getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
-            ps.setString(1, materialId);
+            ps.setInt(1, materialId);
             ps.executeUpdate();
         } catch (SQLException e) {
             System.out.println("Failed to delete material");
             e.printStackTrace();
         }
     }
+
     public int getHighestIdNumber(String usertype) {
         int highest = 0;
 
@@ -1931,11 +1931,11 @@ public ArrayList<Student> getStudentsByCourse(String courseCode) {
 
         if (student.getCurrentCourses() != null && !student.getCurrentCourses().isEmpty()) {
             String insertCurrentCoursesSql = "INSERT INTO currentcourses (userid, courseid) VALUES (?, ?)";
-            for (String courseId : student.getCurrentCourses()) {
+            for (int courseId : student.getCurrentCourses()) {
                 try (Connection conn = getConnection();
                         PreparedStatement ps = conn.prepareStatement(insertCurrentCoursesSql)) {
                     ps.setString(1, student.getId());
-                    ps.setInt(2, Integer.parseInt(courseId));
+                    ps.setInt(2, courseId);
                     ps.executeUpdate();
                 } catch (SQLException e) {
                     System.out.println("Failed to insert current course: " + courseId);
@@ -2053,11 +2053,11 @@ public ArrayList<Student> getStudentsByCourse(String courseCode) {
 
         if (instructor.getCourses() != null && !instructor.getCourses().isEmpty()) {
             String insertCoursesSql = "INSERT INTO currentcourses (userid, courseid) VALUES (?, ?)";
-            for (String courseId : instructor.getCourses()) {
+            for (int courseId : instructor.getCourses()) {
                 try (Connection conn = getConnection();
                         PreparedStatement ps = conn.prepareStatement(insertCoursesSql)) {
                     ps.setString(1, instructor.getId());
-                    ps.setInt(2, Integer.parseInt(courseId));
+                    ps.setInt(2, courseId);
                     ps.executeUpdate();
                 } catch (SQLException e) {
                     System.out.println("Failed to insert instructor course: " + courseId);

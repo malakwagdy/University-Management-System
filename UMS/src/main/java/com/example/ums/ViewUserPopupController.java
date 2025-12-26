@@ -75,7 +75,7 @@ public class ViewUserPopupController {
             detailsBox.getChildren().add(new Label("GPA: " + cleanValue(student.getGpa())));
             detailsBox.getChildren().add(new Label("Semester: " + cleanValue(student.getSemester())));
             if (student.getCurrentCourses() != null && !student.getCurrentCourses().isEmpty()) {
-                detailsBox.getChildren().add(new Label("Current Courses: " + String.join(", ", student.getCurrentCourses())));
+                detailsBox.getChildren().add(new Label("Current Courses: " + student.getCurrentCourses().stream().map(String::valueOf).collect(java.util.stream.Collectors.joining(", "))));
             } else {
                 detailsBox.getChildren().add(new Label("Current Courses: N/A"));
             }
@@ -104,7 +104,7 @@ public class ViewUserPopupController {
             detailsBox.getChildren().add(new Label("Role: " + cleanValue(instructor.getRole())));
             detailsBox.getChildren().add(new Label("Salary: " + (isHR ? cleanValue(instructor.getSalary()) : "N/A")));
             if (instructor.getCourses() != null && !instructor.getCourses().isEmpty()) {
-                detailsBox.getChildren().add(new Label("Courses: " + String.join(", ", instructor.getCourses())));
+                detailsBox.getChildren().add(new Label("Courses: " + instructor.getCourses().stream().map(String::valueOf).collect(java.util.stream.Collectors.joining(", "))));
             } else {
                 detailsBox.getChildren().add(new Label("Courses: N/A"));
             }
