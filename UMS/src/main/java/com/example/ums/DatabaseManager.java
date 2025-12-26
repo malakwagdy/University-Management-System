@@ -2684,6 +2684,128 @@ public ArrayList<Student> getStudentsByCourse(int courseCode) {
         }
     }
 
+    public Map<String,String> getAssignmentGrades(int assignmentId) {
+        String sql = "SELECT userid, grade FROM assignmentgrades WHERE assignmentid = ?";
+        Map<String,String> grades = new HashMap<>();
+        try (Connection conn = getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, assignmentId);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                grades.put(rs.getString("userid"), rs.getString("grade"));
+            }
+        } catch (SQLException e) {
+            System.out.println("Failed to get assignment grades");
+            e.printStackTrace();
+        }
+        return grades;
+    }
+    public Map<String,String> getExamGrades(int examId) {
+        String sql = "SELECT userid, grade FROM examgrades WHERE examid = ?";
+        Map<String, String> grades = new HashMap<>();
+        try (Connection conn = getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, examId);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                grades.put(rs.getString("userid"), rs.getString("grade"));
+            }
+        } catch (SQLException e) {
+            System.out.println("Failed to get exam grades");
+            e.printStackTrace();
+        }
+        return grades;
+    }
+    public Map <String,String> getAssignmentFeedback(int assignmentId) {
+        String sql = "SELECT userid, feedback FROM assignmentgrades WHERE assignmentid = ?";
+        Map<String, String> feedbacks = new HashMap<>();
+        try (Connection conn = getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, assignmentId);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                feedbacks.put(rs.getString("userid"), rs.getString("feedback"));
+            }
+        } catch (SQLException e) {
+            System.out.println("Failed to get assignment feedbacks");
+            e.printStackTrace();
+        }
+        return feedbacks;
+    }
+    public Map <String,String> getExamFeedback(int examId) {
+        String sql = "SELECT userid, feedback FROM examgrades WHERE examid = ?";
+        Map<String, String> feedbacks = new HashMap<>();
+        try (Connection conn = getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, examId);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                feedbacks.put(rs.getString("userid"), rs.getString("feedback"));
+            }
+        } catch (SQLException e) {
+            System.out.println("Failed to get exam feedbacks");
+            e.printStackTrace();
+        }
+        return feedbacks;
+    }
+
+    public  String getExamGradeForStudent(int examId, String userId) {
+        String sql = "SELECT grade FROM examgrades WHERE examid = ? AND userid = ?";
+        try (Connection conn = getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, examId);
+            ps.setString(2, userId);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                return rs.getString("grade");
+            }
+        } catch (SQLException e) {
+            System.out.println("Failed to get exam grade for student");
+            e.printStackTrace();
+        }
+        return null;
+    }
+    public String getAssignmentGradeForStudent(int assignmentId, String userId) {
+        String sql = "SELECT grade FROM assignmentgrades WHERE assignmentid = ? AND userid = ?";
+        try (Connection conn = getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, assignmentId);
+            ps.setString(2, userId);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                return rs.getString("grade");
+            }
+        } catch (SQLException e) {
+            System.out.println("Failed to get assignment grade for student");
+            e.printStackTrace();
+        }
+        return null;
+    }
+    public String getAssignmentFeedbackForStudent(int assignmentId, String userId) {
+        String sql = "SELECT feedback FROM assignmentgrades WHERE assignmentid = ? AND userid = ?";
+        try (Connection conn = getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, assignmentId);
+            ps.setString(2, userId);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                return rs.getString("feedback");
+            }
+        } catch (SQLException e) {
+            System.out.println("Failed to get assignment feedback for student");
+            e.printStackTrace();
+        }
+        return null;
+    }
+    public String getExamFeedbackForStudent(int examId, String userId) {
+        String sql = "SELECT feedback FROM examgrades WHERE examid = ? AND userid = ?";
+        try (Connection conn = getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, examId);
+            ps.setString(2, userId);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                return rs.getString("feedback");
+            }
+        } catch (SQLException e) {
+            System.out.println("Failed to get exam feedback for student");
+            e.printStackTrace();
+        }
+        return null;
+    }
+
     /**
      * Simple connectivity test (optional).
      */
