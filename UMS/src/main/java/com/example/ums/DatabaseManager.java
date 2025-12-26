@@ -2473,7 +2473,6 @@ public ArrayList<Student> getStudentsByCourse(String courseCode) {
     }
 
     public void addQuiz(Exam exam) {
-        // Backwards-compatible name: this inserts an exam row with examtype='quiz'
         addExam(exam, Exam.ExamType.QUIZ);
     }
 
@@ -2613,6 +2612,62 @@ public ArrayList<Student> getStudentsByCourse(String courseCode) {
             e.printStackTrace();
         }
         return exams;
+    }
+    
+    public void addAssignmentGrade(int assignmentId, String userId, String grade) {
+        String sql = "INSERT INTO assignmentgrades (assignmentid, userid, grade) VALUES (?, ?, ?) " +
+                "ON CONFLICT (assignmentid, userid) DO UPDATE SET grade = EXCLUDED.grade";
+        try (Connection conn = getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, assignmentId);
+            ps.setString(2, userId);
+            ps.setString(3, grade);
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            System.out.println("Failed to add/update assignment grade");
+            e.printStackTrace();
+        }
+    }
+
+    public void addExamGrade(int examId, String userId, String grade) {
+        String sql = "INSERT INTO examgrades (examid, userid, grade) VALUES (?, ?, ?) " +
+                "ON CONFLICT (examid, userid) DO UPDATE SET grade = EXCLUDED.grade";
+        try (Connection conn = getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, examId);
+            ps.setString(2, userId);
+            ps.setString(3, grade);
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            System.out.println("Failed to add/update exam grade");
+            e.printStackTrace();
+        }
+    }
+
+    public void addAssignmentFeedback(int assignmentId, String userId, String feedback) {
+        String sql = "INSERT INTO assignmentgrades (assignmentid, userid, grade, feedback) VALUES (?, ?, NULL, ?) " +
+                "ON CONFLICT (assignmentid, userid) DO UPDATE SET feedback = EXCLUDED.feedback";
+        try (Connection conn = getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, assignmentId);
+            ps.setString(2, userId);
+            ps.setString(3, feedback);
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            System.out.println("Failed to add/update assignment feedback");
+            e.printStackTrace();
+        }
+    }
+
+    public void addExamFeedback(int examId, String userId, String feedback) {
+        String sql = "INSERT INTO examgrades (examid, userid, grade, feedback) VALUES (?, ?, NULL, ?) " +
+                "ON CONFLICT (examid, userid) DO UPDATE SET feedback = EXCLUDED.feedback";
+        try (Connection conn = getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, examId);
+            ps.setString(2, userId);
+            ps.setString(3, feedback);
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            System.out.println("Failed to add/update exam feedback");
+            e.printStackTrace();
+        }
     }
 
     /**

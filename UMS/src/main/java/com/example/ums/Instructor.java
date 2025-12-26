@@ -219,6 +219,22 @@ public class Instructor extends User{
         dm.addAssignment(courseId, assignment);
         
     }
+
+    public void addAssignmentGrade(int assignmentId, String userId, String grade) {
+        dm.addAssignmentGrade(assignmentId, userId, grade);
+    }
+
+    public void addAssignmentFeedback(int assignmentId, String userId, String feedback) {
+        dm.addAssignmentFeedback(assignmentId, userId, feedback);
+    }
+
+    public void addExamGrade(int examId, String userId, String grade) {
+        dm.addExamGrade(examId, userId, grade);
+    }
+
+    public void addExamFeedback(int examId, String userId, String feedback) {
+        dm.addExamFeedback(examId, userId, feedback);
+    }
     public ArrayList<String> displayInstructorCourses(String userId) {
         ArrayList<String> list = new ArrayList<>();
         try {
