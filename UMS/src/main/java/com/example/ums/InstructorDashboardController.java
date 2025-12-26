@@ -355,9 +355,11 @@ public class InstructorDashboardController {
                     
                     {
                         bookBtn.setOnAction(event -> {
-                            Classroom hall = getTableView().getItems().get(getIndex());
-                            instructor.bookHall(hall.getHallId());
-                            loadHalls();
+                            Classroom selectedHall = getTableView().getItems().get(getIndex());
+                            int hallId = selectedHall.getHallId();
+
+                            BookingContext.setSelectedHallId(hallId);
+                            SceneController.switchTo("BookClassroom.fxml");
                         });
                     }
                     
