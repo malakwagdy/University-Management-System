@@ -7,25 +7,22 @@ public class Assignment {
     private String assignmentId;
     private String assignmentName;
     private String url;
-    private String assignmentType;
     private String assignmentDate;
     private Map<String, String> grades;
     private Map<String, String> feedback;
 
-    public Assignment(String assignmentId, String assignmentName, String url, String assignmentType, String assignmentDate, Map<String, String> grades, Map<String, String> feedback) {
+    public Assignment(String assignmentId, String assignmentName, String url, String assignmentDate, Map<String, String> grades, Map<String, String> feedback) {
         this.assignmentId = assignmentId;
         this.assignmentName = assignmentName;
         this.url = url;
-        this.assignmentType = assignmentType;
         this.assignmentDate = assignmentDate;
         this.grades = grades;
         this.feedback = feedback;
     }
-    public Assignment(String assignmentId, String assignmentName, String url, String assignmentType, String assignmentDate) {
+    public Assignment(String assignmentId, String assignmentName, String url, String assignmentDate) {
         this.assignmentId = assignmentId;
         this.assignmentName = assignmentName;
         this.url = url;
-        this.assignmentType = assignmentType;
         this.assignmentDate = assignmentDate;
         this.grades = new HashMap<>();
         this.feedback = new HashMap<>();
@@ -37,14 +34,6 @@ public class Assignment {
 
     public void setAssignmentDate(String assignmentDate) {
         this.assignmentDate = assignmentDate;
-    }
-
-    public String getAssignmentType() {
-        return assignmentType;
-    }
-
-    public void setAssignmentType(String assignmentType) {
-        this.assignmentType = assignmentType;
     }
 
     public String getAssignmentId() {

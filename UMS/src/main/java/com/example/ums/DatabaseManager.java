@@ -1490,10 +1490,9 @@ public ArrayList<Student> getStudentsByCourse(String courseCode) {
         Assignment assignment = null;
         String sql =
                 "SELECT a.assignmentid, " +
-                "       a.assignmenttype AS assignmentname, " +
+                "       a.assignmentname, " +
                 "       a.assignmenturl, " +
                 "       a.assignmentdate, " +
-                "       a.assignmenttype, " +
                 "       ag.userid, " +
                 "       ag.grade, " +
                 "       ag.feedback " +
@@ -1510,7 +1509,6 @@ public ArrayList<Student> getStudentsByCourse(String courseCode) {
                             rs.getString("assignmentid"),
                             rs.getString("assignmentname"),
                             rs.getString("assignmenturl"),
-                            rs.getString("assignmenttype"),
                             rs.getString("assignmentdate"));
                 }
                 String userId = rs.getString("userid");
@@ -1538,18 +1536,17 @@ public ArrayList<Student> getStudentsByCourse(String courseCode) {
         Assignment assignment = new Assignment(
                 rs.getString("assignmentid"),
                 rs.getString("assignmentname"),
-                rs.getString("url"),
-                rs.getString("assignmenttype"),
+                rs.getString("assignmenturl"),
                 rs.getString("assignmentdate"));
         return assignment;
     }
     public void addAssignment(int courseId,Assignment assignment) {
-        String sql = "INSERT INTO assignments (courseid, assignmentid, assignmentname, url, assignmenttype, assignmentdate) VALUES (?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO assignments (courseid, assignmentid, assignmentname, assignmenturl, assignmentdate) VALUES (?, ?, ?, ?, ?)";
         try (Connection conn = getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
-            ps.setString(1, assignment.getAssignmentId());
-            ps.setString(2, assignment.getAssignmentName());
-            ps.setString(3, upload(assignment.getUrl()));
-            ps.setString(4, assignment.getAssignmentType());
+            ps.setInt(1, courseId);
+            ps.setString(2, assignment.getAssignmentId());
+            ps.setString(3, assignment.getAssignmentName());
+            ps.setString(4, upload(assignment.getUrl()));
             ps.setString(5, assignment.getAssignmentDate());
             ps.executeUpdate();
         }catch (SQLException e) {
