@@ -10,30 +10,41 @@ public class Assignment {
     private String assignmentDate;
     private Map<String, String> grades;
     private Map<String, String> feedback;
+    private int courseId;
 
-    public Assignment(String assignmentId, String assignmentName, String url, String assignmentDate, Map<String, String> grades, Map<String, String> feedback) {
+    public Assignment(String assignmentId, String assignmentName, String url, String assignmentDate,int courseId, Map<String, String> grades, Map<String, String> feedback) {
         this.assignmentId = assignmentId;
         this.assignmentName = assignmentName;
         this.url = url;
         this.assignmentDate = assignmentDate;
         this.grades = grades;
         this.feedback = feedback;
+        this.courseId = courseId;
     }
-    public Assignment(String assignmentId, String assignmentName, String url, String assignmentDate) {
+    public Assignment(String assignmentId, String assignmentName, String url, String assignmentDate,int courseId) {
         this.assignmentId = assignmentId;
         this.assignmentName = assignmentName;
+        this.courseId = courseId;
         this.url = url;
         this.assignmentDate = assignmentDate;
         this.grades = new HashMap<>();
         this.feedback = new HashMap<>();
     }
 
-    public String getAssignmentDate() {
+    public String getAssignmentDate() { 
         return assignmentDate;
     }
 
     public void setAssignmentDate(String assignmentDate) {
         this.assignmentDate = assignmentDate;
+    }
+
+    public int getCourseId() {
+        return courseId;
+    }
+
+    public void setCourseId(int courseId) {
+        this.courseId = courseId;
     }
 
     public String getAssignmentId() {

@@ -1507,7 +1507,8 @@ public ArrayList<Student> getStudentsByCourse(int courseCode) {
                             rs.getString("assignmentid"),
                             rs.getString("assignmentname"),
                             rs.getString("assignmenturl"),
-                            rs.getString("assignmentdate"));
+                            rs.getString("assignmentdate"),
+                            rs.getInt("courseid"));
                 }
                 String userId = rs.getString("userid");
                 if (userId != null) {
@@ -1535,7 +1536,8 @@ public ArrayList<Student> getStudentsByCourse(int courseCode) {
                 rs.getString("assignmentid"),
                 rs.getString("assignmentname"),
                 rs.getString("assignmenturl"),
-                rs.getString("assignmentdate"));
+                rs.getString("assignmentdate"),
+                rs.getInt("courseid"));
         return assignment;
     }
     public void addAssignment(int courseId,Assignment assignment) {
