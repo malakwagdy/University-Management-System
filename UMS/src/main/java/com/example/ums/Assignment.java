@@ -4,7 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class Assignment {
-    private String assignmentId;
+    private int assignmentId;
     private String assignmentName;
     private String url;
     private String assignmentDate;
@@ -12,7 +12,7 @@ public class Assignment {
     private Map<String, String> feedback;
     private int courseId;
 
-    public Assignment(String assignmentId, String assignmentName, String url, String assignmentDate,int courseId, Map<String, String> grades, Map<String, String> feedback) {
+    public Assignment(int assignmentId, String assignmentName, String url, String assignmentDate,int courseId, Map<String, String> grades, Map<String, String> feedback) {
         this.assignmentId = assignmentId;
         this.assignmentName = assignmentName;
         this.url = url;
@@ -21,8 +21,16 @@ public class Assignment {
         this.feedback = feedback;
         this.courseId = courseId;
     }
-    public Assignment(String assignmentId, String assignmentName, String url, String assignmentDate,int courseId) {
+    public Assignment(int assignmentId, String assignmentName, String url, String assignmentDate,int courseId) {
         this.assignmentId = assignmentId;
+        this.assignmentName = assignmentName;
+        this.courseId = courseId;
+        this.url = url;
+        this.assignmentDate = assignmentDate;
+        this.grades = new HashMap<>();
+        this.feedback = new HashMap<>();
+    }
+    public Assignment( String assignmentName, String url, String assignmentDate,int courseId) {
         this.assignmentName = assignmentName;
         this.courseId = courseId;
         this.url = url;
@@ -47,11 +55,12 @@ public class Assignment {
         this.courseId = courseId;
     }
 
-    public String getAssignmentId() {
+
+    public int getAssignmentId() {
         return assignmentId;
     }
 
-    public void setAssignmentId(String assignmentId) {
+    public void setAssignmentId(int assignmentId) {
         this.assignmentId = assignmentId;
     }
 

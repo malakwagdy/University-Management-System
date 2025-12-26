@@ -206,7 +206,7 @@ public class Instructor extends User{
         }
         return list;
     }
-    public Assignment displayAssignmentDetails(String assignmentId) {
+    public Assignment displayAssignmentDetails(int assignmentId) {
         Assignment assignment = null;
         try {
             assignment = dm.getAssignmentDetails(assignmentId);

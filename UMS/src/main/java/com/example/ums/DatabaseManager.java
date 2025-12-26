@@ -70,15 +70,23 @@ public class DatabaseManager {
     public String upload(String filePath) throws Exception {
         Map<String, Object> uploadResult = CLOUDINARY.uploader()
                 .upload(filePath, ObjectUtils.asMap(
-                        "resource_type", "auto",
-                        "folder", "UMS"
+
+                        "resource_type", "image",
+                        "format", "pdf",
+                        "folder", "UMS",
+                        "use_filename", true,
+                        "unique_filename", true,
+                        "access_mode", "public"
                 ));
+
         Object secureUrl = uploadResult.getOrDefault("secure_url", uploadResult.get("url"));
         if (secureUrl == null) {
             throw new IllegalStateException("Upload succeeded but no URL returned: " + uploadResult);
         }
+
         return secureUrl.toString();
     }
+
     public static boolean bookClassroom(int hallId) {
 
             String sql = "UPDATE halls SET availability = false WHERE hallid = ?";
@@ -1484,13 +1492,14 @@ public ArrayList<Student> getStudentsByCourse(int courseCode) {
         return assignments;
     }
 
-    public Assignment getAssignmentDetails(String assignmentId) throws SQLException {
+    public Assignment getAssignmentDetails(int assignmentId) throws SQLException {
         Assignment assignment = null;
         String sql =
                 "SELECT a.assignmentid, " +
                 "       a.assignmentname, " +
                 "       a.assignmenturl, " +
                 "       a.assignmentdate, " +
+                "       a.courseid, " +
                 "       ag.userid, " +
                 "       ag.grade, " +
                 "       ag.feedback " +
@@ -1499,12 +1508,12 @@ public ArrayList<Student> getStudentsByCourse(int courseCode) {
                 "WHERE a.assignmentid = ?";
 
         try (Connection conn = getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
-            ps.setString(1, assignmentId);
+            ps.setInt(1, assignmentId);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 if (assignment == null) {
                     assignment = new Assignment(
-                            rs.getString("assignmentid"),
+                            rs.getInt("assignmentid"),
                             rs.getString("assignmentname"),
                             rs.getString("assignmenturl"),
                             rs.getString("assignmentdate"),
@@ -1533,7 +1542,7 @@ public ArrayList<Student> getStudentsByCourse(int courseCode) {
         
     private Assignment mapNewAssignment(ResultSet rs) throws SQLException {
         Assignment assignment = new Assignment(
-                rs.getString("assignmentid"),
+                rs.getInt("assignmentid"),
                 rs.getString("assignmentname"),
                 rs.getString("assignmenturl"),
                 rs.getString("assignmentdate"),
@@ -1541,14 +1550,18 @@ public ArrayList<Student> getStudentsByCourse(int courseCode) {
         return assignment;
     }
     public void addAssignment(int courseId,Assignment assignment) {
-        String sql = "INSERT INTO assignments (courseid, assignmentid, assignmentname, assignmenturl, assignmentdate) VALUES (?, ?, ?, ?, ?)";
-        try (Connection conn = getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
+        String sql = "INSERT INTO assignments (courseid, assignmentname, assignmenturl, assignmentdate) VALUES (?, ?, ?, ?)";
+        try (Connection conn = getConnection(); PreparedStatement ps = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             ps.setInt(1, courseId);
-            ps.setString(2, assignment.getAssignmentId());
-            ps.setString(3, assignment.getAssignmentName());
-            ps.setString(4, upload(assignment.getUrl()));
-            ps.setString(5, assignment.getAssignmentDate());
+            ps.setString(2, assignment.getAssignmentName());
+            ps.setString(3, upload(assignment.getUrl()));
+            ps.setString(4, assignment.getAssignmentDate());
             ps.executeUpdate();
+            try (ResultSet keys = ps.getGeneratedKeys()) {
+                if (keys.next()) {
+                    assignment.setAssignmentId(keys.getInt(1));
+                }
+            }
         }catch (SQLException e) {
             System.out.println("Failed to add assignment");
             e.printStackTrace();
@@ -2309,8 +2322,7 @@ public ArrayList<Student> getStudentsByCourse(int courseCode) {
         if (parent.getChildren() != null && !parent.getChildren().isEmpty()) {
             String insertChildrenSql = "INSERT INTO children (parentid, childid) VALUES (?, ?)";
             for (String childId : parent.getChildren()) {
-                try (Connection conn = getConnection();
-                        PreparedStatement ps = conn.prepareStatement(insertChildrenSql)) {
+                try (Connection conn = getConnection(); PreparedStatement ps = conn.prepareStatement(insertChildrenSql)) {
                     ps.setString(1, parent.getId());
                     ps.setString(2, childId);
                     ps.executeUpdate();
@@ -2689,3 +2701,4 @@ public ArrayList<Student> getStudentsByCourse(int courseCode) {
         }
     }
 }
+
