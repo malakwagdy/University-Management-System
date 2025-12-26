@@ -5,7 +5,7 @@ import java.util.Map;
 import java.sql.SQLException;
 
 public class Student extends User {
-    private ArrayList<String> currentCourses;
+    private ArrayList<Integer> currentCourses;
     private Map<Integer,Map<String,String>> takenCourses;
     private String gpa;
     private String semester;
@@ -16,7 +16,7 @@ public class Student extends User {
         super();
     }
 
-    public Student( String studentId, String phoneNumber, String email, String password, String name, String dateOfBirth, ArrayList<String> currentCourses, Map<Integer,Map<String,String>> takenCourses, String GPA, String semester, String major) {
+    public Student( String studentId, String phoneNumber, String email, String password, String name, String dateOfBirth, ArrayList<Integer> currentCourses, Map<Integer,Map<String,String>> takenCourses, String GPA, String semester, String major) {
         super(studentId , "Student", phoneNumber, email, password, name, dateOfBirth);
         this.currentCourses = currentCourses;
         this.takenCourses = takenCourses;
@@ -33,10 +33,10 @@ public class Student extends User {
         this.semester = "1";
         this.major = major;
     }
-    public ArrayList<String> getCurrentCourses() {
+    public ArrayList<Integer> getCurrentCourses() {
         return currentCourses;
     }
-    public void setCurrentCourses(ArrayList<String> currentCourses) {
+    public void setCurrentCourses(ArrayList<Integer> currentCourses) {
         this.currentCourses = currentCourses;
     }
     public Map<Integer,Map<String,String>> getTakenCourses() {
@@ -74,7 +74,7 @@ public class Student extends User {
         }
     }
     
-    public static ArrayList<String> getCurrentCoursesForStudent(String userId) {
+    public static ArrayList<Integer> getCurrentCoursesForStudent(String userId) {
         try {
             DatabaseManager dm = new DatabaseManager();
             return dm.getCurrentCourses(userId);
@@ -88,5 +88,37 @@ public class Student extends User {
         ArrayList<Announcment> list = dm.getStudentAnnouncements(studentId);
         list.addAll(dm.getGeneralAnnouncements());
         return list;
+    }
+
+    public ArrayList<Exam> getStudentAllExams(String userId) {
+        return dm.getStudentAllExams(userId);
+    }
+
+    public ArrayList<Exam> getStudentQuizzes(String userId) {
+        return dm.getStudentQuizzes(userId);
+    }
+
+    public ArrayList<Exam> getStudentMidterms(String userId) {
+        return dm.getStudentMidterms(userId);
+    }
+
+    public ArrayList<Exam> getStudentFinals(String userId) {
+        return dm.getStudentFinals(userId);
+    }
+
+    public String getExamGradeForStudent(int examId, String userId) {
+        return dm.getExamGradeForStudent(examId, userId);
+    }
+
+    public String getAssignmentGradeForStudent(int assignmentId, String userId) {
+        return dm.getAssignmentGradeForStudent(assignmentId, userId);
+    }
+
+    public String getAssignmentFeedbackForStudent(int assignmentId, String userId) {
+        return dm.getAssignmentFeedbackForStudent(assignmentId, userId);
+    }
+
+    public String getExamFeedbackForStudent(int examId, String userId) {
+        return dm.getExamFeedbackForStudent(examId, userId);
     }
 }

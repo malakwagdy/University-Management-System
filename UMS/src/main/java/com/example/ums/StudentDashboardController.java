@@ -7,7 +7,6 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.event.ActionEvent;
 import java.io.IOException;
-import java.sql.SQLException;
 import java.util.ArrayList;
 
 public class StudentDashboardController {
@@ -44,19 +43,19 @@ public class StudentDashboardController {
 
     // Inner class to represent course information for the table
     public static class CourseInfo {
-        private String courseId;
+        private int courseId;
         private String courseName;
         private String instructor;
         private String grade;
         
-        public CourseInfo(String courseId, String courseName, String instructor, String grade) {
+        public CourseInfo(int courseId, String courseName, String instructor, String grade) {
             this.courseId = courseId;
             this.courseName = courseName;
             this.instructor = instructor;
             this.grade = grade;
         }
         
-        public String getCourseId() { return courseId; }
+        public int getCourseId() { return courseId; }
         public String getCourseName() { return courseName; }
         public String getInstructor() { return instructor; }
         public String getGrade() { return grade; }
@@ -90,20 +89,20 @@ public class StudentDashboardController {
         
         try {
             // Load current courses using DatabaseManager method
-            ArrayList<String> currentCourses = Student.getCurrentCoursesForStudent(student.getId());
+            ArrayList<Integer> currentCourses = Student.getCurrentCoursesForStudent(student.getId());
             if (currentCourses != null) {
-                for (String courseIdStr : currentCourses) {
+                for (int courseId : currentCourses) {
                     // Get course details
-                    Course course = Course.getCourseById(Integer.parseInt(courseIdStr));
-                    String courseName = course != null ? course.getCourseName() : "Course " + courseIdStr;
+                    Course course = Course.getCourseById(courseId);
+                    String courseName = course != null ? course.getCourseName() : "Course " + courseId;
                     
                     // Get instructors for this course
-                    ArrayList<Instructor> instructors = Course.getCourseInstructors(courseIdStr);
+                    ArrayList<Instructor> instructors = Course.getCourseInstructors(courseId);
                     String instructorNames = instructors.isEmpty() ? "TBD" : 
                         String.join(", ", instructors.stream().map(Instructor::getName).toArray(String[]::new));
                     
                     courseList.add(new CourseInfo(
-                        courseIdStr,
+                            courseId,
                         courseName,
                         instructorNames,
                         "In Progress"

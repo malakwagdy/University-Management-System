@@ -355,7 +355,7 @@ public class EditUserPopupController {
             semesterField.setText(student.getSemester());
         }
         if (student.getCurrentCourses() != null && !student.getCurrentCourses().isEmpty()) {
-            currentCoursesField.setText(String.join(", ", student.getCurrentCourses()));
+            currentCoursesField.setText(student.getCurrentCourses().stream().map(String::valueOf).collect(java.util.stream.Collectors.joining(", ")));
         }
         if (student.getTakenCourses() != null && !student.getTakenCourses().isEmpty()) {
             StringBuilder takenCoursesStr = new StringBuilder();
@@ -426,7 +426,7 @@ public class EditUserPopupController {
         }
         
         if (instructor.getCourses() != null && !instructor.getCourses().isEmpty()) {
-            String coursesStr = String.join(", ", instructor.getCourses());
+            String coursesStr = instructor.getCourses().stream().map(String::valueOf).collect(java.util.stream.Collectors.joining(", "));
             if (!isDeptHead) {
                 // HR: Show Label, hide TextField
                 if (coursesLabel != null) {
@@ -659,11 +659,11 @@ public class EditUserPopupController {
                 student.setSemester(semesterField.getText().trim());
                 if (!currentCoursesField.getText().trim().isEmpty()) {
                     String[] courses = currentCoursesField.getText().split(",");
-                    ArrayList<String> currentCourses = new ArrayList<>();
+                    ArrayList<Integer> currentCourses = new ArrayList<>();
                     for (String course : courses) {
                         String trimmed = course.trim();
                         if (!trimmed.isEmpty()) {
-                            currentCourses.add(trimmed);
+                            currentCourses.add(Integer.parseInt(trimmed));
                         }
                     }
                     student.setCurrentCourses(currentCourses);
@@ -712,11 +712,15 @@ public class EditUserPopupController {
                     }
                     if (!coursesField.getText().trim().isEmpty()) {
                         String[] courses = coursesField.getText().split(",");
-                        ArrayList<String> coursesList = new ArrayList<>();
+                        ArrayList<Integer> coursesList = new ArrayList<>();
                         for (String course : courses) {
                             String trimmed = course.trim();
                             if (!trimmed.isEmpty()) {
-                                coursesList.add(trimmed);
+                                try {
+                                    coursesList.add(Integer.parseInt(trimmed));
+                                } catch (NumberFormatException e) {
+                                    // Skip invalid course ID
+                                }
                             }
                         }
                         instructor.setCourses(coursesList);
@@ -731,11 +735,15 @@ public class EditUserPopupController {
                     }
                     if (!coursesField.getText().trim().isEmpty() && currentUser instanceof Instructor) {
                         String[] courses = coursesField.getText().split(",");
-                        ArrayList<String> coursesList = new ArrayList<>();
+                        ArrayList<Integer> coursesList = new ArrayList<>();
                         for (String course : courses) {
                             String trimmed = course.trim();
                             if (!trimmed.isEmpty()) {
-                                coursesList.add(trimmed);
+                                try {
+                                    coursesList.add(Integer.parseInt(trimmed));
+                                } catch (NumberFormatException e) {
+                                    // Skip invalid course ID
+                                }
                             }
                         }
                         ((Instructor) currentUser).updateCourses(user.getId(), coursesList, instructor.getCourses());

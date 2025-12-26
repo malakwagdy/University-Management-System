@@ -130,10 +130,20 @@ public class Course {
         this.finals = finals;
     }
     
-    public static ArrayList<Instructor> getCourseInstructors(String courseId) {
+    public static ArrayList<Instructor> getCourseInstructors(int courseId) {
         try {
             DatabaseManager dm = new DatabaseManager();
             return dm.getCourseInstructors(courseId);
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return new ArrayList<>();
+        }
+    }
+
+    public static ArrayList<Material> getCourseMaterials(int courseId) {
+        try {
+            DatabaseManager dm = new DatabaseManager();
+            return dm.getMaterials(courseId);
         } catch (SQLException e) {
             e.printStackTrace();
             return new ArrayList<>();

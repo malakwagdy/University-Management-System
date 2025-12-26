@@ -6,7 +6,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class Instructor extends User{
-    private ArrayList<String> courses;
+    private ArrayList<Integer> courses;
     private String salary;
     private String role;
     private boolean departmentHead;
@@ -20,7 +20,7 @@ public class Instructor extends User{
         super();
     }
 
-    public Instructor(String id , String phoneNumber, String email, String password, String dateOfBirth, String name, String salary, ArrayList<String> courses, String role, boolean departmentHead, String departmentName, ArrayList<String> responsibilities, Map<String,String> officeHours, ArrayList<String> benefits) {
+    public Instructor(String id , String phoneNumber, String email, String password, String dateOfBirth, String name, String salary, ArrayList<Integer> courses, String role, boolean departmentHead, String departmentName, ArrayList<String> responsibilities, Map<String,String> officeHours, ArrayList<String> benefits) {
         super( id, "Instructor", phoneNumber, email, password, name, dateOfBirth);
         this.salary = salary;
         this.courses = courses;
@@ -34,7 +34,7 @@ public class Instructor extends User{
     public Instructor(String id , String phoneNumber, String email, String password, String dateOfBirth, String name, String department,boolean departmentHead,String role) {
         super( id, "Instructor", phoneNumber, email, password, name, dateOfBirth);
         this.salary = "0";
-        this.courses = new ArrayList<String>();
+        this.courses = new ArrayList<Integer>();
         this.role = role;
         this.departmentHead = departmentHead;
         this.departmentName = department;
@@ -43,11 +43,11 @@ public class Instructor extends User{
         this.benefits = new ArrayList<String>();
     }
 
-    public ArrayList<String> getCourses() {
+    public ArrayList<Integer> getCourses() {
         return courses;
     }
 
-    public void setCourses(ArrayList<String> courses) {
+    public void setCourses(ArrayList<Integer> courses) {
         this.courses = courses;
     }
 
@@ -197,7 +197,7 @@ public class Instructor extends User{
         }
         return list;
     }
-    public ArrayList<Assignment> displayAssignments(String courseId) {
+    public ArrayList<Assignment> displayAssignments(int courseId) {
         ArrayList<Assignment> list = new ArrayList<>();
         try {
             list = dm.getAssignments(courseId);
@@ -206,7 +206,7 @@ public class Instructor extends User{
         }
         return list;
     }
-    public Assignment displayAssignmentDetails(String assignmentId) {
+    public Assignment displayAssignmentDetails(int assignmentId) {
         Assignment assignment = null;
         try {
             assignment = dm.getAssignmentDetails(assignmentId);
@@ -219,8 +219,24 @@ public class Instructor extends User{
         dm.addAssignment(courseId, assignment);
         
     }
-    public ArrayList<String> displayInstructorCourses(String userId) {
-        ArrayList<String> list = new ArrayList<>();
+
+    public void addAssignmentGrade(int assignmentId, String userId, String grade) {
+        dm.addAssignmentGrade(assignmentId, userId, grade);
+    }
+
+    public void addAssignmentFeedback(int assignmentId, String userId, String feedback) {
+        dm.addAssignmentFeedback(assignmentId, userId, feedback);
+    }
+
+    public void addExamGrade(int examId, String userId, String grade) {
+        dm.addExamGrade(examId, userId, grade);
+    }
+
+    public void addExamFeedback(int examId, String userId, String feedback) {
+        dm.addExamFeedback(examId, userId, feedback);
+    }
+    public ArrayList<Integer> displayInstructorCourses(String userId) {
+        ArrayList<Integer> list = new ArrayList<>();
         try {
             list = dm.getCurrentCourses(userId);
         } catch (Exception e) {
@@ -229,56 +245,48 @@ public class Instructor extends User{
         }
         return list;
     }
-    public void updateCourses(String userId, ArrayList<String> newCourses,ArrayList<String> oldCourses) {
-        ArrayList<String> updatedList = newCourses != null ? new ArrayList<String>(newCourses) : new ArrayList<String>();
-        ArrayList<String> existingList = oldCourses != null ? new ArrayList<String>(oldCourses) : new ArrayList<String>();
+    public void updateCourses(String userId, ArrayList<Integer> newCourses,ArrayList<Integer> oldCourses) {
+        ArrayList<Integer> updatedList = newCourses != null ? new ArrayList<Integer>(newCourses) : new ArrayList<Integer>();
+        ArrayList<Integer> existingList = oldCourses != null ? new ArrayList<Integer>(oldCourses) : new ArrayList<Integer>();
 
-        ArrayList<String> toAdd = new ArrayList<String>(updatedList);
+        ArrayList<Integer> toAdd = new ArrayList<Integer>(updatedList);
         toAdd.removeAll(existingList);
 
-        ArrayList<String> toRemove = new ArrayList<String>(existingList);
+        ArrayList<Integer> toRemove = new ArrayList<Integer>(existingList);
         toRemove.removeAll(updatedList);
 
 
-        for (String Responsibility : toAdd) {
+        for (int courseId : toAdd) {
             try {
-                dm.addCurrentCourse(userId, Responsibility);
+                dm.addCurrentCourse(userId, courseId);
             } catch (SQLException e) {
                 throw new RuntimeException(e);
             }
         }
-        for (String Responsibility : toRemove) {
+        for (int courseId : toRemove) {
             try {
-                dm.removeCurrentCourse(userId, Responsibility);
+                dm.removeCurrentCourse(userId, courseId);
             } catch (SQLException e) {
                 throw new RuntimeException(e);
             }
         }
     }
-    public void updateCourseMaterials(String userId, ArrayList<String> newMaterial,ArrayList<String> oldMaterial) {
-        ArrayList<String> updatedList = newMaterial != null ? new ArrayList<String>(newMaterial) : new ArrayList<String>();
-        ArrayList<String> existingList = oldMaterial != null ? new ArrayList<String>(oldMaterial) : new ArrayList<String>();
+    public void updateCourseMaterials(int courseId, ArrayList<Material> newMaterial,ArrayList<Material> oldMaterial) {
+        ArrayList<Material> updatedList = newMaterial != null ? new ArrayList<Material>(newMaterial) : new ArrayList<Material>();
+        ArrayList<Material> existingList = oldMaterial != null ? new ArrayList<Material>(oldMaterial) : new ArrayList<Material>();
 
-        ArrayList<String> toAdd = new ArrayList<String>(updatedList);
+        ArrayList<Material> toAdd = new ArrayList<Material>(updatedList);
         toAdd.removeAll(existingList);
 
-        ArrayList<String> toRemove = new ArrayList<String>(existingList);
+        ArrayList<Material> toRemove = new ArrayList<Material>(existingList);
         toRemove.removeAll(updatedList);
 
 
-        for (String materialId : toAdd) {
-            try {
-                dm.addCurrentCourse(userId, materialId);
-            } catch (SQLException e) {
-                throw new RuntimeException(e);
-            }
+        for (Material material : toAdd) {
+            dm.addMaterial(courseId, material);
         }
-        for (String materialId : toRemove) {
-            try {
-                dm.removeCurrentCourse(userId, materialId);
-            } catch (SQLException e) {
-                throw new RuntimeException(e);
-            }
+        for (Material material : toRemove) {
+            dm.deleteMaterial(material.getMaterialId());
         }
     }
 
@@ -331,5 +339,129 @@ public class Instructor extends User{
     }
     public void createAnnouncement(Announcment announcment) {
         dm.addAnnouncment(announcment);
+    }
+
+    public int getCourseStudentsCount(int courseId) {
+        ArrayList<Student> students = dm.getStudentsByCourse(courseId);
+        return students.size();
+    }
+
+    public ArrayList<Student> getInstructorStudents(String instructorId) {
+        ArrayList<Student> allStudents = new ArrayList<>();
+        ArrayList<Integer> courses = displayInstructorCourses(instructorId);
+        for (int courseId : courses) {
+            ArrayList<Student> courseStudents = dm.getStudentsByCourse(courseId);
+            for (Student student : courseStudents) {
+                if (!allStudents.contains(student)) {
+                    allStudents.add(student);
+                }
+            }
+        }
+        return allStudents;
+    }
+
+    public ArrayList<Assignment> getInstructorAssignments(String instructorId) {
+        ArrayList<Assignment> allAssignments = new ArrayList<>();
+        ArrayList<Integer> courses = displayInstructorCourses(instructorId);
+        for (int courseId : courses) {
+            try {
+                ArrayList<Assignment> courseAssignments = dm.getAssignments(courseId);
+                allAssignments.addAll(courseAssignments);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        return allAssignments;
+    }
+
+    public void bookHall(int hallId) {
+        dm.bookClassroom(hallId);
+    }
+
+    public ArrayList<Classroom> getAllHalls() {
+        try {
+            return dm.getAllClassrooms();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ArrayList<>();
+        }
+    }
+
+    // ---- Exams (Course) ----
+    public ArrayList<Exam> getCourseAllExams(int courseId) {
+        return dm.getCourseAllExams(courseId);
+    }
+
+    // ---- Exams (Create) ----
+    public void addQuiz(Exam exam) {
+        dm.addQuiz(exam);
+    }
+
+    public void addMidterm(Exam midterm) {
+        dm.addMidterm(midterm);
+    }
+
+    public void addFinal(Exam finalExam) {
+        dm.addFinal(finalExam);
+    }
+
+    public ArrayList<Exam> getCourseQuizzes(int courseId) {
+        return dm.getCourseQuizzes(courseId);
+    }
+
+    public ArrayList<Exam> getCourseMidterms(int courseId) {
+        return dm.getCourseMidterms(courseId);
+    }
+
+    public ArrayList<Exam> getCourseFinals(int courseId) {
+        return dm.getCourseFinals(courseId);
+    }
+
+    // ---- Exams (Student) ----
+    public ArrayList<Exam> getStudentAllExams(String userId) {
+        return dm.getStudentAllExams(userId);
+    }
+
+    public ArrayList<Exam> getStudentQuizzes(String userId) {
+        return dm.getStudentQuizzes(userId);
+    }
+
+    public ArrayList<Exam> getStudentMidterms(String userId) {
+        return dm.getStudentMidterms(userId);
+    }
+
+    public ArrayList<Exam> getStudentFinals(String userId) {
+        return dm.getStudentFinals(userId);
+    }
+
+    public Map<String, String> getAssignmentGrades(int assignmentId) {
+        return dm.getAssignmentGrades(assignmentId);
+    }
+
+    public Map<String, String> getExamGrades(int examId) {
+        return dm.getExamGrades(examId);
+    }
+
+    public Map<String, String> getAssignmentFeedback(int assignmentId) {
+        return dm.getAssignmentFeedback(assignmentId);
+    }
+
+    public Map<String, String> getExamFeedback(int examId) {
+        return dm.getExamFeedback(examId);
+    }
+    public String getExamGradeForStudent(int examId, String userId) {
+        return dm.getExamGradeForStudent(examId, userId);
+    }
+
+    public String getAssignmentGradeForStudent(int assignmentId, String userId) {
+        return dm.getAssignmentGradeForStudent(assignmentId, userId);
+    }
+
+    public String getAssignmentFeedbackForStudent(int assignmentId, String userId) {
+        return dm.getAssignmentFeedbackForStudent(assignmentId, userId);
+    }
+
+    public String getExamFeedbackForStudent(int examId, String userId) {
+        return dm.getExamFeedbackForStudent(examId, userId);
     }
 }
