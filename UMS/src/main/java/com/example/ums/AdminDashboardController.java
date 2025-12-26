@@ -566,8 +566,11 @@ public class AdminDashboardController implements Initializable {
                     
                     {
                         bookBtn.setOnAction(event -> {
-                            Classroom classroom = getTableView().getItems().get(getIndex());
-                            handleBookClassroom(classroom);
+                            Classroom selectedHall = getTableView().getItems().get(getIndex());
+                            int hallId = selectedHall.getHallId();
+
+                            BookingContext.setSelectedHallId(hallId);
+                            SceneController.switchTo("BookClassroom.fxml");
                         });
                     }
                     
@@ -686,25 +689,26 @@ public class AdminDashboardController implements Initializable {
     }
     
     private void handleBookClassroom(Classroom classroom) {
-        if (!classroom.isAvailability()) {
-            showAlert("Booking Error", "This classroom is already booked.");
-            return;
-        }
-        
-        if (classroom.isHallMaintenance()) {
-            showAlert("Booking Error", "This classroom is under maintenance and cannot be booked.");
-            return;
-        }
-        
-        boolean success = DatabaseManager.bookClassroom(classroom.getHallId());
-        
-        if (success) {
-            classroom.setAvailability(false);
-            hallsTable.refresh();
-            showAlert("Success", "Classroom booked successfully.");
-        } else {
-            showAlert("Database Error", "Could not book classroom.");
-        }
+        SceneController.switchTo("BookClassroom.fxml");
+//        if (!classroom.isAvailability()) {
+//            showAlert("Booking Error", "This classroom is already booked.");
+//            return;
+//        }
+//
+//        if (classroom.isHallMaintenance()) {
+//            showAlert("Booking Error", "This classroom is under maintenance and cannot be booked.");
+//            return;
+//        }
+//
+//        boolean success = DatabaseManager.bookClassroom(classroom.getHallId());
+//
+//        if (success) {
+//            classroom.setAvailability(false);
+//            hallsTable.refresh();
+//            showAlert("Success", "Classroom booked successfully.");
+//        } else {
+//            showAlert("Database Error", "Could not book classroom.");
+//        }
     }
     
     @FXML

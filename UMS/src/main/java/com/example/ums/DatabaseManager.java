@@ -95,7 +95,30 @@ public class DatabaseManager {
                 return false;
             }
         }
-        
+
+    public static boolean reserveSlot(int hallId, String slotDate, String slotTime) {
+
+        String sql =
+        "INSERT INTO reservedslots (hallid, slotdate, slottime)"+
+        "VALUES (?, ?, ?)";
+
+
+        try (Connection conn = getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setInt(1, hallId);
+            ps.setString(2, slotDate);
+            ps.setString(3, slotTime);
+
+            ps.executeUpdate();
+            return true;
+
+        } catch (SQLException e) {
+            // Primary key violation = already booked
+            e.printStackTrace();
+            return false;
+        }
+    }
 
     public static void AddClassroom(Classroom classroom) throws SQLException {
         String sql =

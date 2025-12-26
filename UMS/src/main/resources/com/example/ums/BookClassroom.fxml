@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.AnchorPane?>
+
+
+<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.ums.BookClassroomController">
+   <children>
+      <ComboBox fx:id="timeCombo" layoutX="272.0" layoutY="188.0" prefWidth="150.0" />
+      <DatePicker fx:id="datePicker" layoutX="265.0" layoutY="124.0" />
+      <Label layoutX="153.0" layoutY="128.0" text="Slot Date" />
+      <Label layoutX="153.0" layoutY="192.0" text="Slot Time" />
+      <Button fx:id="Confirm_Booking" layoutX="246.0" layoutY="279.0" mnemonicParsing="false" onAction="#HandleConfirmBooking" text="Confirm Booking" />
+   </children>
+</AnchorPane>
