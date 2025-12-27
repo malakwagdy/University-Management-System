@@ -407,6 +407,11 @@ public class AdminDashboardController implements Initializable {
     }
 
     @FXML
+    private void handleAddAnnouncement() {
+        AddAnnouncementController.show(0, admin, null);
+    }
+
+    @FXML
     private void handleAddUserButton(ActionEvent event) {
         try {
             SceneController.switchScene(event, "AddUser.fxml", "Add User");

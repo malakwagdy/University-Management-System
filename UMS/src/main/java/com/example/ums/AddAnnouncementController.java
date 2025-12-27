@@ -1,5 +1,8 @@
 package com.example.ums;
 
+import java.io.IOException;
+import java.time.LocalDate;
+
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -9,28 +12,25 @@ import javafx.scene.control.TextField;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
-import java.io.IOException;
-import java.time.LocalDate;
-
 public class AddAnnouncementController {
     @FXML
     private TextField titleTextField;
     @FXML
     private TextArea announceTextArea;
 
-    private Instructor currentInstructor;
+    private User currentUser;
     private int courseId;
     private Runnable onSaveCallback;
     private Stage stage;
 
-    public static void show(int courseId, Instructor instructor, Runnable onSaveCallback) {
+    public static void show(int courseId, User user, Runnable onSaveCallback) {
         try {
             FXMLLoader loader = new FXMLLoader(AddAnnouncementController.class.getResource("AddAnnouncement.fxml"));
             Scene scene = new Scene(loader.load());
 
             AddAnnouncementController controller = loader.getController();
             controller.courseId = courseId;
-            controller.currentInstructor = instructor;
+            controller.currentUser = user;
             controller.onSaveCallback = onSaveCallback;
 
             Stage stage = new Stage();
@@ -58,7 +58,11 @@ public class AddAnnouncementController {
         Announcment announcement = new Announcment(title, content, date, courseId);
 
         try {
-            currentInstructor.createAnnouncement(announcement);
+            if (currentUser instanceof Instructor) {
+                ((Instructor) currentUser).createAnnouncement(announcement);
+            } else if (currentUser instanceof Admin) {
+                ((Admin) currentUser).createAnnouncement(announcement);
+            }
 
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
             alert.setTitle("Success");
