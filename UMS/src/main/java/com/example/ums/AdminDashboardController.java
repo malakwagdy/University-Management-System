@@ -407,8 +407,8 @@ public class AdminDashboardController implements Initializable {
     }
 
     @FXML
-    private void handleAddAnnouncement() {
-        AddAnnouncementController.show(0, admin, null);
+    private void HandlePostAnnounceBtn() {
+        AddAnnouncementController.show(null, admin, null);
     }
 
     @FXML

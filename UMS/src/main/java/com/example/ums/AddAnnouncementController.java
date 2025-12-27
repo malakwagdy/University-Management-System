@@ -19,11 +19,11 @@ public class AddAnnouncementController {
     private TextArea announceTextArea;
 
     private User currentUser;
-    private int courseId;
+    private Integer courseId;
     private Runnable onSaveCallback;
     private Stage stage;
 
-    public static void show(int courseId, User user, Runnable onSaveCallback) {
+    public static void show(Integer courseId, User user, Runnable onSaveCallback) {
         try {
             FXMLLoader loader = new FXMLLoader(AddAnnouncementController.class.getResource("AddAnnouncement.fxml"));
             Scene scene = new Scene(loader.load());
@@ -55,7 +55,12 @@ public class AddAnnouncementController {
         }
 
         String date = LocalDate.now().toString();
-        Announcment announcement = new Announcment(title, content, date, courseId);
+        Announcment announcement;
+        if (courseId != null) {
+            announcement = new Announcment(title, content, date, courseId);
+        } else {
+            announcement = new Announcment(title, content, date);
+        }
 
         try {
             if (currentUser instanceof Instructor) {
