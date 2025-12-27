@@ -147,7 +147,7 @@
                                  <children>
                                     <Label text="Office Hours" />
                                     <Region HBox.hgrow="ALWAYS" />
-                                    <Button fx:id="editOfficeHoursBtn" text="Edit Hours" />
+                                    <Button fx:id="addOfficeHoursBtn" onAction="#handleAddOfficeHoursButton" text="Add Hours" />
                                  </children>
                               </HBox>
                               <ListView fx:id="officeHoursList" prefHeight="223.0" prefWidth="942.0" />
@@ -211,7 +211,6 @@
                                     <TableColumn fx:id="studentEmailCol" prefWidth="200.0" text="Student Email" />
                                     <TableColumn fx:id="studentGPACol" prefWidth="100.0" text="GPA" />
                                     <TableColumn fx:id="studentCoursesCol" prefWidth="120.0" text="Courses" />
-                                    <TableColumn fx:id="studentActionsCol" prefWidth="200.0" text="Actions" />
                                  </columns>
                               </TableView>
                            </children>
