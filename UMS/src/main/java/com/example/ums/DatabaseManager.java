@@ -1403,6 +1403,28 @@ public ArrayList<Student> getStudentsByCourse(int courseCode) {
         }
         return courses;
     }
+    public void addInstructorToCourse(String instructorId, int courseId) {
+        String sql = "INSERT INTO currentcourses (userid, courseid) VALUES (?, ?)";
+        try (Connection conn = getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, instructorId);
+            ps.setInt(2, courseId);
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            System.out.println("Failed to add instructor to course");
+            e.printStackTrace();
+        }
+    }
+    public void removeInstructorFromCourse(String instructorId, int courseId) {
+        String sql = "DELETE FROM currentcourses WHERE userid = ? AND courseid = ?";
+        try (Connection conn = getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, instructorId);
+            ps.setInt(2, courseId);
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            System.out.println("Failed to remove instructor from course");
+            e.printStackTrace();
+        }
+    }
 
     public ArrayList<Course> getAllCourses() throws SQLException {
         ArrayList<Course> courses = new ArrayList<>();

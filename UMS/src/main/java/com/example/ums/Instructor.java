@@ -167,6 +167,21 @@ public class Instructor extends User{
         }
         return courses;
     }
+    public void addCourseToInstructor(String userId, int courseId) {
+        try {
+            dm.addInstructorToCourse(userId, courseId);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    public void removeCourseFromInstructor(String userId, int courseId) {
+        try {
+            dm.removeInstructorFromCourse(userId, courseId);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
 
     public ArrayList<Course> getDepartmentCourses(String department) {
         ArrayList<Course> courses = new ArrayList<>();
