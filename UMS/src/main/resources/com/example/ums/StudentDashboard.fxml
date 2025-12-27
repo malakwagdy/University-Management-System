@@ -96,8 +96,13 @@
 
             <!-- Upcoming Quizzes Section -->
             <VBox spacing="10">
-               <Label text="Upcoming Quizzes" />
-               <ListView fx:id="quizzesList" prefHeight="150.0" />
+               <Label text="Announcements" />
+               <TableView prefHeight="200.0" prefWidth="200.0">
+                 <columns>
+                   <TableColumn prefWidth="192.0" text="Title" />
+                   <TableColumn prefWidth="579.0" text="Announcement" />
+                 </columns>
+               </TableView>
             </VBox>
 
             <!-- Action Buttons -->

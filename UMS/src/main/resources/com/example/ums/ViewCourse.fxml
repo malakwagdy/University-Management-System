@@ -68,7 +68,8 @@
             <HBox spacing="10.0">
                <children>
                   <Label minWidth="100.0" text="Course Materials: " />
-                  <Label fx:id="materialsLabel" />
+                  <!-- Use a container so the controller can add download buttons per material -->
+                  <VBox fx:id="materialsBox" />
                </children>
             </HBox>
          </children>
