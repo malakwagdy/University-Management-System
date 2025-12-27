@@ -49,6 +49,33 @@ public class StudentDashboardController {
     @FXML
     private TableColumn<CourseInfo, Void> actionsCol;
 
+    @FXML
+    private TableView<AnnouncementInfo> announcementsTable;
+
+    @FXML
+    private TableColumn<AnnouncementInfo, String> announcementTitleCol;
+
+    @FXML
+    private TableColumn<AnnouncementInfo, String> announcementContentCol;
+
+    @FXML
+    private TableView<AssignmentInfo> assignmentsTable;
+
+    @FXML
+    private TableColumn<AssignmentInfo, String> assignmentNameCol;
+
+    @FXML
+    private TableColumn<AssignmentInfo, String> courseCol;
+
+    @FXML
+    private TableColumn<AssignmentInfo, String> dueDateCol;
+
+    @FXML
+    private TableColumn<AssignmentInfo, String> gradeCol2;
+
+    @FXML
+    private Label pendingAssignmentsLabel;
+
     // Inner class to represent course information for the table
     public static class CourseInfo {
         private int courseId;
@@ -80,6 +107,38 @@ public class StudentDashboardController {
         }
     }
 
+    public static class AssignmentInfo {
+        private String assignmentName;
+        private String course;
+        private String dueDate;
+        private String grade;
+
+        public AssignmentInfo(String assignmentName, String course, String dueDate, String grade) {
+            this.assignmentName = assignmentName;
+            this.course = course;
+            this.dueDate = dueDate;
+            this.grade = grade;
+        }
+
+        public String getAssignmentName() { return assignmentName; }
+        public String getCourse() { return course; }
+        public String getDueDate() { return dueDate; }
+        public String getGrade() { return grade; }
+    }
+
+    public static class AnnouncementInfo {
+        private String title;
+        private String content;
+
+        public AnnouncementInfo(String title, String content) {
+            this.title = title;
+            this.content = content;
+        }
+
+        public String getTitle() { return title; }
+        public String getContent() { return content; }
+    }
+
     @FXML
     private void initialize() {
         Student student = Student.getCurrentStudent();
@@ -93,6 +152,49 @@ public class StudentDashboardController {
             // Setup courses table
             setupCoursesTable();
             loadStudentCourses(student);
+
+            // Setup and load announcements (if available)
+            if (announcementsTable != null) {
+                setupAnnouncementsTable();
+                loadStudentAnnouncements(student);
+            }
+
+            // Setup and load assignments
+            if (assignmentsTable != null) {
+                setupAssignmentsTable();
+                loadStudentAssignments(student);
+            }
+        }
+    }
+
+    private void setupAssignmentsTable() {
+        assignmentNameCol.setCellValueFactory(new PropertyValueFactory<>("assignmentName"));
+        courseCol.setCellValueFactory(new PropertyValueFactory<>("course"));
+        dueDateCol.setCellValueFactory(new PropertyValueFactory<>("dueDate"));
+        gradeCol2.setCellValueFactory(new PropertyValueFactory<>("grade"));
+    }
+
+    private void loadStudentAssignments(Student student) {
+        ArrayList<Assignment> assignments = student.getStudentAssignments(student.getId());
+        ObservableList<AssignmentInfo> assignmentList = FXCollections.observableArrayList();
+
+        for (Assignment assignment : assignments) {
+            Course course = Course.getCourseById(assignment.getCourseId());
+            String courseName = course != null ? course.getCourseName() : "Course " + assignment.getCourseId();
+            String grade = student.getAssignmentGradeForStudent(assignment.getAssignmentId(), student.getId());
+
+            assignmentList.add(new AssignmentInfo(
+                assignment.getAssignmentName(),
+                courseName,
+                assignment.getAssignmentDate(),
+                grade != null ? grade : "Not Graded"
+            ));
+        }
+
+        assignmentsTable.setItems(assignmentList);
+        if (pendingAssignmentsLabel != null) {
+            long pendingCount = assignmentList.stream().filter(a -> "Not Graded".equals(a.getGrade())).count();
+            pendingAssignmentsLabel.setText(String.valueOf(pendingCount));
         }
     }
 
@@ -128,6 +230,58 @@ public class StudentDashboardController {
             };
             return cell;
         });
+
+        // Add action buttons column
+        actionsCol.setCellFactory(col -> {
+            TableCell<CourseInfo, Void> cell = new TableCell<CourseInfo, Void>() {
+                private final Button detailsBtn = new Button("Details");
+                private final Button gradesBtn = new Button("Grades");
+                private final HBox buttons = new HBox(5, detailsBtn, gradesBtn);
+
+                {
+                    detailsBtn.setOnAction(e -> {
+                        CourseInfo course = getTableView().getItems().get(getIndex());
+                        openViewCourse(course.getCourseId());
+                    });
+                    gradesBtn.setOnAction(e -> {
+                        CourseInfo course = getTableView().getItems().get(getIndex());
+                        openViewGrades(course.getCourseId());
+                    });
+                }
+
+                @Override
+                protected void updateItem(Void item, boolean empty) {
+                    super.updateItem(item, empty);
+                    setGraphic(empty ? null : buttons);
+                }
+            };
+            return cell;
+        });
+    }
+
+    private void setupAnnouncementsTable() {
+        if (announcementTitleCol != null && announcementContentCol != null) {
+            announcementTitleCol.setCellValueFactory(new PropertyValueFactory<>("title"));
+            announcementContentCol.setCellValueFactory(new PropertyValueFactory<>("content"));
+        }
+    }
+
+    private void loadStudentAnnouncements(Student student) {
+        if (announcementsTable != null) {
+            ArrayList<Announcment> announcements = student.getStudentAnnouncements(student.getId());
+            ObservableList<AnnouncementInfo> announcementList = FXCollections.observableArrayList();
+
+            if (announcements != null) {
+                for (Announcment announcement : announcements) {
+                    announcementList.add(new AnnouncementInfo(
+                        announcement.getTitle(),
+                        announcement.getContent()
+                    ));
+                }
+            }
+
+            announcementsTable.setItems(announcementList);
+        }
     }
 
     private void loadStudentCourses(Student student) {
@@ -197,6 +351,7 @@ public class StudentDashboardController {
             e.printStackTrace();
         }
     }
+
 
     @FXML
     public void handleChangePassword(ActionEvent actionEvent) {

@@ -1,8 +1,8 @@
 package com.example.ums;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Map;
-import java.sql.SQLException;
 
 public class Student extends User {
     private ArrayList<Integer> currentCourses;
@@ -10,6 +10,7 @@ public class Student extends User {
     private String gpa;
     private String semester;
     private String major;
+    private DatabaseManager dm = new DatabaseManager();
 
 
     public Student() {
@@ -83,11 +84,24 @@ public class Student extends User {
             return new ArrayList<>();
         }
     }
-    public  ArrayList<Announcment> getStudentAnnouncments(String studentId) {
+    public  ArrayList<Announcment> getStudentAnnouncements(String studentId) {
         DatabaseManager dm = new DatabaseManager();
         ArrayList<Announcment> list = dm.getStudentAnnouncements(studentId);
         list.addAll(dm.getGeneralAnnouncements());
         return list;
+    }
+
+    public ArrayList<Assignment> getStudentAssignments(String userId) {
+        ArrayList<Assignment> allAssignments = new ArrayList<>();
+        try {
+            ArrayList<Integer> courses = dm.getCurrentCourses(userId);
+            for (int courseId : courses) {
+                allAssignments.addAll(dm.getAssignments(courseId));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return allAssignments;
     }
 
     public ArrayList<Exam> getStudentAllExams(String userId) {

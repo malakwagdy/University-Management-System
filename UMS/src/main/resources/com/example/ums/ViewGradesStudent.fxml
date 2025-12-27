@@ -15,13 +15,13 @@
                 <Label fx:id="courseNameLabel" />
             </children>
         </HBox>
-      <TableView fx:id="coursesTable" prefHeight="310.0" prefWidth="299.0">
-         <columns>
-            <TableColumn fx:id="nameCol" prefWidth="169.69313102960587" text="Name" />
-            <TableColumn fx:id="gradeCol" prefWidth="150.30686950683594" text="Grade" />
-            <TableColumn fx:id="feedbackCol" prefWidth="424.1392517089844" text="Feedback" />
-         </columns>
-      </TableView>
+        <TableView fx:id="coursesTable" prefHeight="310.0" prefWidth="299.0">
+            <columns>
+                <TableColumn fx:id="nameCol" prefWidth="169.69313102960587" text="Name" />
+                <TableColumn fx:id="gradeCol" prefWidth="150.30686950683594" text="Grade" />
+                <TableColumn fx:id="feedbackCol" prefWidth="424.1392517089844" text="Feedback" />
+            </columns>
+        </TableView>
         <HBox alignment="CENTER" layoutX="10.0" layoutY="159.0" prefHeight="100.0" prefWidth="600.0" spacing="10.0">
             <children>
                 <Button mnemonicParsing="false" onAction="#handleDoneButton" text="Done" />
