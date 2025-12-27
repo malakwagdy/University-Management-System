@@ -67,8 +67,7 @@ public class HrDashboardController implements Initializable {
                 "All",
                 "Professor",
                 "Teaching Assistant",
-                "HR"
-        );
+                "HR");
         if (employeeRoleFilter != null) {
             employeeRoleFilter.setItems(instructorRoleOptions);
             employeeRoleFilter.setValue("All"); // Set default to "All"
@@ -190,10 +189,9 @@ public class HrDashboardController implements Initializable {
      * Helper method to determine the user type from the User object
      */
     private String getUserRole(User user) {
-        if (user instanceof HR){
+        if (user instanceof HR) {
             return "HR";
-        }
-        else {
+        } else {
             Instructor instructor = (Instructor) user;
             if (instructor.isDepartmentHead()) {
                 return "Department Head";
@@ -231,7 +229,6 @@ public class HrDashboardController implements Initializable {
         ViewUserPopupController.show(user, hr, () -> loadAllUsers());
     }
 
-
     @FXML
     private void handleLogoutButton(ActionEvent event) {
         User.Logout();
@@ -245,8 +242,9 @@ public class HrDashboardController implements Initializable {
     @FXML
     public void HandleChangePassBtn(ActionEvent actionEvent) {
         try {
-            SceneController.switchScene(actionEvent, "ChangePassword.fxml", "Change Password");
-        } catch (IOException e) {
+            String userId = GlobalData.getCurrentlyLoggedIN();
+            ChangePasswordController.show(userId);
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }

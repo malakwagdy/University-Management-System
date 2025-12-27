@@ -74,7 +74,7 @@ public class DeptHeadDashboardController implements Initializable {
 
     @FXML
     private Label coursePlaceholder;
-    
+
     @FXML
     private ScrollPane homepageView;
     @FXML
@@ -83,7 +83,7 @@ public class DeptHeadDashboardController implements Initializable {
     private ScrollPane myCoursesView;
     @FXML
     private ScrollPane departmentStudentsView;
-    
+
     @FXML
     private TableView<Course> myCoursesTable;
     @FXML
@@ -96,7 +96,7 @@ public class DeptHeadDashboardController implements Initializable {
     private TableColumn<Course, String> myCourseBylawCol;
     @FXML
     private TableColumn<Course, String> myCourseActionsCol;
-    
+
     @FXML
     private TableView<Student> studentsTable;
     @FXML
@@ -130,8 +130,7 @@ public class DeptHeadDashboardController implements Initializable {
         ObservableList<String> instructorRoleOptions = FXCollections.observableArrayList(
                 "All",
                 "Professor",
-                "Teaching Assistant"
-        );
+                "Teaching Assistant");
         instructorRoleFilter.setItems(instructorRoleOptions);
         instructorRoleFilter.setValue("All");
 
@@ -175,7 +174,7 @@ public class DeptHeadDashboardController implements Initializable {
         loadAllInstructors();
         loadCoursesData();
     }
-    
+
     private void showView(ScrollPane viewToShow) {
         homepageView.setVisible(false);
         homepageView.setManaged(false);
@@ -185,42 +184,42 @@ public class DeptHeadDashboardController implements Initializable {
         myCoursesView.setManaged(false);
         departmentStudentsView.setVisible(false);
         departmentStudentsView.setManaged(false);
-        
+
         viewToShow.setVisible(true);
         viewToShow.setManaged(true);
     }
-    
+
     @FXML
     private void handleDepartmentInstructorsButton() {
         showView(homepageView);
         loadAllInstructors();
     }
-    
+
     @FXML
     private void handleDepartmentCoursesButton() {
         showView(departmentCoursesView);
         loadCoursesData();
     }
-    
+
     @FXML
     private void handleDepartmentStudentsButton() {
         showView(departmentStudentsView);
         loadDepartmentStudents();
     }
-    
+
     @FXML
     private void hamdleMyCoursesButton() {
         showView(myCoursesView);
         loadMyCoursesData();
     }
-    
+
     private void loadDepartmentStudents() {
         studentIdCol.setCellValueFactory(new PropertyValueFactory<>("id"));
         studentNameCol.setCellValueFactory(new PropertyValueFactory<>("name"));
         studentEmailCol.setCellValueFactory(new PropertyValueFactory<>("email"));
         studentGPACol.setCellValueFactory(new PropertyValueFactory<>("gpa"));
         studentSemesterCol.setCellValueFactory(new PropertyValueFactory<>("semester"));
-        
+
         Task<ObservableList<Student>> task = new Task<>() {
             @Override
             protected ObservableList<Student> call() throws Exception {
@@ -228,32 +227,32 @@ public class DeptHeadDashboardController implements Initializable {
                 return FXCollections.observableArrayList(deptStudents);
             }
         };
-        
+
         task.setOnSucceeded(e -> studentsTable.setItems(task.getValue()));
         task.setOnFailed(e -> task.getException().printStackTrace());
-        
+
         new Thread(task).start();
     }
-    
+
     private void loadMyCoursesData() {
         myCourseIdCol.setCellValueFactory(new PropertyValueFactory<>("courseId"));
         myCourseNameCol.setCellValueFactory(new PropertyValueFactory<>("courseName"));
         myCourseDescriptionCol.setCellValueFactory(new PropertyValueFactory<>("courseDescription"));
         myCourseBylawCol.setCellValueFactory(new PropertyValueFactory<>("year"));
-        
+
         myCourseActionsCol.setCellFactory(new Callback<TableColumn<Course, String>, TableCell<Course, String>>() {
             @Override
             public TableCell<Course, String> call(TableColumn<Course, String> param) {
                 return new TableCell<Course, String>() {
                     private final Button addMaterialBtn = new Button("Add Material");
-                    
+
                     {
                         addMaterialBtn.setOnAction(event -> {
                             Course course = getTableView().getItems().get(getIndex());
                             AddMaterialController.show(course.getCourseId(), deptHead, () -> loadMyCoursesData());
                         });
                     }
-                    
+
                     @Override
                     protected void updateItem(String item, boolean empty) {
                         super.updateItem(item, empty);
@@ -266,7 +265,7 @@ public class DeptHeadDashboardController implements Initializable {
                 };
             }
         });
-        
+
         ArrayList<Course> courses = deptHead.getInstructorCourses(deptHead.getId());
         myCoursesTable.setItems(FXCollections.observableArrayList(courses));
     }
@@ -280,7 +279,7 @@ public class DeptHeadDashboardController implements Initializable {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        
+
         // Filter instructors by department if department name is set
         if (instructors != null && deptHead.getDepartmentName() != null) {
             for (Instructor instructor : instructors) {
@@ -294,7 +293,7 @@ public class DeptHeadDashboardController implements Initializable {
 
         allUsers = FXCollections.observableArrayList(InstructorList);
         instructorsTable.setItems(allUsers);
-        
+
         // Update counts
         if (instructorsCountLabel != null) {
             instructorsCountLabel.setText(String.valueOf(InstructorList.size()));
@@ -329,10 +328,9 @@ public class DeptHeadDashboardController implements Initializable {
      */
     private String getUserRole(User user) {
         Instructor instructor = (Instructor) user;
-        if (instructor.isDepartmentHead()){
+        if (instructor.isDepartmentHead()) {
             return "Department Head";
-        }
-        else {
+        } else {
             return instructor.getRole();
         }
     }
@@ -368,12 +366,11 @@ public class DeptHeadDashboardController implements Initializable {
         courseInstructorsCol.setCellValueFactory(cellData -> {
             Course course = cellData.getValue();
             ArrayList<Instructor> instructors = Course.getCourseInstructors(course.getCourseId());
-            String instructorNames = instructors.isEmpty() ? "N/A" :
-                String.join(", ", instructors.stream().map(Instructor::getName).toArray(String[]::new));
+            String instructorNames = instructors.isEmpty() ? "N/A"
+                    : String.join(", ", instructors.stream().map(Instructor::getName).toArray(String[]::new));
             return new javafx.beans.property.SimpleStringProperty(instructorNames);
         });
         bylawCol.setCellValueFactory(new PropertyValueFactory<>("year"));
-
 
         courseActionsCol.setCellFactory(new Callback<TableColumn<Course, String>, TableCell<Course, String>>() {
             @Override
@@ -382,7 +379,9 @@ public class DeptHeadDashboardController implements Initializable {
                     private final Button editBtn = new Button("Edit");
                     private final Button deleteBtn = new Button("Delete");
                     private final Button addMaterialBtn = new Button("Add Material");
-                    private final HBox buttonBox = new HBox(5, editBtn, deleteBtn, addMaterialBtn);
+                    private final Button assignBtn = new Button("Assign");
+
+                    private final HBox buttonBox = new HBox(5, editBtn, deleteBtn, addMaterialBtn, assignBtn);
 
                     {
                         editBtn.setOnAction(event -> {
@@ -394,10 +393,15 @@ public class DeptHeadDashboardController implements Initializable {
                             Course course = getTableView().getItems().get(getIndex());
                             handleDeleteCourse(course);
                         });
-                        
+
                         addMaterialBtn.setOnAction(event -> {
                             Course course = getTableView().getItems().get(getIndex());
                             AddMaterialController.show(course.getCourseId(), deptHead, () -> loadCoursesData());
+                        });
+
+                        assignBtn.setOnAction(event -> {
+                            Course course = getTableView().getItems().get(getIndex());
+                            AssignCourseController.show(course.getCourseId(), deptHead, () -> loadCoursesData());
                         });
                     }
 
@@ -482,10 +486,21 @@ public class DeptHeadDashboardController implements Initializable {
             e.printStackTrace();
         }
     }
+
     @FXML
     public void HandleChangePassBtn(ActionEvent actionEvent) {
         try {
-            SceneController.switchScene(actionEvent, "ChangePassword.fxml", "Change Password");
+            String userId = GlobalData.getCurrentlyLoggedIN();
+            ChangePasswordController.show(userId);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @FXML
+    private void handleNavToInstructorDashboard(ActionEvent event) {
+        try {
+            SceneController.switchScene(event, "InstructorDashboard.fxml", "Instructor Dashboard");
         } catch (IOException e) {
             e.printStackTrace();
         }

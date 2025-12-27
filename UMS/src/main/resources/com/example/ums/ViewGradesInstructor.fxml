@@ -7,7 +7,7 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox alignment="CENTER" prefHeight="481.0" prefWidth="772.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.ums.ViewGradesInstructorController">
+<VBox alignment="CENTER" prefHeight="481.0" prefWidth="772.0" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.ums.ViewGradesInstructorController">
     <children>
         <HBox alignment="CENTER" prefHeight="66.0" prefWidth="473.0" spacing="10.0">
             <children>
@@ -20,7 +20,6 @@
             <TableColumn fx:id="nameCol" prefWidth="169.69313102960587" text="Name" />
             <TableColumn fx:id="gradeCol" prefWidth="150.30686950683594" text="Grade" />
             <TableColumn fx:id="feedbackCol" prefWidth="240.5" text="Feedback" />
-            <TableColumn prefWidth="162.0" text="Action" />
          </columns>
       </TableView>
         <HBox alignment="CENTER" layoutX="10.0" layoutY="159.0" prefHeight="100.0" prefWidth="600.0" spacing="10.0">

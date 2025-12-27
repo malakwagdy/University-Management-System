@@ -13,6 +13,13 @@ public class Announcment {
         this.date = date;
     }
 
+    public Announcment(String title, String content, String date, int courseid) {
+        this.title = title;
+        this.content = content;
+        this.date = date;
+        this.courseid = courseid;
+    }
+
     public String getTitle() {
         return title;
     }

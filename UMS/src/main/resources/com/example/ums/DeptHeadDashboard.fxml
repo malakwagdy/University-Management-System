@@ -15,7 +15,7 @@
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 
-<BorderPane prefHeight="813.0" prefWidth="1326.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.ums.DeptHeadDashboardController">
+<BorderPane prefHeight="813.0" prefWidth="1326.0" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.ums.DeptHeadDashboardController">
    <top>
       <VBox prefWidth="284.0" spacing="10">
          <padding>
@@ -42,8 +42,9 @@
          <Button fx:id="departmentStudentsBtn" maxWidth="1.7976931348623157E308" onAction="#handleDepartmentStudentsButton" text="Department Students" />
          <Separator />
          <Button fx:id="myCoursesBtn" maxWidth="1.7976931348623157E308" onAction="#hamdleMyCoursesButton" text="My Courses" />
-         <Region VBox.vgrow="ALWAYS" />
          <Button fx:id="ChangePassBtn" mnemonicParsing="false" onAction="#HandleChangePassBtn" prefHeight="26.0" prefWidth="192.0" text="Change Password" />
+         <Button fx:id="navToInstructorDashboardBtn" maxWidth="1.7976931348623157E308" onAction="#handleNavToInstructorDashboard" text="Instructor Dashboard" />
+         <Region VBox.vgrow="ALWAYS" />
       </VBox>
    </left>
    <center>

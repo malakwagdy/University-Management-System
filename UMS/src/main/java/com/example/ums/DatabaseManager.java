@@ -2437,13 +2437,12 @@ public ArrayList<Student> getStudentsByCourse(int courseCode) {
     }
 
     public void addAnnouncment(Announcment announcment) {
-        String sql = "INSERT INTO announcements (announcementid, announcementtitle, announcementcontent, announcementdate, courseid) VALUES (?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO announcements (announcementtitle, announcementcontent, announcementdate, courseid) VALUES (?, ?, ?, ?)";
         try (Connection conn = getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
-            ps.setInt(1, announcment.getId());
-            ps.setString(2, announcment.getTitle());
-            ps.setString(3, announcment.getContent());
-            ps.setString(4, announcment.getDate());
-            ps.setInt(5, announcment.getCourseid());
+            ps.setString(1, announcment.getTitle());
+            ps.setString(2, announcment.getContent());
+            ps.setString(3, announcment.getDate());
+            ps.setInt(4, announcment.getCourseid());
             ps.executeUpdate();
         } catch (SQLException e) {
             System.out.println("Failed to add announcement");

@@ -126,6 +126,9 @@ public class InstructorDashboardController {
     private Instructor instructor;
 
     @FXML
+    private javafx.scene.control.Button navToDeptHeadDashboardBtn;
+
+    @FXML
     private void initialize() {
         try {
             instructor = dm.getInstructor(GlobalData.getCurrentlyLoggedIN());
@@ -135,8 +138,26 @@ public class InstructorDashboardController {
         if (instructor != null) {
             instructorNameLabel.setText("Welcome, " + instructor.getName());
             departmentLabel.setText("Department: " + instructor.getDepartmentName());
+
+            // Check if department head to toggle dashboard button
+            if (instructor.isDepartmentHead()) {
+                navToDeptHeadDashboardBtn.setVisible(true);
+                navToDeptHeadDashboardBtn.setManaged(true);
+            } else {
+                navToDeptHeadDashboardBtn.setVisible(false);
+                navToDeptHeadDashboardBtn.setManaged(false);
+            }
         }
         loadMyCourses();
+    }
+
+    @FXML
+    private void handleNavToDeptHeadDashboard(ActionEvent event) {
+        try {
+            SceneController.switchScene(event, "DeptHeadDashboard.fxml", "Department Head Dashboard");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     private void showView(ScrollPane viewToShow) {
@@ -212,18 +233,14 @@ public class InstructorDashboardController {
             @Override
             public TableCell<Course, String> call(TableColumn<Course, String> param) {
                 return new TableCell<Course, String>() {
-                    private final Button viewBtn = new Button("View");
                     private final Button addMaterialBtn = new Button("Add Material");
                     private final Button addAssignmentBtn = new Button("Add Assignment");
                     private final Button addExamBtn = new Button("Add Exam");
-                    private final HBox buttonBox = new HBox(5, viewBtn, addMaterialBtn, addAssignmentBtn, addExamBtn);
+                    private final Button addAnnouncementBtn = new Button("Add Announcement");
+                    private final HBox buttonBox = new HBox(5, addMaterialBtn, addAssignmentBtn, addExamBtn,
+                            addAnnouncementBtn);
 
                     {
-                        viewBtn.setOnAction(event -> {
-                            Course course = getTableView().getItems().get(getIndex());
-                            ViewCourseController.show(course);
-                        });
-
                         addMaterialBtn.setOnAction(event -> {
                             Course course = getTableView().getItems().get(getIndex());
                             AddMaterialController.show(course.getCourseId(), instructor, () -> loadMyCourses());
@@ -236,6 +253,10 @@ public class InstructorDashboardController {
                         addExamBtn.setOnAction(event -> {
                             Course course = getTableView().getItems().get(getIndex());
                             handleAddExam(course);
+                        });
+                        addAnnouncementBtn.setOnAction(event -> {
+                            Course course = getTableView().getItems().get(getIndex());
+                            handleAddAnnouncement(course);
                         });
                     }
 
@@ -355,7 +376,8 @@ public class InstructorDashboardController {
                         return new TableCell<Assignment, String>() {
                             private final Button viewBtn = new Button("View");
                             private final Button gradeBtn = new Button("Grade");
-                            private final HBox buttonBox = new HBox(5, viewBtn, gradeBtn);
+                            private final Button viewGradesBtn = new Button("View Grades");
+                            private final HBox buttonBox = new HBox(5, viewBtn, gradeBtn, viewGradesBtn);
 
                             {
                                 viewBtn.setOnAction(event -> {
@@ -391,6 +413,14 @@ public class InstructorDashboardController {
                                     Assignment assignment = getTableView().getItems().get(getIndex());
                                     AddGradesController.showForAssignment(assignment.getAssignmentId(), instructor,
                                             () -> loadAssignments());
+                                });
+
+                                viewGradesBtn.setOnAction(event -> {
+                                    Assignment assignment = getTableView().getItems().get(getIndex());
+                                    Course course = Course.getCourseById(assignment.getCourseId());
+                                    String courseName = course != null ? course.getCourseName() : "Unknown Course";
+                                    ViewGradesInstructorController.showForAssignment(assignment.getAssignmentId(),
+                                            assignment.getCourseId(), courseName, instructor);
                                 });
                             }
 
@@ -444,11 +474,21 @@ public class InstructorDashboardController {
             public TableCell<Exam, String> call(TableColumn<Exam, String> param) {
                 return new TableCell<Exam, String>() {
                     private final Button gradeBtn = new Button("Grade");
+                    private final Button viewGradesBtn = new Button("View Grades");
+                    private final HBox buttonBox = new HBox(5, gradeBtn, viewGradesBtn);
 
                     {
                         gradeBtn.setOnAction(event -> {
                             Exam exam = getTableView().getItems().get(getIndex());
                             handleGradeExam(exam);
+                        });
+
+                        viewGradesBtn.setOnAction(event -> {
+                            Exam exam = getTableView().getItems().get(getIndex());
+                            Course course = Course.getCourseById(exam.getCourseId());
+                            String courseName = course != null ? course.getCourseName() : "Unknown Course";
+                            ViewGradesInstructorController.showForExam(exam.getExamId(), exam.getCourseId(), courseName,
+                                    instructor);
                         });
                     }
 
@@ -458,7 +498,7 @@ public class InstructorDashboardController {
                         if (empty) {
                             setGraphic(null);
                         } else {
-                            setGraphic(gradeBtn);
+                            setGraphic(buttonBox);
                         }
                     }
                 };
@@ -495,10 +535,7 @@ public class InstructorDashboardController {
                     {
                         bookBtn.setOnAction(event -> {
                             Classroom selectedHall = getTableView().getItems().get(getIndex());
-                            int hallId = selectedHall.getHallId();
-
-                            BookingContext.setSelectedHallId(hallId);
-                            SceneController.switchTo("BookClassroom.fxml");
+                            BookClassroomController.show(selectedHall.getHallId(), instructor, () -> loadHalls());
                         });
                     }
 
@@ -645,6 +682,10 @@ public class InstructorDashboardController {
         }
     }
 
+    private void handleAddAnnouncement(Course course) {
+        AddAnnouncementController.show(course.getCourseId(), instructor, null);
+    }
+
     private void handleAddAssignment(Course course) {
         AddAssignmentController.show(course.getCourseId(), instructor, () -> loadMyCourses());
     }
@@ -660,9 +701,11 @@ public class InstructorDashboardController {
     @FXML
     public void HandleChangePassBtn(ActionEvent actionEvent) {
         try {
-            SceneController.switchScene(actionEvent, "ChangePassword.fxml", "Change Password");
-        } catch (IOException e) {
+            String userId = GlobalData.getCurrentlyLoggedIN();
+            ChangePasswordController.show(userId);
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
+
 }

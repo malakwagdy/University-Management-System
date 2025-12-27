@@ -35,11 +35,13 @@ public class ParentDashboardController {
             e.printStackTrace();
         }
     }
+
     @FXML
     public void HandleChangePassBtn(ActionEvent actionEvent) {
         try {
-            SceneController.switchScene(actionEvent, "ChangePassword.fxml", "Change Password");
-        } catch (IOException e) {
+            String userId = GlobalData.getCurrentlyLoggedIN();
+            ChangePasswordController.show(userId);
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }

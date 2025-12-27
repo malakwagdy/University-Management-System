@@ -47,6 +47,23 @@
             </TextField>
          </children>
       </HBox>
+      <HBox fx:id="departmentHBox" alignment="CENTER" prefHeight="41.0" prefWidth="600.0">
+          <children>
+              <Label alignment="CENTER" text="Department:">
+                  <padding>
+                      <Insets right="6.0" />
+                  </padding>
+                  <HBox.margin>
+                      <Insets right="15.0" />
+                  </HBox.margin>
+              </Label>
+              <javafx.scene.control.ComboBox fx:id="departmentComboBox" prefWidth="150.0">
+                  <HBox.margin>
+                      <Insets left="35.0" />
+                  </HBox.margin>
+              </javafx.scene.control.ComboBox>
+          </children>
+      </HBox>
       <Label fx:id="errorMsg" />
       <HBox fx:id="courseDescriptionHBox" alignment="TOP_CENTER" prefHeight="41.0" prefWidth="600.0">
          <children>

@@ -14,7 +14,7 @@
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 
-<BorderPane xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.ums.AdminDashboardController">
+<BorderPane xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.ums.AdminDashboardController">
    <top>
       <VBox spacing="10">
          <padding>
@@ -190,7 +190,6 @@
                                     <TableColumn fx:id="hallTypeCol" prefWidth="200.0" text="Hall Type" />
                                     <TableColumn fx:id="maintenanceCol" prefWidth="120.0" text="Maintenance" />
                                     <TableColumn fx:id="availabilityCol" prefWidth="120.0" text="Availability" />
-                                    <TableColumn fx:id="hallsActionsCol" prefWidth="200.0" text="Actions" />
                                  </columns>
                                  <placeholder>
                                     <Label fx:id="hallsPlaceholder" text="No Records Found" />
