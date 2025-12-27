@@ -9,11 +9,12 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.zaxxer.hikari.HikariConfig;
-import com.zaxxer.hikari.HikariDataSource;
 import org.mindrot.jbcrypt.BCrypt;
+
 import com.cloudinary.Cloudinary;
 import com.cloudinary.utils.ObjectUtils;
+import com.zaxxer.hikari.HikariConfig;
+import com.zaxxer.hikari.HikariDataSource;
 
 import io.github.cdimascio.dotenv.Dotenv;
 
@@ -2727,6 +2728,23 @@ public ArrayList<Student> getStudentsByCourse(int courseCode) {
             System.out.println("Failed to add/update exam feedback");
             e.printStackTrace();
         }
+    }
+
+    public ArrayList<Assignment> getAllAssignmentsForStudent() throws SQLException {
+        ArrayList<Assignment> assignments = new ArrayList<>();
+        String sql = "SELECT a.* FROM assignments a WHERE a.courseid IN (SELECT courseid FROM currentcourses WHERE userid = ? )";
+        try (Connection conn = getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, GlobalData.getCurrentlyLoggedIN());
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                assignments.add(mapNewAssignment(rs));
+            }
+        } catch (SQLException e) {
+            System.out.println("Failed to get assignments for student");
+            e.printStackTrace();
+            throw e;
+        }
+        return assignments;
     }
 
     public Map<String,String> getAssignmentGrades(int assignmentId) {

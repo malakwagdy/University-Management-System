@@ -3,7 +3,6 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.control.ListView?>
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
@@ -12,7 +11,7 @@
 <?import javafx.scene.layout.Region?>
 <?import javafx.scene.layout.VBox?>
 
-<BorderPane xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.ums.StudentDashboardController">
+<BorderPane xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.ums.StudentDashboardController">
    <top>
       <VBox spacing="10">
          <padding>
@@ -88,7 +87,6 @@
                      <TableColumn fx:id="assignmentNameCol" prefWidth="200.0" text="Assignment" />
                      <TableColumn fx:id="courseCol" prefWidth="150.0" text="Course" />
                      <TableColumn fx:id="dueDateCol" prefWidth="120.0" text="Due Date" />
-                     <TableColumn fx:id="statusCol" prefWidth="100.0" text="Status" />
                      <TableColumn fx:id="gradeCol2" prefWidth="100.0" text="Grade" />
                   </columns>
                </TableView>
@@ -97,11 +95,11 @@
             <!-- Upcoming Quizzes Section -->
             <VBox spacing="10">
                <Label text="Announcements" />
-               <TableView prefHeight="200.0" prefWidth="200.0">
-                 <columns>
-                   <TableColumn prefWidth="192.0" text="Title" />
-                   <TableColumn prefWidth="579.0" text="Announcement" />
-                 </columns>
+               <TableView fx:id="announcementsTable" prefHeight="200.0" prefWidth="200.0">
+                  <columns>
+                     <TableColumn fx:id="announcementTitleCol" prefWidth="192.0" text="Title" />
+                     <TableColumn fx:id="announcementContentCol" prefWidth="579.0" text="Announcement" />
+                  </columns>
                </TableView>
             </VBox>
 
@@ -111,7 +109,7 @@
                <Button fx:id="viewAssignmentsBtn" text="View All Assignments" />
                <Button fx:id="viewGradesBtn" text="View Grades" />
                <Button fx:id="viewScheduleBtn" text="View Schedule" />
-               <Button fx:id="changePasswordBtn" text="Change Password" onAction="#handleChangePassword" />
+               <Button fx:id="changePasswordBtn" onAction="#handleChangePassword" text="Change Password" />
             </HBox>
          </VBox>
       </ScrollPane>

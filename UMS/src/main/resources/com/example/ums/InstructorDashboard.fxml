@@ -15,7 +15,7 @@
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 
-<BorderPane xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.ums.InstructorDashboardController">
+<BorderPane xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.ums.InstructorDashboardController">
    <top>
       <VBox spacing="10">
          <padding>
@@ -30,7 +30,7 @@
          </HBox>
       </VBox>
    </top>
-   
+
    <left>
       <VBox prefWidth="200.0" spacing="10">
          <padding>
@@ -44,7 +44,6 @@
          <Button fx:id="officeHoursBtn" maxWidth="1.7976931348623157E308" onAction="#handleOfficeHoursButton" text="Office Hours" />
          <Button fx:id="gradesBtn" maxWidth="1.7976931348623157E308" onAction="#handleGradesButton" text="Grade Management" />
          <Button fx:id="classroom_btn" mnemonicParsing="false" onAction="#handleHallsButton" prefHeight="26.0" prefWidth="172.0" text="Halls" />
-         <Button fx:id="ChangePassBtn" mnemonicParsing="false" onAction="#HandleChangePassBtn" prefHeight="26.0" prefWidth="168.0" text="Change Password" />
          <Region VBox.vgrow="ALWAYS" />
          <Separator />
          <Button fx:id="leaveRequestBtn" maxWidth="1.7976931348623157E308" text="Leave Requests" />
@@ -58,8 +57,8 @@
                   <padding>
                      <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
                   </padding>
-                  
-                        <!-- Quick Stats -->
+
+                  <!-- Quick Stats -->
                   <HBox spacing="20">
                      <VBox alignment="CENTER" spacing="5" HBox.hgrow="ALWAYS">
                         <padding>
@@ -83,8 +82,8 @@
                         <Label fx:id="pendingGradingLabel" text="15" />
                      </VBox>
                   </HBox>
-                  
-                        <!-- My Courses Section -->
+
+                  <!-- My Courses Section -->
                   <VBox spacing="10">
                      <HBox alignment="CENTER_LEFT" spacing="10">
                         <Label text="My Courses" />
