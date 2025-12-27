@@ -611,4 +611,8 @@ public class Admin extends User {
         dm.updateCourse(course);
     }
 
+    public void createAnnouncement(Announcment announcment) {
+        dm.addAnnouncment(announcment);
+    }
+
 }

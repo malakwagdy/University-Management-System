@@ -5,7 +5,7 @@ public class Announcment {
     private String title;
     private String content;
     private String date;
-    private int courseid;
+    private Integer courseid;
 
     public Announcment(String title, String content, String date) {
         this.title = title;
@@ -13,7 +13,7 @@ public class Announcment {
         this.date = date;
     }
 
-    public Announcment(String title, String content, String date, int courseid) {
+    public Announcment(String title, String content, String date, Integer courseid) {
         this.title = title;
         this.content = content;
         this.date = date;
@@ -51,11 +51,12 @@ public class Announcment {
     public void setDate(String date) {
         this.date = date;
     }
-    public int getCourseid() {
+
+    public Integer getCourseid() {
         return courseid;
     }
-    public void setCourseid(int courseid) {
+
+    public void setCourseid(Integer courseid) {
         this.courseid = courseid;
     }
-
 }
