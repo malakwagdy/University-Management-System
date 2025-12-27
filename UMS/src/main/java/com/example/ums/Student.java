@@ -121,4 +121,12 @@ public class Student extends User {
     public String getExamFeedbackForStudent(int examId, String userId) {
         return dm.getExamFeedbackForStudent(examId, userId);
     }
+
+    public Map<String, String> getStudentCourseGrades(String userId, Integer courseId) {
+        return dm.getStudentCourseGrades(userId, courseId);
+    }
+
+    public Map<String, String> getStudentCourseFeedback(String userId, Integer courseId) {
+        return dm.getStudentCourseFeedback(userId, courseId);
+    }
 }

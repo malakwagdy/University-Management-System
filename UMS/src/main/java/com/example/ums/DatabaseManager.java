@@ -2828,6 +2828,73 @@ public ArrayList<Student> getStudentsByCourse(int courseCode) {
         }
         return null;
     }
+    public Map<String,String> getStudentCourseGrades(String userId,Integer courseId) {
+        String sql = "SELECT a.assignmentid, ag.grade AS assignment_grade, e.examid, eg.grade AS exam_grade " +
+                "FROM assignments a " +
+                "LEFT JOIN assignmentgrades ag ON a.assignmentid = ag.assignmentid AND ag.userid = ? " +
+                "LEFT JOIN exams e ON a.courseid = e.courseid " +
+                "LEFT JOIN examgrades eg ON e.examid = eg.examid AND eg.userid = ? " +
+                "WHERE a.courseid = ?";
+
+        Map<String, String> grades = new HashMap<>();
+        try (Connection conn = getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, userId);
+            ps.setString(2, userId);
+            ps.setInt(3, courseId);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                int assignmentId = rs.getInt("assignmentid");
+                String assignmentGrade = rs.getString("assignment_grade");
+                if (assignmentGrade != null) {
+                    grades.put("Assignment " + assignmentId, assignmentGrade);
+                }
+
+                int examId = rs.getInt("examid");
+                String examGrade = rs.getString("exam_grade");
+                if (examGrade != null) {
+                    grades.put("Exam " + examId, examGrade);
+                }
+            }
+        } catch (SQLException e) {
+            System.out.println("Failed to get student course grades");
+            e.printStackTrace();
+        }
+        return grades;
+    }
+    public Map<String,String> getStudentCourseFeedback(String userId,Integer courseId) {
+        String sql = "SELECT a.assignmentid, ag.feedback AS assignment_feedback, e.examid, eg.feedback AS exam_feedback " +
+                "FROM assignments a " +
+                "LEFT JOIN assignmentgrades ag ON a.assignmentid = ag.assignmentid AND ag.userid = ? " +
+                "LEFT JOIN exams e ON a.courseid = e.courseid " +
+                "LEFT JOIN examgrades eg ON e.examid = eg.examid AND eg.userid = ? " +
+                "WHERE a.courseid = ?";
+
+        Map<String, String> feedbacks = new HashMap<>();
+        try (Connection conn = getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, userId);
+            ps.setString(2, userId);
+            ps.setInt(3, courseId);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                int assignmentId = rs.getInt("assignmentid");
+                String assignmentFeedback = rs.getString("assignment_feedback");
+                if (assignmentFeedback != null) {
+                    feedbacks.put("Assignment " + assignmentId, assignmentFeedback);
+                }
+
+                int examId = rs.getInt("examid");
+                String examFeedback = rs.getString("exam_feedback");
+                if (examFeedback != null) {
+                    feedbacks.put("Exam " + examId, examFeedback);
+                }
+            }
+        } catch (SQLException e) {
+            System.out.println("Failed to get student course feedbacks");
+            e.printStackTrace();
+        }
+        return feedbacks;
+    }
+
 
     /**
      * Simple connectivity test (optional).
