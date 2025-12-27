@@ -494,9 +494,11 @@ public class InstructorDashboardController {
 
                     {
                         bookBtn.setOnAction(event -> {
-                            Classroom hall = getTableView().getItems().get(getIndex());
-                            instructor.bookHall(hall.getHallId());
-                            loadHalls();
+                            Classroom selectedHall = getTableView().getItems().get(getIndex());
+                            int hallId = selectedHall.getHallId();
+
+                            BookingContext.setSelectedHallId(hallId);
+                            SceneController.switchTo("BookClassroom.fxml");
                         });
                     }
 
@@ -653,5 +655,14 @@ public class InstructorDashboardController {
 
     private void handleGradeExam(Exam exam) {
         AddGradesController.showForExam(exam.getExamId(), instructor, () -> loadExams());
+    }
+
+    @FXML
+    public void HandleChangePassBtn(ActionEvent actionEvent) {
+        try {
+            SceneController.switchScene(actionEvent, "ChangePassword.fxml", "Change Password");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }

@@ -105,4 +105,28 @@ public class Student extends User {
     public ArrayList<Exam> getStudentFinals(String userId) {
         return dm.getStudentFinals(userId);
     }
+
+    public String getExamGradeForStudent(int examId, String userId) {
+        return dm.getExamGradeForStudent(examId, userId);
+    }
+
+    public String getAssignmentGradeForStudent(int assignmentId, String userId) {
+        return dm.getAssignmentGradeForStudent(assignmentId, userId);
+    }
+
+    public String getAssignmentFeedbackForStudent(int assignmentId, String userId) {
+        return dm.getAssignmentFeedbackForStudent(assignmentId, userId);
+    }
+
+    public String getExamFeedbackForStudent(int examId, String userId) {
+        return dm.getExamFeedbackForStudent(examId, userId);
+    }
+
+    public Map<String, String> getStudentCourseGrades(String userId, Integer courseId) {
+        return dm.getStudentCourseGrades(userId, courseId);
+    }
+
+    public Map<String, String> getStudentCourseFeedback(String userId, Integer courseId) {
+        return dm.getStudentCourseFeedback(userId, courseId);
+    }
 }

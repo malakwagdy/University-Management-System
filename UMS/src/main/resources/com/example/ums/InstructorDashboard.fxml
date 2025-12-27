@@ -15,7 +15,7 @@
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 
-<BorderPane xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.ums.InstructorDashboardController">
+<BorderPane xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.ums.InstructorDashboardController">
    <top>
       <VBox spacing="10">
          <padding>
@@ -44,6 +44,7 @@
          <Button fx:id="officeHoursBtn" maxWidth="1.7976931348623157E308" onAction="#handleOfficeHoursButton" text="Office Hours" />
          <Button fx:id="gradesBtn" maxWidth="1.7976931348623157E308" onAction="#handleGradesButton" text="Grade Management" />
          <Button fx:id="classroom_btn" mnemonicParsing="false" onAction="#handleHallsButton" prefHeight="26.0" prefWidth="172.0" text="Halls" />
+         <Button fx:id="ChangePassBtn" mnemonicParsing="false" onAction="#HandleChangePassBtn" prefHeight="26.0" prefWidth="168.0" text="Change Password" />
          <Region VBox.vgrow="ALWAYS" />
          <Separator />
          <Button fx:id="leaveRequestBtn" maxWidth="1.7976931348623157E308" text="Leave Requests" />

@@ -241,4 +241,13 @@ public class HrDashboardController implements Initializable {
             e.printStackTrace();
         }
     }
+
+    @FXML
+    public void HandleChangePassBtn(ActionEvent actionEvent) {
+        try {
+            SceneController.switchScene(actionEvent, "ChangePassword.fxml", "Change Password");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 }

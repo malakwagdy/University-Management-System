@@ -12,7 +12,7 @@
 <?import javafx.scene.layout.Region?>
 <?import javafx.scene.layout.VBox?>
 
-<BorderPane xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.ums.ParentDashboardController">
+<BorderPane xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.ums.ParentDashboardController">
    <top>
       <VBox spacing="10">
          <padding>
@@ -116,6 +116,7 @@
                <Button fx:id="viewFullTranscriptBtn" text="View Full Transcript" />
                <Button fx:id="viewAttendanceBtn" text="View Attendance" />
                <Button fx:id="contactInstructorBtn" text="Contact Instructor" />
+               <Button fx:id="ChangePassBtn" mnemonicParsing="false" onAction="#HandleChangePassBtn" text="Change Password" />
             </HBox>
          </VBox>
       </ScrollPane>

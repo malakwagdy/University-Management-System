@@ -13,7 +13,7 @@
 <?import javafx.scene.layout.Region?>
 <?import javafx.scene.layout.VBox?>
 
-<BorderPane xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.ums.HrDashboardController">
+<BorderPane xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.ums.HrDashboardController">
    <top>
       <VBox spacing="10">
          <padding>
@@ -40,6 +40,7 @@
          <Button fx:id="benefitsBtn" maxWidth="1.7976931348623157E308" text="Benefits" />
          <Button fx:id="equipmentBtn" maxWidth="1.7976931348623157E308" text="Equipment" />
          <Region VBox.vgrow="ALWAYS" />
+         <Button fx:id="ChangePassBtn" mnemonicParsing="false" onAction="#HandleChangePassBtn" prefHeight="26.0" prefWidth="192.0" text="Change Password" />
       </VBox>
    </left>
 
