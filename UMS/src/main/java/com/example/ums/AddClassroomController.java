@@ -69,10 +69,8 @@ public class AddClassroomController {
 
 
         Classroom classroom = new Classroom(
-
                 hallCapacity,
                 hallType
-
         );
 
         try {
@@ -80,6 +78,15 @@ public class AddClassroomController {
             showAlert("Success", "Classroom added successfully");
         } catch (SQLException e) {
             showAlert("Error", "Failed to add classroom");
+            e.printStackTrace();
+        }
+    }
+
+    @FXML
+    private void handleBackButton(ActionEvent event) {
+        try {
+            SceneController.switchScene(event, "AdminDashboard.fxml", "Admin Dashboard");
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }

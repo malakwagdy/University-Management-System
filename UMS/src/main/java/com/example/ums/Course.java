@@ -4,6 +4,7 @@ import com.google.firebase.database.PropertyName;
 
 import java.util.ArrayList;
 import java.util.Map;
+import java.sql.SQLException;
 
 public class Course {
     private int courseId;
@@ -15,6 +16,7 @@ public class Course {
     private ArrayList<String> quizzes;
     private Map<String, String> midterm;
     private Map<String, String> finals;
+    private String courseDepartment;
 
 
     public Course(int courseId, String courseName, String courseDescription, String year, ArrayList<String> material, ArrayList<String> assignments, ArrayList<String> quizzes, Map<String, String> midterm, Map<String, String> finals, ArrayList<String> students) {
@@ -30,12 +32,32 @@ public class Course {
 
     }
 
+    public Course(int courseId, String courseName, String courseDescription, String year, String courseDepartment) {
+        this(courseId, courseName, courseDescription, year);
+        this.courseDepartment = courseDepartment;
+    }
+
     public Course(int courseId, String courseName, String courseDescription, String year) {
         this.courseId = courseId;
         this.courseName = courseName;
         this.courseDescription = courseDescription;
         this.year = year;
     }
+
+    public Course(String courseName, String courseDescription, String year) {
+        this.courseName = courseName;
+        this.courseDescription = courseDescription;
+        this.year = year;
+    }
+
+    public String getCourseDepartment() {
+        return courseDepartment;
+    }
+
+    public void setCourseDepartment(String courseDepartment) {
+        this.courseDepartment = courseDepartment;
+    }
+
     public int getCourseId() {
         return courseId;
     }
@@ -106,6 +128,36 @@ public class Course {
 
     public void setFinals(Map<String, String> finals) {
         this.finals = finals;
+    }
+    
+    public static ArrayList<Instructor> getCourseInstructors(int courseId) {
+        try {
+            DatabaseManager dm = new DatabaseManager();
+            return dm.getCourseInstructors(courseId);
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return new ArrayList<>();
+        }
+    }
+
+    public static ArrayList<Material> getCourseMaterials(int courseId) {
+        try {
+            DatabaseManager dm = new DatabaseManager();
+            return dm.getMaterials(courseId);
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return new ArrayList<>();
+        }
+    }
+    
+    public static Course getCourseById(int courseId) {
+        try {
+            DatabaseManager dm = new DatabaseManager();
+            return dm.getCourse(courseId);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 
 }

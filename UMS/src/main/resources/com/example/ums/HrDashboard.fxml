@@ -13,7 +13,7 @@
 <?import javafx.scene.layout.Region?>
 <?import javafx.scene.layout.VBox?>
 
-<BorderPane xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.ums.HrDashboardController">
+<BorderPane xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.ums.HrDashboardController">
    <top>
       <VBox spacing="10">
          <padding>
@@ -40,6 +40,7 @@
          <Button fx:id="benefitsBtn" maxWidth="1.7976931348623157E308" text="Benefits" />
          <Button fx:id="equipmentBtn" maxWidth="1.7976931348623157E308" text="Equipment" />
          <Region VBox.vgrow="ALWAYS" />
+         <Button fx:id="ChangePassBtn" mnemonicParsing="false" onAction="#HandleChangePassBtn" prefHeight="26.0" prefWidth="192.0" text="Change Password" />
       </VBox>
    </left>
 
@@ -92,19 +93,18 @@
             <!-- Professional Development -->
             <VBox spacing="10">
                <HBox alignment="CENTER_LEFT" spacing="10">
-                  <Label text="Professional Development Activities" />
+                  <Label text="Department Employees" />
                   <Region HBox.hgrow="ALWAYS" />
-                  <TextField fx:id="trainingSearchField" promptText="Search activities" />
-                  <Button fx:id="addTrainingBtn" text="+ Add Activity" />
+                  <ComboBox fx:id="employeeRoleFilter" onAction="#handleEmployeeRoleFilter" promptText="Filter by Role" />
                </HBox>
-               <TableView fx:id="trainingTable" prefHeight="220.0">
+               <TableView fx:id="employeeTable" prefHeight="220.0">
                   <columns>
-                     <TableColumn fx:id="trainingEmployeeCol" prefWidth="180.0" text="Employee" />
-                     <TableColumn fx:id="trainingNameCol" prefWidth="200.0" text="Activity" />
-                     <TableColumn fx:id="trainingDateCol" prefWidth="120.0" text="Date" />
-                     <TableColumn fx:id="trainingStatusCol" prefWidth="120.0" text="Status" />
-                     <TableColumn fx:id="trainingCreditsCol" prefWidth="100.0" text="Credits" />
-                     <TableColumn fx:id="trainingActionsCol" prefWidth="150.0" text="Actions" />
+                     <TableColumn fx:id="employeeIdCol" prefWidth="108.0" text="EmployeeID" />
+                     <TableColumn fx:id="nameCol" prefWidth="183.0" text="Name" />
+                     <TableColumn fx:id="emailCol" prefWidth="276.0" text="Email" />
+                     <TableColumn fx:id="roleCol" prefWidth="128.0" text="Role" />
+                     <TableColumn fx:id="salaryCol" prefWidth="114.0" text="Salary" />
+                     <TableColumn fx:id="actionsCol" prefWidth="182.0" text="Actions" />
                   </columns>
                </TableView>
             </VBox>
@@ -121,7 +121,7 @@
                   <columns>
                      <TableColumn fx:id="payrollEmployeeCol" prefWidth="180.0" text="Employee" />
                      <TableColumn fx:id="payrollRoleCol" prefWidth="150.0" text="Role" />
-                     <TableColumn fx:id="salaryCol" prefWidth="120.0" text="Salary" />
+                     <TableColumn fx:id="payrollSalaryCol" prefWidth="120.0" text="Salary" />
                      <TableColumn fx:id="benefitsCostCol" prefWidth="120.0" text="Benefits" />
                      <TableColumn fx:id="payrollStatusCol" prefWidth="120.0" text="Status" />
                      <TableColumn fx:id="payrollUpdatedCol" prefWidth="150.0" text="Last Updated" />

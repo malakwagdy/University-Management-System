@@ -10,7 +10,7 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox alignment="BOTTOM_LEFT" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.ums.AddUserController">
+<VBox alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.ums.AddUserController">
     <children>
       <HBox alignment="CENTER" prefHeight="31.0" prefWidth="600.0">
          <children>
@@ -54,6 +54,20 @@
                 </TextField>
             </children>
         </HBox>
+      <HBox alignment="CENTER" prefHeight="41.0" prefWidth="600.0">
+         <children>
+            <Label alignment="CENTER" text="Date of Birth:">
+               <HBox.margin>
+                  <Insets right="10.0" />
+               </HBox.margin>
+            </Label>
+            <DatePicker fx:id="dobPicker" onAction="#handleDatePicker" prefHeight="26.0" prefWidth="162.0">
+               <HBox.margin>
+                  <Insets left="20.0" />
+               </HBox.margin>
+            </DatePicker>
+         </children>
+      </HBox>
       <HBox fx:id="roleHBox" alignment="CENTER" prefHeight="31.0" prefWidth="600.0">
          <children>
             <Label text="Role:">
@@ -118,20 +132,6 @@
          </children>
       </HBox>
       <Label fx:id="errorMsg" />
-      <HBox prefHeight="32.0" prefWidth="600.0">
-         <children>
-            <Label alignment="CENTER" text="Date of birth: ">
-               <HBox.margin>
-                  <Insets left="170.0" />
-               </HBox.margin>
-            </Label>
-            <DatePicker fx:id="dobPicker" onAction="#handleDatePicker" prefHeight="26.0" prefWidth="150.0">
-               <HBox.margin>
-                  <Insets left="30.0" />
-               </HBox.margin>
-            </DatePicker>
-         </children>
-      </HBox>
       <HBox alignment="CENTER" prefHeight="45.0" prefWidth="600.0" spacing="10.0">
          <children>
             <Button fx:id="cancelButton" mnemonicParsing="false" onAction="#handleCancelButton" text="Cancel">

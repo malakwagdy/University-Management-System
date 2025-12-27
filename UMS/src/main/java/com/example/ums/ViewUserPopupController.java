@@ -1,17 +1,20 @@
 package com.example.ums;
 
+import java.io.IOException;
+import java.util.Map;
+
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
-import javafx.scene.control.*;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
+import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-
-import java.io.IOException;
-import java.util.Map;
 
 public class ViewUserPopupController {
     @FXML
@@ -25,55 +28,71 @@ public class ViewUserPopupController {
     
     private User user;
     private Stage popupStage;
-    private Admin admin;
+    private User currentUser;
     private Runnable onRefresh;
     
     public void setUser(User user) {
         this.user = user;
-        populateUserDetails();
+        // Don't populate details here - wait until currentUser is set
     }
     
     public void setPopupStage(Stage stage) {
         this.popupStage = stage;
     }
     
-    public void setAdmin(Admin admin) {
-        this.admin = admin;
+    public void setCurrentUser(User currentUser) {
+        this.currentUser = currentUser;
+        // Now populate details after currentUser is set
+        populateUserDetails();
     }
     
     public void setOnRefresh(Runnable onRefresh) {
         this.onRefresh = onRefresh;
     }
     
+    private String cleanValue(String value) {
+        if (value == null) return "N/A";
+        return value.replaceAll("^\"|\"$", "");
+    }
+    
     private void populateUserDetails() {
         if (user == null) return;
         
+        boolean isHR = currentUser instanceof HR;
+        
         // Common fields for all users
-        detailsBox.getChildren().add(new Label("ID: " + (user.getId() != null ? user.getId() : "N/A")));
-        detailsBox.getChildren().add(new Label("Name: " + (user.getName() != null ? user.getName() : "N/A")));
-        detailsBox.getChildren().add(new Label("Email: " + (user.getEmail() != null ? user.getEmail() : "N/A")));
-        detailsBox.getChildren().add(new Label("Phone Number: " + (user.getPhoneNumber() != null ? user.getPhoneNumber() : "N/A")));
+        detailsBox.getChildren().add(new Label("ID: " + cleanValue(user.getId())));
+        detailsBox.getChildren().add(new Label("Name: " + cleanValue(user.getName())));
+        detailsBox.getChildren().add(new Label("Email: " + cleanValue(user.getEmail())));
+        detailsBox.getChildren().add(new Label("Phone Number: " + cleanValue(user.getPhoneNumber())));
         detailsBox.getChildren().add(new Label("User Type: " + getUserType(user)));
         
         // Add type-specific fields
         if (user instanceof Student) {
             Student student = (Student) user;
-            detailsBox.getChildren().add(new Label("Date of Birth: " + (student.getdateOfBirth() != null ? student.getdateOfBirth() : "N/A")));
-            detailsBox.getChildren().add(new Label("Major: " + (student.getMajor() != null ? student.getMajor() : "N/A")));
-            detailsBox.getChildren().add(new Label("GPA: " + (student.getGpa() != null ? student.getGpa() : "N/A")));
-            detailsBox.getChildren().add(new Label("Semester: " + (student.getSemester() != null ? student.getSemester() : "N/A")));
+            detailsBox.getChildren().add(new Label("Date of Birth: " + cleanValue(student.getdateOfBirth())));
+            detailsBox.getChildren().add(new Label("Major: " + cleanValue(student.getMajor())));
+            detailsBox.getChildren().add(new Label("GPA: " + cleanValue(student.getGpa())));
+            detailsBox.getChildren().add(new Label("Semester: " + cleanValue(student.getSemester())));
             if (student.getCurrentCourses() != null && !student.getCurrentCourses().isEmpty()) {
-                detailsBox.getChildren().add(new Label("Current Courses: " + String.join(", ", student.getCurrentCourses())));
+                detailsBox.getChildren().add(new Label("Current Courses: " + student.getCurrentCourses().stream().map(String::valueOf).collect(java.util.stream.Collectors.joining(", "))));
             } else {
                 detailsBox.getChildren().add(new Label("Current Courses: N/A"));
             }
             if (student.getTakenCourses() != null && !student.getTakenCourses().isEmpty()) {
                 StringBuilder takenCoursesStr = new StringBuilder();
-                for (Map.Entry<String, String> entry : student.getTakenCourses().entrySet()) {
+                for (Map.Entry<Integer, Map<String,String>> entry : student.getTakenCourses().entrySet()) {
                     if (takenCoursesStr.length() > 0) {
                         takenCoursesStr.append(", ");
                     }
-                    takenCoursesStr.append(entry.getKey()).append(" (").append(entry.getValue()).append(")");
+                    Map<String, String> courseData = entry.getValue();
+                    String grade = courseData.get("grade");
+                    String semester = courseData.get("semester");
+                    takenCoursesStr.append(entry.getKey()).append(" (").append(cleanValue(grade));
+                    if (semester != null && !semester.isEmpty()) {
+                        takenCoursesStr.append(" - ").append(cleanValue(semester));
+                    }
+                    takenCoursesStr.append(")");
                 }
                 detailsBox.getChildren().add(new Label("Taken Courses: " + takenCoursesStr.toString()));
             } else {
@@ -81,11 +100,11 @@ public class ViewUserPopupController {
             }
         } else if (user instanceof Instructor) {
             Instructor instructor = (Instructor) user;
-            detailsBox.getChildren().add(new Label("Department: " + (instructor.getDepartmentName() != null ? instructor.getDepartmentName() : "N/A")));
-            detailsBox.getChildren().add(new Label("Role: " + (instructor.getRole() != null ? instructor.getRole() : "Instructor")));
-            detailsBox.getChildren().add(new Label("Salary: " + (instructor.getSalary() != null ? instructor.getSalary() : "N/A")));
+            detailsBox.getChildren().add(new Label("Department: " + cleanValue(instructor.getDepartmentName())));
+            detailsBox.getChildren().add(new Label("Role: " + cleanValue(instructor.getRole())));
+            detailsBox.getChildren().add(new Label("Salary: " + (isHR ? cleanValue(instructor.getSalary()) : "N/A")));
             if (instructor.getCourses() != null && !instructor.getCourses().isEmpty()) {
-                detailsBox.getChildren().add(new Label("Courses: " + String.join(", ", instructor.getCourses())));
+                detailsBox.getChildren().add(new Label("Courses: " + instructor.getCourses().stream().map(String::valueOf).collect(java.util.stream.Collectors.joining(", "))));
             } else {
                 detailsBox.getChildren().add(new Label("Courses: N/A"));
             }
@@ -95,25 +114,25 @@ public class ViewUserPopupController {
                 detailsBox.getChildren().add(new Label("Responsibilities: N/A"));
             }
             if (instructor.getOfficeHours() != null && !instructor.getOfficeHours().isEmpty()) {
-                detailsBox.getChildren().add(new Label("Office Hours: " + String.join(", ", instructor.getOfficeHours())));
+                detailsBox.getChildren().add(new Label("Office Hours: " + String.join(", ", instructor.getOfficeHours().values())));
             } else {
                 detailsBox.getChildren().add(new Label("Office Hours: N/A"));
             }
-            if (instructor.getBenefits() != null && !instructor.getBenefits().isEmpty()) {
+            if (isHR && instructor.getBenefits() != null && !instructor.getBenefits().isEmpty()) {
                 detailsBox.getChildren().add(new Label("Benefits: " + String.join(", ", instructor.getBenefits())));
             } else {
                 detailsBox.getChildren().add(new Label("Benefits: N/A"));
             }
         } else if (user instanceof Admin) {
             Admin adminUser = (Admin) user;
-            detailsBox.getChildren().add(new Label("Salary: " + (adminUser.getSalary() != null ? adminUser.getSalary() : "N/A")));
+            detailsBox.getChildren().add(new Label("Salary: " + (isHR ? cleanValue(adminUser.getSalary()) : "N/A")));
         } else if (user instanceof HR) {
             HR hr = (HR) user;
-            detailsBox.getChildren().add(new Label("Department: " + (hr.getDepartmentName() != null ? hr.getDepartmentName() : "N/A")));
-            detailsBox.getChildren().add(new Label("Salary: " + (hr.getSalary() != null ? hr.getSalary() : "N/A")));
+            detailsBox.getChildren().add(new Label("Department: " + cleanValue(hr.getDepartmentName())));
+            detailsBox.getChildren().add(new Label("Salary: " + (isHR ? cleanValue(hr.getSalary()) : "N/A")));
         } else if (user instanceof Parent) {
             Parent parent = (Parent) user;
-            detailsBox.getChildren().add(new Label("Relation: " + (parent.getRelation() != null ? parent.getRelation() : "N/A")));
+            detailsBox.getChildren().add(new Label("Relation: " + cleanValue(parent.getRelation())));
             if (parent.getChildren() != null && !parent.getChildren().isEmpty()) {
                 detailsBox.getChildren().add(new Label("Children IDs: " + String.join(", ", parent.getChildren())));
             } else {
@@ -131,11 +150,29 @@ public class ViewUserPopupController {
         return "Unknown";
     }
     
+    private void setupButtonPermissions() {
+        // Only show delete button for admin users
+        boolean isAdmin = currentUser instanceof Admin;
+        if (deleteBtn != null) {
+            deleteBtn.setVisible(isAdmin);
+            deleteBtn.setManaged(isAdmin);
+        }
+        
+        // Hide edit button if viewing own profile
+        boolean isSameUser = currentUser != null && user != null && 
+                           currentUser.getId() != null && currentUser.getId().equals(user.getId());
+        if (editBtn != null) {
+            editBtn.setVisible(!isSameUser);
+            editBtn.setManaged(!isSameUser);
+        }
+    }
+    
     @FXML
     private void handleEditButton(ActionEvent event) {
         popupStage.close();
         Platform.runLater(() -> {
-            EditUserPopupController.show(user, admin, () -> {
+            // Create admin for operations, but EditUserPopupController will use currently logged-in user for permissions
+            EditUserPopupController.show(user, currentUser, () -> {
                 if (onRefresh != null) {
                     onRefresh.run();
                 }
@@ -155,6 +192,8 @@ public class ViewUserPopupController {
             if (response == ButtonType.OK) {
                 try {
                     String userId = user.getId();
+                    // Use admin operations for deletion
+                    Admin admin = new Admin();
                     admin.deleteUser(userId);
                     
                     // Close popup
@@ -187,7 +226,7 @@ public class ViewUserPopupController {
         popupStage.close();
     }
     
-    public static void show(User user, Admin admin, Runnable onRefresh) {
+    public static void show(User user, User currentUser, Runnable onRefresh) {
         try {
             FXMLLoader loader = new FXMLLoader(ViewUserPopupController.class.getResource("/com/example/ums/ViewUserPopup.fxml"));
             VBox root = loader.load();
@@ -199,8 +238,11 @@ public class ViewUserPopupController {
             
             controller.setUser(user);
             controller.setPopupStage(popupStage);
-            controller.setAdmin(admin);
+            controller.setCurrentUser(currentUser);
             controller.setOnRefresh(onRefresh);
+            
+            // Hide delete button for non-admin users
+            controller.setupButtonPermissions();
             
             Scene scene = new Scene(root, 500, 500);
             popupStage.setScene(scene);

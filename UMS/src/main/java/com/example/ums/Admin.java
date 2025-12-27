@@ -8,14 +8,18 @@ import java.util.Map;
 public class Admin extends User {
     private String salary;
 
+    static DatabaseManager dm = new DatabaseManager();
+
     public Admin() {
         super();
     }
 
-    public Admin(String id,String phoneNumber, String email, String password, String dateOfBirth, String name, String salary) {
+    public Admin(String id, String phoneNumber, String email, String password, String dateOfBirth, String name,
+            String salary) {
         super(id, "Admin", phoneNumber, email, password, name, dateOfBirth);
         this.salary = salary;
     }
+
     public String getSalary() {
         return salary;
     }
@@ -24,10 +28,9 @@ public class Admin extends User {
         this.salary = salary;
     }
 
-
-    public void createAdmin(String phoneNumber,  String password, String dateOfBirth, String name, String salary) {
-        String id= this.generateID("Admin");
-        String email = id+"@ums.edu";
+    public void createAdmin(String phoneNumber, String password, String dateOfBirth, String name, String salary) {
+        String id = this.generateID("Admin");
+        String email = id + "@ums.edu";
         validateCommonFields(phoneNumber, email, password, name);
         if (salary == null || salary.trim().isEmpty()) {
             throw new IllegalArgumentException("salary is required");
@@ -38,59 +41,97 @@ public class Admin extends User {
         if (phoneNumber == null || phoneNumber.trim().isEmpty()) {
             throw new IllegalArgumentException("Phone number is required");
         }
-        Admin admin=new Admin(id, phoneNumber, email, password, dateOfBirth, name, salary);
+        Admin admin = new Admin(id, phoneNumber, email, password, dateOfBirth, name, salary);
         dm.addAdmin(admin);
     }
 
-    public void deleteUser(String id){
+    public void deleteUser(String id) {
         dm.deleteUser(id);
     }
-//    public void updateUser(User user){
-//        String code = user.getId().substring(2,3);
-//        switch (code) {
-//            case"A":
-//                fm.updateAdmin((Admin) user);
-//                break;
-//            case "S":
-//                fm.updateStudent((Student) user);
-//                break;
-//            case "I":
-//                fm.updateInstructor((Instructor) user);
-//                break;
-//            case "P":
-//                fm.updateParent((Parent) user);
-//                break;
-//            case "H":
-//                fm.updateHR((HR) user);
-//                break;
-//            default:
-//                throw new IllegalArgumentException("Invalid ID: " + user.getId());
-//        }
-//
-//    }
 
+    public void updateStudent(Student student) {
+        try {
+            dm.updateStudent(student);
+        } catch (SQLException e) {
+            e.printStackTrace();
+            System.out.println("Failed to update student: " + student.getId());
+        }
+    }
 
+    public void updateInstructor(Instructor instructor) {
+        try {
+            dm.updateInstructor(instructor);
+        } catch (SQLException e) {
+            e.printStackTrace();
+            System.out.println("Failed to update instructor: " + instructor.getId());
+        }
+    }
+
+    public void updateHR(HR hr) {
+        try {
+            dm.updateHR(hr);
+        } catch (SQLException e) {
+            e.printStackTrace();
+            System.out.println("Failed to update HR: " + hr.getId());
+        }
+    }
+
+    public void updateParent(Parent parent) {
+        try {
+            dm.updateParent(parent);
+        } catch (SQLException e) {
+            e.printStackTrace();
+            System.out.println("Failed to update parent: " + parent.getId());
+        }
+    }
+
+    public void updateAdmin(Admin admin) {
+        try {
+            dm.updateAdmin(admin);
+        } catch (SQLException e) {
+            e.printStackTrace();
+            System.out.println("Failed to update admin: " + admin.getId());
+        }
+    }
 
     public void updateDepartmentHead(String instructorId, Boolean isDepartmentHead) {
-        Instructor instructor = fm.getInstructor(instructorId);
+        Instructor instructor = null;
+        try {
+            instructor = dm.getInstructor(instructorId);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
         if (instructor == null) {
             throw new IllegalArgumentException("Instructor not found with ID: " + instructorId);
         }
         instructor.setDepartmentHead(isDepartmentHead);
-        fm.updateInstructor(instructor);
+        try {
+            dm.updateInstructor(instructor);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
+
     public void updateRole(String instructorId, String role) {
-        Instructor instructor = fm.getInstructor(instructorId);
-        if (instructor == null) {
+        Instructor instructor = null;
+        try {
+            instructor = dm.getInstructor(instructorId);
+        } catch (SQLException e) {
+            e.printStackTrace();
             throw new IllegalArgumentException("Instructor not found with ID: " + instructorId);
         }
         instructor.setRole(role);
-        fm.updateInstructor(instructor);
+        try {
+            dm.updateInstructor(instructor);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
-    public void createHR(String phoneNumber,  String password, String dateOfBirth, String name, String salary, String departmentName) {
-        String id= this.generateID("HR");
-        String email = id+"@ums.edu";
+    public void createHR(String phoneNumber, String password, String dateOfBirth, String name, String salary,
+            String departmentName) {
+        String id = this.generateID("HR");
+        String email = id + "@ums.edu";
         validateCommonFields(phoneNumber, email, password, name);
         if (salary == null || salary.trim().isEmpty()) {
             throw new IllegalArgumentException("Salary is required");
@@ -101,12 +142,14 @@ public class Admin extends User {
         if (phoneNumber == null || phoneNumber.trim().isEmpty()) {
             throw new IllegalArgumentException("Phone number is required");
         }
-        HR hr=new HR(id, phoneNumber, email, password, dateOfBirth, name, salary, departmentName);
+        HR hr = new HR(id, phoneNumber, email, password, dateOfBirth, name, salary, departmentName);
         dm.addHR(hr);
     }
-    public void createInstructor(String phoneNumber,  String password, String dateOfBirth, String name, String department,String role,Boolean departmentHead) {
-        String id= this.generateID("Instructor");
-        String email = id+"@ums.edu";
+
+    public void createInstructor(String phoneNumber, String password, String dateOfBirth, String name,
+            String department, String role, Boolean departmentHead) {
+        String id = this.generateID("Instructor");
+        String email = id + "@ums.edu";
         validateCommonFields(phoneNumber, email, password, name);
         if (department == null || department.trim().isEmpty()) {
             throw new IllegalArgumentException("Department is required");
@@ -120,12 +163,15 @@ public class Admin extends User {
         if (role == null || role.trim().isEmpty()) {
             throw new IllegalArgumentException("Role is required");
         }
-        Instructor instructor=new Instructor(id, phoneNumber, email, password, dateOfBirth, name, department, departmentHead, role);
+        Instructor instructor = new Instructor(id, phoneNumber, email, password, dateOfBirth, name, department,
+                departmentHead, role);
         dm.addInstructor(instructor);
     }
-    public void createParent(String phoneNumber, String password, String dateOfBirth, String name, String relation, ArrayList<String> children) {
-        String id= this.generateID("Parent");
-        String email = id+"@ums.edu";
+
+    public void createParent(String phoneNumber, String password, String dateOfBirth, String name, String relation,
+            ArrayList<String> children) {
+        String id = this.generateID("Parent");
+        String email = id + "@ums.edu";
         validateCommonFields(phoneNumber, email, password, name);
 
         if (relation == null || relation.trim().isEmpty()) {
@@ -147,7 +193,7 @@ public class Admin extends User {
             throw new IllegalArgumentException("Phone number is required");
         }
 
-        Parent parent=new Parent(id, phoneNumber, email, password, name, dateOfBirth, relation, children);
+        Parent parent = new Parent(id, phoneNumber, email, password, name, dateOfBirth, relation, children);
         dm.addParent(parent);
     }
 
@@ -208,6 +254,7 @@ public class Admin extends User {
             updated.setMajor(existing.getMajor());
         }
     }
+
     private void mergeInstructor(Instructor updated, Instructor existing) {
 
         if ((updated.getCourses() == null || updated.getCourses().isEmpty())
@@ -242,6 +289,7 @@ public class Admin extends User {
             updated.setBenefits(existing.getBenefits());
         }
     }
+
     private void mergeParent(Parent updated, Parent existing) {
 
         if (updated.getRelation() == null && existing.getRelation() != null) {
@@ -253,6 +301,7 @@ public class Admin extends User {
             updated.setChildren(existing.getChildren());
         }
     }
+
     private void mergeHR(HR updated, HR existing) {
 
         if (updated.getSalary() == null && existing.getSalary() != null) {
@@ -263,12 +312,14 @@ public class Admin extends User {
             updated.setDepartmentName(existing.getDepartmentName());
         }
     }
+
     private void mergeAdmin(Admin updated, Admin existing) {
 
         if (updated.getSalary() == null && existing.getSalary() != null) {
             updated.setSalary(existing.getSalary());
         }
     }
+
     private User findExistingUserById(String id) {
 
         Student s = null;
@@ -277,7 +328,8 @@ public class Admin extends User {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        if (s != null) return s;
+        if (s != null)
+            return s;
 
         Instructor i = null;
         try {
@@ -285,7 +337,8 @@ public class Admin extends User {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        if (i != null) return i;
+        if (i != null)
+            return i;
 
         Parent p = null;
         try {
@@ -293,7 +346,8 @@ public class Admin extends User {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        if (p != null) return p;
+        if (p != null)
+            return p;
 
         HR hr = null;
         try {
@@ -301,7 +355,8 @@ public class Admin extends User {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        if (hr != null) return hr;
+        if (hr != null)
+            return hr;
 
         Admin a = null;
         try {
@@ -309,7 +364,8 @@ public class Admin extends User {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        if (a != null) return a;
+        if (a != null)
+            return a;
 
         return null;
     }
@@ -327,46 +383,76 @@ public class Admin extends User {
         // 3. Merge subclass-specific fields
         if (user instanceof Student) {
             Student s = (Student) user;
-            Student existing = fm.getStudent(s.getId());
-            if (existing != null) mergeStudent(s, existing);
-            fm.addStudent(s);
+            Student existing = null;
+            try {
+                existing = dm.getStudent(s.getId());
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+            if (existing != null)
+                mergeStudent(s, existing);
+            dm.addStudent(s);
         }
 
         else if (user instanceof Instructor) {
             Instructor i = (Instructor) user;
-            Instructor existing = fm.getInstructor(i.getId());
-            if (existing != null) mergeInstructor(i, existing);
-            fm.addInstructor(i);
+            Instructor existing = null;
+            try {
+                existing = dm.getInstructor(i.getId());
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+            if (existing != null)
+                mergeInstructor(i, existing);
+            dm.addInstructor(i);
         }
 
         else if (user instanceof Parent) {
             Parent p = (Parent) user;
-            Parent existing = fm.getParent(p.getId());
-            if (existing != null) mergeParent(p, existing);
-            fm.addParent(p);
+            Parent existing = null;
+            try {
+                existing = dm.getParent(p.getId());
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+            if (existing != null)
+                mergeParent(p, existing);
+            dm.addParent(p);
         }
 
         else if (user instanceof HR) {
             HR hr = (HR) user;
-            HR existing = fm.getHR(hr.getId());
-            if (existing != null) mergeHR(hr, existing);
-            fm.addHR(hr);
+            HR existing = null;
+            try {
+                existing = dm.getHR(hr.getId());
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+            if (existing != null)
+                mergeHR(hr, existing);
+            dm.addHR(hr);
         }
 
         else if (user instanceof Admin) {
             Admin a = (Admin) user;
-            Admin existing = fm.getAdmin(a.getId());
-            if (existing != null) mergeAdmin(a, existing);
-            fm.addAdmin(a);
+            Admin existing = null;
+            try {
+                existing = dm.getAdmin(a.getId());
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+            if (existing != null)
+                mergeAdmin(a, existing);
+            dm.addAdmin(a);
         }
     }
+
     private String normalize(String value) {
         if (value == null || value.trim().isEmpty()) {
             return null;
         }
         return value;
     }
-
 
     public ArrayList<Admission> retrieveAdmissions() {
         ArrayList<Admission> admissions = null;
@@ -378,6 +464,7 @@ public class Admin extends User {
         }
         return admissions;
     }
+
     public ArrayList<Admission> retrieveAdmissionsByStatus(String status) {
         ArrayList<Admission> admissions = null;
         try {
@@ -388,10 +475,12 @@ public class Admin extends User {
         }
         return admissions;
     }
+
     public void acceptAdmission(Admission admission) {
-        String id= this.generateID("Student");
-        String email = id+"@ums.edu";
-        Student student=new Student(id, admission.getPhoneNumber(), email,"12345", admission.getName(), admission.getDateOfBirth(), admission.getMajor());
+        String id = this.generateID("Student");
+        String email = id + "@ums.edu";
+        Student student = new Student(id, admission.getPhoneNumber(), email, "12345", admission.getName(),
+                admission.getDateOfBirth(), admission.getMajor());
         admission.setStatus("Accepted");
         try {
             dm.addStudent(student);
@@ -410,13 +499,13 @@ public class Admin extends User {
         }
     }
 
-
     private void validateCommonFields(String phoneNumber, String email, String password, String name) {
         if (phoneNumber == null || phoneNumber.trim().isEmpty()) {
             throw new IllegalArgumentException("Phone number is required");
         }
 
-        if (phoneNumber.length() != 11|| !phoneNumber.startsWith("011") && !phoneNumber.startsWith("012") && !phoneNumber.startsWith("010") && !phoneNumber.startsWith("015")) {
+        if (phoneNumber.length() != 11 || !phoneNumber.startsWith("011") && !phoneNumber.startsWith("012")
+                && !phoneNumber.startsWith("010") && !phoneNumber.startsWith("015")) {
             throw new IllegalArgumentException("Phone number is invalid");
         }
 
@@ -465,7 +554,7 @@ public class Admin extends User {
         return year + letter + number;
     }
 
-    public Map<Course,String>generateTranscript(String studentId) {
+    public Map<Course, Map<String, String>> generateTranscript(String studentId) {
         Student student = null;
         try {
             student = dm.getStudent(studentId);
@@ -475,7 +564,7 @@ public class Admin extends User {
         if (student == null) {
             throw new IllegalArgumentException("Student not found with ID: " + studentId);
         }
-        Map<Course, String> transcript = null;
+        Map<Course, Map<String, String>> transcript = null;
         try {
             transcript = dm.getTakenCoursesForTranscript(studentId);
         } catch (SQLException e) {
@@ -483,6 +572,7 @@ public class Admin extends User {
         }
         return transcript;
     }
+
     public ArrayList<Course> getAllCourse() {
         ArrayList<Course> courses = null;
         try {
@@ -491,8 +581,18 @@ public class Admin extends User {
             e.printStackTrace();
             return null;
         }
-        return  courses;
+        return courses;
     }
+
+    public void addCourse(String courseName, String courseDescription, String year, String department) {
+        Course course = new Course(0, courseName, courseDescription, year, department);
+        dm.addCourse(course);
+    }
+
+    public void deleteCourse(int courseId) {
+        dm.deleteCourse(courseId);
+    }
+
     public void editCourseDetails(int courseId, String courseName, String courseDescription, String year) {
         Course course = null;
         course = dm.getCourse(courseId);

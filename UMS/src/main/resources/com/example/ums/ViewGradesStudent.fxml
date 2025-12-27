@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+<VBox alignment="CENTER" prefHeight="481.0" prefWidth="772.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.ums.ViewGradesStudentController">
+    <children>
+        <HBox alignment="CENTER" prefHeight="66.0" prefWidth="473.0" spacing="10.0">
+            <children>
+                <Label text="Course Name:" />
+                <Label fx:id="courseNameLabel" />
+            </children>
+        </HBox>
+        <TableView fx:id="coursesTable" prefHeight="310.0" prefWidth="299.0">
+            <columns>
+                <TableColumn fx:id="nameCol" prefWidth="169.69313102960587" text="Name" />
+                <TableColumn fx:id="gradeCol" prefWidth="150.30686950683594" text="Grade" />
+                <TableColumn fx:id="feedbackCol" prefWidth="424.1392517089844" text="Feedback" />
+            </columns>
+        </TableView>
+        <HBox alignment="CENTER" layoutX="10.0" layoutY="159.0" prefHeight="100.0" prefWidth="600.0" spacing="10.0">
+            <children>
+                <Button mnemonicParsing="false" onAction="#handleDoneButton" text="Done" />
+            </children>
+        </HBox>
+    </children>
+</VBox>

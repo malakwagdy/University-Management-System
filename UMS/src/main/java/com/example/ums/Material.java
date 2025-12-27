@@ -1,21 +1,26 @@
 package com.example.ums;
 
 public class Material {
-    private String materialId;
+    private int materialId;
     private String materialName;
     private String url;
 
-    public Material(String materialId, String materialName, String url) {
+    public Material(int materialId, String materialName, String url) {
         this.materialId = materialId;
         this.materialName = materialName;
         this.url = url;
     }
 
-    public String getMaterialId() {
+    public Material(String materialName, String url) {
+        this.materialName = materialName;
+        this.url = url;
+    }
+
+    public int getMaterialId() {
         return materialId;
     }
 
-    public void setMaterialId(String materialId) {
+    public void setMaterialId(int materialId) {
         this.materialId = materialId;
     }
 
