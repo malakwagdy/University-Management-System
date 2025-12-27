@@ -427,4 +427,13 @@ public class InstructorDashboardController {
         alert.setContentText("Add Assignment functionality for course: " + course.getCourseName() + " will be implemented soon.");
         alert.showAndWait();
     }
+
+    @FXML
+    public void HandleChangePassBtn(ActionEvent actionEvent) {
+        try {
+            SceneController.switchScene(actionEvent, "ChangePassword.fxml", "Change Password");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 }
